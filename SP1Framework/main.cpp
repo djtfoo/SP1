@@ -18,6 +18,9 @@ const unsigned int gc_uFrameTime = 1000 / gc_ucFPS;    // time for each frame
 //main loop declaration
 void mainLoop( void );
 
+//Console object
+Console g_Console(80, 25, "SP1 Framework");
+
 // TODO:
 // Bug in waitUntil. it waits for the time from getElapsedTime to waitUntil, but should be insignificant.
 
@@ -64,7 +67,7 @@ void displayMenu(Sequence &s)
 	COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
     c.X = c.X / 2 - 9;
-    g_Console.writeToBuffer(c, "A game in 3 seconds", 0x03);
+    g_Console.writeToBuffer(c, "Menu", 0x03);
     c.Y += 1;
     c.X = g_Console.getConsoleSize().X / 2 - 20;
     g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);

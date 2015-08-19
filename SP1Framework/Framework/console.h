@@ -86,4 +86,7 @@ class Console
         void shutDownConsole();
 };
 
+//Console object
+extern Console g_Console;
+
 #endif // _CONSOLE_H
