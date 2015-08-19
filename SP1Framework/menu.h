@@ -21,8 +21,9 @@ const char* menu[] =
 };
 
 enum SequenceOPT{
-	Sound = 1,
-	Back,
+	OptionsMenu,
+	Sound,			//1
+	Back,			//2
 	MAX_SEQUENCEOPT,
 };
 
@@ -44,4 +45,4 @@ int input;
 
 //options.cpp
 void displayOptions();
-void displaysound();
+void displaySound();

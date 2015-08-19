@@ -42,13 +42,18 @@ void gameLoop()
     while (seq != Exit)
     {
 
+		displayMenu(seq);
+
         switch(seq)
         {
-			case Menu : displayMenu(seq); break;
             case Play : displayGame(); break;
             case Options : displayOptions(); break;
             case Exit : displayExit(); break;
         }
+
+		if (seq != Menu && seq != Exit) {
+			seq = Menu;
+		}
     }
 }
 
@@ -64,13 +69,17 @@ void userInput (Sequence &s) //If s is modified, seq is modified as well
 void displayMenu(Sequence &s)
 {
 	//use g_Console.writeToBuffer
+    clearScreen();
 	COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
-    c.X = c.X / 2 - 9;
-    g_Console.writeToBuffer(c, "Menu", 0x03);
+    c.X = c.X / 2;
+    g_Console.writeToBuffer(c, "MENU", 0x03);
+	c.Y += 1;
+    c.X = g_Console.getConsoleSize().X / 2 - 20;
+    g_Console.writeToBuffer(c, "Press '1' to play Game", 0x09);
     c.Y += 1;
     c.X = g_Console.getConsoleSize().X / 2 - 20;
-    g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);
+    g_Console.writeToBuffer(c, "Press '4' to go Options", 0x09);
     c.Y += 1;
     c.X = g_Console.getConsoleSize().X / 2 - 9;
     g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x09);
@@ -91,17 +100,70 @@ void displayHighscore()
 
 }
 
+void userInputOPT(SequenceOPT &s)
+{
+    int input1;
+    cin >> input1;
+
+    s = static_cast<SequenceOPT>(input1);
+}
+
 void displayOptions() {
-	//use g_Console.writeToBuffer
-	cout << "Options:" << endl;
-	for (SequenceOPT s = Sound; s != MAX_SEQUENCE; s = static_cast<SequenceOPT>(s+1)) 
-	{ 
-		cout << "Option " << s << " " << option[static_cast<int>(s)-1] << endl;
+
+	SequenceOPT s = OptionsMenu;
+
+	while (s != Back) {
+
+		//use g_Console.writeToBuffer
+		clearScreen();
+
+		COORD c = g_Console.getConsoleSize();
+		c.Y /= 3;
+		c.X = c.X / 2;
+		g_Console.writeToBuffer(c, "OPTIONS", 0x03);
+		c.Y += 1;
+		c.X = g_Console.getConsoleSize().X / 2 - 20;
+		g_Console.writeToBuffer(c, "Press '1' for Sound", 0x09);
+		c.Y += 1;
+		c.X = g_Console.getConsoleSize().X / 2 - 9;
+		g_Console.writeToBuffer(c, "Press '2' to go back to Main Menu", 0x09);
+		g_Console.flushBufferToConsole();
+
+		userInputOPT(s);
+
+		switch(s)
+		{
+			case Sound : displaySound(); break;
+			case Back : s = Back; break;
+		}
+
+		if (s != OptionsMenu && s != Back) {
+			s = OptionsMenu;
+		}
+
 	}
+
 }
 
 void displaySound(){
-	cout << "Adjust your sound here:" << endl;
+
+	clearScreen();
+	COORD c = g_Console.getConsoleSize();
+    c.Y /= 3;
+    c.X = c.X / 2;
+    g_Console.writeToBuffer(c, "EDIT SOUND HERE", 0x03);
+	c.Y += 1;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	g_Console.writeToBuffer(c, "Press '1' to switch on sound", 0x09);
+	c.Y += 1;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x09);
+	g_Console.flushBufferToConsole();
+
+	//userInputSOUND();
+	int i;
+	cin >> i;
+
 }
 
 

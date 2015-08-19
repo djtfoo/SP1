@@ -42,7 +42,7 @@ void init( void )
     g_eGameState = S_SPLASHSCREEN;
 
     g_sChar.m_cLocation.X = 1;
-    g_sChar.m_cLocation.Y = 1;
+    g_sChar.m_cLocation.Y = 2;
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");
@@ -155,7 +155,7 @@ void moveCharacter()
 
     // Updating the location of the character based on the key press
     // providing a beep sound whenver we shift the character
-	int charX = g_sChar.m_cLocation.Y;
+	int charX = g_sChar.m_cLocation.Y - 1;
 	int charY = g_sChar.m_cLocation.X;
 
     if (g_abKeyPressed[K_UP] && g_sChar.m_cLocation.Y > 0)
@@ -263,7 +263,7 @@ void mapgenerator(int rows, int cols) {
 	COORD c;
 
 	for (int i = 0; i < rows; ++i) {
-		c.Y = i;
+		c.Y = i+1;
 		for (int j = 0; j < cols; ++j) {
 			c.X = j;
 			if (maze[i][j] == '@') {
