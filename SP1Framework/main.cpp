@@ -1,4 +1,4 @@
-// This is the main file to hold everthing together
+// This is the main file to hold everything together
 
 #include "Framework\timer.h"
 #include "Framework\console.h"
