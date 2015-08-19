@@ -2,6 +2,12 @@
 
 #include "Framework\timer.h"
 #include "game.h"
+#include "menu.h"
+#include <iostream>
+
+using std::cin;
+using std::cout;
+using std::endl;
 
 CStopWatch g_Timer;                            // Timer function to keep track of time and the frame rate
 bool g_bQuitGame = false;                    // Set to true if you want to quit the game
@@ -19,10 +25,79 @@ void mainLoop( void );
 int main( void )
 {
     init();      // initialize your variables
-    mainLoop();  // main loop
+    gameLoop();  // main loop
     shutdown();  // do clean up, if any. free memory.
     
     return 0;
+}
+
+void gameLoop()
+{
+    Sequence seq = Menu;
+	displayMenu();
+
+    while (seq != Exit && seq != Play)
+    {
+
+		userInput(seq);
+
+        switch(seq)
+        {
+            case Play : displayGame(); break;
+            case Options : displayOptions(); break;
+            case Exit : displayExit(); break;
+        }
+    }
+}
+
+void userInput (Sequence &s) //If s is modified, seq is modified as well
+{
+    int input;
+    cin >> input;
+    //Cannot cin>>s cause it doesn't take in
+    s = static_cast<Sequence>(input);
+}
+
+void displayMenu()
+{
+	//use g_Console.writeToBuffer
+        cout << "Menu" << endl;
+        cout << endl;
+        for (Sequence s = Play; s != MAX_SEQUENCE; s = static_cast<Sequence>(s+1))
+        {
+         cout << "Menu Option " << s << " " << menu[s-1] << endl;
+        }
+}
+
+
+void displayInstructions()
+{
+
+}
+
+void displayHighscore()
+{
+
+}
+
+void displayOptions() {
+	//use g_Console.writeToBuffer
+	cout << "Options:" << endl;
+	for (SequenceOPT s = Sound; s != MAX_SEQUENCE; s = static_cast<SequenceOPT>(s+1)) 
+	{ 
+		cout << "Option " << s << " " << option[static_cast<int>(s)-1] << endl;
+	}
+}
+
+void displaySound(){
+	cout << "Adjust your sound here:" << endl;
+}
+
+
+
+void displayExit()
+{
+
 }
 
 //--------------------------------------------------------------
@@ -32,7 +107,7 @@ int main( void )
 // Input    : void
 // Output   : void
 //--------------------------------------------------------------
-void mainLoop( void )
+void displayGame( void )
 {
     g_Timer.startTimer();    // Start timer to calculate how long it takes to render this frame
     while (!g_bQuitGame)      // run this loop until user wants to quit 
