@@ -1,4 +1,5 @@
 #include "Framework\timer.h"
+#include "Framework\console.h"
 
 enum Sequence 
 {
@@ -32,7 +33,7 @@ const char* option[] =
 };
 
 void gameLoop();
-void displayMenu();
+void displayMenu(Sequence &s);
 void userInput(Sequence &s);
 void displayGame();
 void displayInstructions();

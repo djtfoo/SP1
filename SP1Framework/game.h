@@ -2,6 +2,7 @@
 #define _GAME_H
 
 #include "Framework\timer.h"
+#include "Framework\console.h"
 
 extern CStopWatch g_swTimer;
 extern bool g_bQuitGame;
@@ -32,6 +33,9 @@ struct SGameChar
     COORD m_cLocation;
     bool  m_bActive;
 };
+
+// Console object
+static Console g_Console(80, 25, "SP1 Framework");
 
 void init        ( void );      // initialize your variables, allocate memory, etc
 void getInput    ( void );      // get input from player

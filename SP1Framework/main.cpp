@@ -1,6 +1,7 @@
 // This is the main file to hold everthing together
 
 #include "Framework\timer.h"
+#include "Framework\console.h"
 #include "game.h"
 #include "menu.h"
 #include <iostream>
@@ -34,15 +35,13 @@ int main( void )
 void gameLoop()
 {
     Sequence seq = Menu;
-	displayMenu();
 
-    while (seq != Exit && seq != Play)
+    while (seq != Exit)
     {
-
-		userInput(seq);
 
         switch(seq)
         {
+			case Menu : displayMenu(seq); break;
             case Play : displayGame(); break;
             case Options : displayOptions(); break;
             case Exit : displayExit(); break;
@@ -56,17 +55,26 @@ void userInput (Sequence &s) //If s is modified, seq is modified as well
     cin >> input;
     //Cannot cin>>s cause it doesn't take in
     s = static_cast<Sequence>(input);
+
 }
 
-void displayMenu()
+void displayMenu(Sequence &s)
 {
 	//use g_Console.writeToBuffer
-        cout << "Menu" << endl;
-        cout << endl;
-        for (Sequence s = Play; s != MAX_SEQUENCE; s = static_cast<Sequence>(s+1))
-        {
-         cout << "Menu Option " << s << " " << menu[s-1] << endl;
-        }
+	COORD c = g_Console.getConsoleSize();
+    c.Y /= 3;
+    c.X = c.X / 2 - 9;
+    g_Console.writeToBuffer(c, "A game in 3 seconds", 0x03);
+    c.Y += 1;
+    c.X = g_Console.getConsoleSize().X / 2 - 20;
+    g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);
+    c.Y += 1;
+    c.X = g_Console.getConsoleSize().X / 2 - 9;
+    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x09);
+	g_Console.flushBufferToConsole();
+
+	userInput(s);
+	
 }
 
 

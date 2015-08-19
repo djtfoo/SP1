@@ -19,9 +19,6 @@ SGameChar   g_sChar;
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
-// Console object
-Console g_Console(80, 25, "SP1 Framework");
-
 //map rendering
 char ** maze = 0;
 void maze1(int& rows, int& cols);
@@ -220,8 +217,7 @@ void clearScreen()
 
 void renderSplashScreen()  // renders the splash screen
 {
-
-	//we can use this to say "level blah"
+	//we can use this to say "LEVEL 1", etc
     COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
     c.X = c.X / 2 - 9;
