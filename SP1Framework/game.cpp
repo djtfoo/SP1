@@ -21,8 +21,12 @@ double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger k
 
 //map rendering
 char ** maze = 0;
+int levelCount = 5;
 void maze1(int& rows, int& cols);
 void maze2(int& rows, int& cols);
+void maze3(int& rows, int& cols);
+void maze4(int& rows, int& cols);
+void maze5(int& rows, int& cols);
 void mapgenerator(int rows, int cols);
 
 //--------------------------------------------------------------
@@ -247,11 +251,20 @@ void renderMap()
     int rows = 0;
 	int cols = 0;
 
-	if (0) {
+	if (levelCount == 1) {
 		maze1(rows, cols);
 	}
-	else if (2) {
+	else if (levelCount == 2) {
 		maze2(rows, cols);
+	}
+	else if (levelCount == 3) {
+		maze3(rows, cols);
+	}
+	else if (levelCount == 4) {
+		maze4(rows, cols);
+	}
+	else if (levelCount == 5) {
+		maze5(rows, cols);
 	}
 
 	mapgenerator(rows, cols);
@@ -346,6 +359,113 @@ void maze2(int& rows, int& cols) {
 	for (int i = 0; i < rows; ++i) {
 		maze[i] = new char[cols];
 		string temp = map2[i];
+		for (int j = 0; j < cols; ++j) {
+			maze[i][j] = temp[j];
+		}
+	}
+
+}
+
+void maze3(int& rows, int& cols) {
+
+	string map3[15] = {
+		"###########################",
+		"#         #       #       #",
+		"######### # ############# #",
+		"#         #       #       #",
+		"##### ############# #######",
+		"# # # #   #   #   #       #",
+		"# # # # #   #   # #########",
+		"# # # ############# # #   #",
+		"# # # #             #   # #",
+		"# # # #             ##### #",
+		"# # # #              # #  #",
+		"# # # ############## # # ##",
+		"# # # #    *   #   # # #  #",
+		"# #   #        # # #   ####",
+		"###########################" };
+
+	rows = 15;
+	maze = new char * [rows];
+	cols = 27;
+
+	for (int i = 0; i < rows; ++i) {
+		maze[i] = new char[cols];
+		string temp = map3[i];
+		for (int j = 0; j < cols; ++j) {
+			maze[i][j] = temp[j];
+		}
+	}
+
+}
+
+void maze4(int& rows, int& cols) {
+
+	string map4[16] = {
+		"#############################",
+		"#   #         #       #     #",
+		"# # # # ### ###### #    #   #",
+		"# #   #          # # ## #####",
+		"# ##### # # ###### # #   #  #",
+		"# #     # #        ### # #  #",
+		"# # ################ ### #  #",
+		"# #     #          #     #  #",
+		"# ##### # *        # # # #  #",
+		"# #   # ############ # ###  #",
+		"# ### # #            #      #",
+		"#     # # ####### #### ###  #",
+		"#  ###### #    #       # #  #",
+		"## #      ###  # ####### # ##",
+		"#    #         # #          #",
+		"#############################" };
+
+	rows = 16;
+	maze = new char * [rows];
+	cols = 29;
+
+	for (int i = 0; i < rows; ++i) {
+		maze[i] = new char[cols];
+		string temp = map4[i];
+		for (int j = 0; j < cols; ++j) {
+			maze[i][j] = temp[j];
+		}
+	}
+
+}
+
+void maze5(int& rows, int& cols) {
+
+	string map5[22] = {
+		"##############################",
+		"#     #   #     #    #       #",
+		"# # ### # # ### # ## # #######",
+		"# # #   #   #   #  # # #     #",
+		"# ### ####### ###### # # ### #",
+		"# #   #   #   #   ## # # # # #",
+		"# # ### # ##### # #  # # #   #",
+		"# #     #       #    #   # # #",
+		"# ### ###################### #",
+		"#     #       *      #   # # #",
+		"#######              ##### # #",
+		"#   # #              #     # #",
+		"### # ########################",
+		"#     #      #       #     # #",
+		"############################ #",
+		"#             ##   #   #   # #",
+		"# # ## ########  #   #   #   #",
+		"# # #  #    # # ##############",
+		"#   ####### #                #",
+		"#####     # ################ #",
+		"#     # #   #                #",
+		"##############################" };
+
+	rows = 22;
+	maze = new char * [rows];
+	cols = 30;
+
+	for (int i = 0; i < rows; ++i) {
+		maze[i] = new char[cols];
+		string temp = map5[i];
 		for (int j = 0; j < cols; ++j) {
 			maze[i][j] = temp[j];
 		}
