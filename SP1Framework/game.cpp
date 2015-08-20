@@ -21,8 +21,13 @@ double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger k
 
 //map rendering
 char ** maze = 0;
+int levelCount = 1;
+int ItemCounter = 0;
 void maze1(int& rows, int& cols);
 void maze2(int& rows, int& cols);
+void maze3(int& rows, int& cols);
+void maze4(int& rows, int& cols);
+void maze5(int& rows, int& cols);
 void mapgenerator(int rows, int cols);
 
 //--------------------------------------------------------------
@@ -42,7 +47,7 @@ void init( void )
     g_eGameState = S_SPLASHSCREEN;
 
     g_sChar.m_cLocation.X = 1;
-    g_sChar.m_cLocation.Y = 1;
+    g_sChar.m_cLocation.Y = 2;
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");
@@ -155,12 +160,12 @@ void moveCharacter()
 
     // Updating the location of the character based on the key press
     // providing a beep sound whenver we shift the character
-	int charX = g_sChar.m_cLocation.Y;
-	int charY = g_sChar.m_cLocation.X;
+	int charY = g_sChar.m_cLocation.Y - 1;
+	int charX = g_sChar.m_cLocation.X;
 
     if (g_abKeyPressed[K_UP] && g_sChar.m_cLocation.Y > 0)
     {
-		if (maze[charX-1][charY] != '#') {
+		if (maze[charY-1][charX] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.Y--;
 			bSomethingHappened = true;
@@ -168,7 +173,7 @@ void moveCharacter()
     }
     if (g_abKeyPressed[K_LEFT] && g_sChar.m_cLocation.X > 0)
     {
-		if (maze[charX][charY-1] != '#') {
+		if (maze[charY][charX-1] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.X--;
 			bSomethingHappened = true;
@@ -176,7 +181,7 @@ void moveCharacter()
     }
     if (g_abKeyPressed[K_DOWN] && g_sChar.m_cLocation.Y < g_Console.getConsoleSize().Y - 1)
     {
-		if (maze[charX+1][charY] != '#') {
+		if (maze[charY+1][charX] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.Y++;
 			bSomethingHappened = true;
@@ -184,7 +189,7 @@ void moveCharacter()
     }
     if (g_abKeyPressed[K_RIGHT] && g_sChar.m_cLocation.X < g_Console.getConsoleSize().X - 1)
     {
-		if (maze[charX][charY+1] != '#') {
+		if (maze[charY][charX+1] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.X++;
 			bSomethingHappened = true;
@@ -195,6 +200,10 @@ void moveCharacter()
         g_sChar.m_bActive = !g_sChar.m_bActive;
         bSomethingHappened = true;
     }
+
+	if (bSomethingHappened) {
+		PickUpItems(g_sChar.m_cLocation);
+	}
 
     if (bSomethingHappened)
     {
@@ -247,11 +256,20 @@ void renderMap()
     int rows = 0;
 	int cols = 0;
 
-	if (0) {
+	if (levelCount == 1) {
 		maze1(rows, cols);
 	}
-	else if (2) {
+	else if (levelCount == 2) {
 		maze2(rows, cols);
+	}
+	else if (levelCount == 3) {
+		maze3(rows, cols);
+	}
+	else if (levelCount == 4) {
+		maze4(rows, cols);
+	}
+	else if (levelCount == 5) {
+		maze5(rows, cols);
 	}
 
 	mapgenerator(rows, cols);
@@ -263,7 +281,7 @@ void mapgenerator(int rows, int cols) {
 	COORD c;
 
 	for (int i = 0; i < rows; ++i) {
-		c.Y = i;
+		c.Y = i+1;
 		for (int j = 0; j < cols; ++j) {
 			c.X = j;
 			if (maze[i][j] == '@') {
@@ -287,7 +305,7 @@ void maze1(int& rows, int& cols) {
 
 	string map1[21] = {
 		"##################",
-		"# #@             #",
+		"# #@       $     #",
 		"# ### ######## # #",
 		"#     #  #   # # #",
 		"### ### ## # # # #",
@@ -353,6 +371,113 @@ void maze2(int& rows, int& cols) {
 
 }
 
+void maze3(int& rows, int& cols) {
+
+	string map3[15] = {
+		"###########################",
+		"#         #       #       #",
+		"######### # ############# #",
+		"#         #       #       #",
+		"##### ############# #######",
+		"# # # #   #   #   #       #",
+		"# # # # #   #   # #########",
+		"# # # ############# # #   #",
+		"# # # #             #   # #",
+		"# # # #             ##### #",
+		"# # # #              # #  #",
+		"# # # ############## # # ##",
+		"# # # #    *   #   # # #  #",
+		"# #   #        # # #   ####",
+		"###########################" };
+
+	rows = 15;
+	maze = new char * [rows];
+	cols = 27;
+
+	for (int i = 0; i < rows; ++i) {
+		maze[i] = new char[cols];
+		string temp = map3[i];
+		for (int j = 0; j < cols; ++j) {
+			maze[i][j] = temp[j];
+		}
+	}
+
+}
+
+void maze4(int& rows, int& cols) {
+
+	string map4[16] = {
+		"#############################",
+		"#   #         #       #     #",
+		"# # # # ### ###### #    #   #",
+		"# #   #          # # ## #####",
+		"# ##### # # ###### # #   #  #",
+		"# #     # #        ### # #  #",
+		"# # ################ ### #  #",
+		"# #     #          #     #  #",
+		"# ##### # *        # # # #  #",
+		"# #   # ############ # ###  #",
+		"# ### # #            #      #",
+		"#     # # ####### #### ###  #",
+		"#  ###### #    #       # #  #",
+		"## #      ###  # ####### # ##",
+		"#    #         # #          #",
+		"#############################" };
+
+	rows = 16;
+	maze = new char * [rows];
+	cols = 29;
+
+	for (int i = 0; i < rows; ++i) {
+		maze[i] = new char[cols];
+		string temp = map4[i];
+		for (int j = 0; j < cols; ++j) {
+			maze[i][j] = temp[j];
+		}
+	}
+
+}
+
+void maze5(int& rows, int& cols) {
+
+	string map5[22] = {
+		"##############################",
+		"#     #   #     #    #       #",
+		"# # ### # # ### # ## # #######",
+		"# # #   #   #   #  # # #     #",
+		"# ### ####### ###### # # ### #",
+		"# #   #   #   #   ## # # # # #",
+		"# # ### # ##### # #  # # #   #",
+		"# #     #       #    #   # # #",
+		"# ### ###################### #",
+		"#     #       *      #   # # #",
+		"#######              ##### # #",
+		"#   # #              #     # #",
+		"### # ########################",
+		"#     #      #       #     # #",
+		"############################ #",
+		"#             ##   #   #   # #",
+		"# # ## ########  #   #   #   #",
+		"# # #  #    # # ##############",
+		"#   ####### #                #",
+		"#####     # ################ #",
+		"#     # #   #                #",
+		"##############################" };
+
+	rows = 22;
+	maze = new char * [rows];
+	cols = 30;
+
+	for (int i = 0; i < rows; ++i) {
+		maze[i] = new char[cols];
+		string temp = map5[i];
+		for (int j = 0; j < cols; ++j) {
+			maze[i][j] = temp[j];
+		}
+	}
+
+}
+
 void renderCharacter()
 {
     // Draw the location of the character
@@ -381,9 +506,29 @@ void renderFramerate()
     c.X = 0;
     c.Y = 0;
     g_Console.writeToBuffer(c, ss.str(), 0x59);
+
+	// displays the item counter
+	// problem: itemcounter should be an int, but then writeToBuffer takes char.
+	c.X = 15;
+	c.Y = 0;
+	g_Console.writeToBuffer(c, ItemCounter, 0x59);
 }
 void renderToScreen()
 {
     // Writes the buffer to the console, hence you will see what you have written
     g_Console.flushBufferToConsole();
+}
+
+void PickUpItems(COORD c)
+{
+	int charY = g_sChar.m_cLocation.Y - 1;
+	int charX = g_sChar.m_cLocation.X;
+
+	if(maze[charY][charX] == '$')
+	{
+		//Beep (1440,30)
+		ItemCounter++;
+		maze[charY][charX] == ' ';
+	}
+
 }
