@@ -24,14 +24,13 @@ EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
 //map rendering
+//is there something we can do to not be declaring the variables globally?
 char ** maze = 0;
-int levelCount = 5;
-void maze1(int& rows, int& cols);
-void maze2(int& rows, int& cols);
-void maze3(int& rows, int& cols);
-void maze4(int& rows, int& cols);
-void maze5(int& rows, int& cols);
-void mapgenerator(int rows, int cols);
+int rows = 0;
+int cols = 0;
+int levelCount = 6;
+int ItemCounter = 0;
+int MaxItemCount = 0;
 
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
@@ -56,6 +55,33 @@ void init( void )
     a_Tel.a_Loc.Y = 2;
     a_Tel.b_Loc.X = 16;
     a_Tel.b_Loc.Y = 10;
+
+	if (levelCount == 1) {
+		maze1(rows, cols);
+	}
+	else if (levelCount == 2) {
+		maze2(rows, cols);
+	}
+	else if (levelCount == 3) {
+		maze3(rows, cols);
+	}
+	else if (levelCount == 4) {
+		maze4(rows, cols);
+	}
+	else if (levelCount == 5) {
+		maze5(rows, cols);
+	}
+	else if (levelCount == 6) {
+		maze6(rows, cols);
+	}
+
+	for (int i = 0; i < rows; ++i) {
+		for (int j = 0; j < cols; ++j) {
+			if (maze[i][j] == '$') {
+				++MaxItemCount;
+			}
+		}
+	}
 
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
@@ -150,7 +176,7 @@ void render()
 
 void splashScreenWait()    // waits for time to pass in splash screen
 {
-    if (g_dElapsedTime > 3.0) // wait for 3 seconds to switch to game mode, else do nothing
+    if (g_dElapsedTime > 1.0) // wait for 3 seconds to switch to game mode, else do nothing
         g_eGameState = S_GAME;
 }
 
@@ -212,6 +238,7 @@ void moveCharacter()
 
 	if (bSomethingHappened) {
 		checkTeleport(g_sChar.m_cLocation);
+		PickUpItems(g_sChar.m_cLocation);
 	}
 
     if (bSomethingHappened)
@@ -220,6 +247,7 @@ void moveCharacter()
         g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
     }
 }
+
 void processUserInput()
 {
     // quits the game if player hits the escape key
@@ -239,7 +267,7 @@ void renderSplashScreen()  // renders the splash screen
     COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
     c.X = c.X / 2 - 9;
-    g_Console.writeToBuffer(c, "A game in 3 seconds", 0x03);
+    g_Console.writeToBuffer(c, "A game in 1 second", 0x03);
     c.Y += 1;
     c.X = g_Console.getConsoleSize().X / 2 - 20;
     g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);
@@ -257,29 +285,6 @@ void renderGame()
 void renderMap()
 {
     // Set up sample colours, and output shadings
-    const WORD colors[] = {
-        0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
-        0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6
-    };
-
-    int rows = 0;
-	int cols = 0;
-
-	if (levelCount == 1) {
-		maze1(rows, cols);
-	}
-	else if (levelCount == 2) {
-		maze2(rows, cols);
-	}
-	else if (levelCount == 3) {
-		maze3(rows, cols);
-	}
-	else if (levelCount == 4) {
-		maze4(rows, cols);
-	}
-	else if (levelCount == 5) {
-		maze5(rows, cols);
-	}
 
 	mapgenerator(rows, cols);
 
@@ -449,7 +454,39 @@ void maze4(int& rows, int& cols) {
 
 void maze5(int& rows, int& cols) {
 
-	string map5[22] = {
+	string map5[14] = {
+		"#######################",
+		"#   #         #       #",
+		"# #   ##  ### ##### # #",
+		"# ####    # #     # # #",
+		"#    #### # ####      #",
+		"# # #   # #      # # ##",
+		"# # # ############ #  #",
+		"# # # #     *    # ####",
+		"###   ############ #  #",
+		"# #####            #  #",
+		"#     ######  # ####  #",
+		"##### #   #   #       #",
+		"#       #   # #   #   #",
+		"#######################" };
+
+	rows = 14;
+	maze = new char * [rows];
+	cols = 23;
+
+	for (int i = 0; i < rows; ++i) {
+		maze[i] = new char[cols];
+		string temp = map5[i];
+		for (int j = 0; j < cols; ++j) {
+			maze[i][j] = temp[j];
+		}
+	}
+
+}
+
+void maze6(int& rows, int& cols) {
+
+	string map6[22] = {
 		"##############################",
 		"#  @  #   #     #    #       #",
 		"# # ### # # ### # ## # #######",
@@ -461,7 +498,7 @@ void maze5(int& rows, int& cols) {
 		"# ### ###################### #",
 		"# @   #       * @    #   # # #",
 		"#######              ##### # #",
-		"#   # #              #     # #",
+		"#   # #        $     #     # #",
 		"### # ########################",
 		"#     #      #       #     # #",
 		"############################ #",
@@ -479,7 +516,7 @@ void maze5(int& rows, int& cols) {
 
 	for (int i = 0; i < rows; ++i) {
 		maze[i] = new char[cols];
-		string temp = map5[i];
+		string temp = map6[i];
 		for (int j = 0; j < cols; ++j) {
 			maze[i][j] = temp[j];
 		}
@@ -515,6 +552,13 @@ void renderFramerate()
     c.X = 0;
     c.Y = 0;
     g_Console.writeToBuffer(c, ss.str(), 0x59);
+
+	// displays the item counter
+	ss.str("");
+	ss << "$: " << ItemCounter << "/" << MaxItemCount;
+	c.X = 15;
+	c.Y = 0;
+	g_Console.writeToBuffer(c, ss.str(), 0x59);
 }
 
 void renderToScreen()
@@ -542,5 +586,20 @@ void checkTeleport(COORD c) {
                  g_sChar.m_cLocation.Y = a_Tel.a_Loc.Y;
                 }
          }
+
+}
+
+void PickUpItems(COORD c)
+{
+	int charY = g_sChar.m_cLocation.Y - 1;
+	int charX = g_sChar.m_cLocation.X;
+
+	if(maze[charY][charX] == '$')
+	{
+		//Beep (1440,30)
+		ItemCounter++;
+		maze[charY][charX] = ' ';
+		//still cannot delete the item.
+	}
 
 }

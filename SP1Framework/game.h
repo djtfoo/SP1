@@ -58,6 +58,17 @@ void renderCharacter();     // renders the character into the buffer
 void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
 
+//generating map
+void maze1(int& rows, int& cols);
+void maze2(int& rows, int& cols);
+void maze3(int& rows, int& cols);
+void maze4(int& rows, int& cols);
+void maze5(int& rows, int& cols);
+void maze6(int& rows, int& cols);
+void mapgenerator(int rows, int cols);
+
+//checking things on map
 void checkTeleport(COORD c);
+void PickUpItems(COORD c);
 
 #endif // _GAME_H
