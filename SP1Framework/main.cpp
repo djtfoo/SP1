@@ -47,6 +47,7 @@ void gameLoop()
         switch(seq)
         {
             case Play : displayGame(); break;
+			case Instructions : displayInstructions(); break;
             case Options : displayOptions(); break;
             case Exit : displayExit(); break;
         }
@@ -78,6 +79,9 @@ void displayMenu(Sequence &s)
     c.X = g_Console.getConsoleSize().X / 2 - 20;
     g_Console.writeToBuffer(c, "Press '1' to play Game", 0x09);
     c.Y += 1;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+    g_Console.writeToBuffer(c, "Press '2' for Instructions", 0x09);
+    c.Y += 1;
     c.X = g_Console.getConsoleSize().X / 2 - 20;
     g_Console.writeToBuffer(c, "Press '4' to go Options", 0x09);
     c.Y += 1;
@@ -92,7 +96,30 @@ void displayMenu(Sequence &s)
 
 void displayInstructions()
 {
+	clearScreen();
+	COORD c = g_Console.getConsoleSize();
+	c.Y /= 7;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	g_Console.writeToBuffer(c, "INSTRUCTIONS", 0x03);
+	c.Y += 4;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	g_Console.writeToBuffer(c, "Players' main objective is to escape the maze.", 0x08);
+	c.Y += 3;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	g_Console.writeToBuffer(c, "1) Arrow keys are for movement", 0x08);
+	c.Y += 3;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	g_Console.writeToBuffer(c, "2) Collect all objects in the maze", 0x08);
+	c.Y += 3;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	g_Console.writeToBuffer(c, "3) Escape the room after collecting ALL objects", 0x08);
+	c.Y += 4;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	g_Console.writeToBuffer(c, "Press any key to return", 0x08);
+	g_Console.flushBufferToConsole();
 
+	int i;
+	cin >> i;
 }
 
 void displayHighscore()
