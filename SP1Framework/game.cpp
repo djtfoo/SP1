@@ -14,6 +14,10 @@ double  g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
 
+//Teleporters
+Teleporters a_Tel;
+Teleporters b_Tel;
+
 // Game specific variables here
 SGameChar   g_sChar;
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
@@ -47,6 +51,12 @@ void init( void )
 
     g_sChar.m_cLocation.X = 1;
     g_sChar.m_cLocation.Y = 2;
+
+	a_Tel.a_Loc.X = 3;
+    a_Tel.a_Loc.Y = 2;
+    a_Tel.b_Loc.X = 16;
+    a_Tel.b_Loc.Y = 10;
+
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");
@@ -159,12 +169,12 @@ void moveCharacter()
 
     // Updating the location of the character based on the key press
     // providing a beep sound whenver we shift the character
-	int charX = g_sChar.m_cLocation.Y - 1;
-	int charY = g_sChar.m_cLocation.X;
+	int charY = g_sChar.m_cLocation.Y - 1;
+	int charX = g_sChar.m_cLocation.X;
 
     if (g_abKeyPressed[K_UP] && g_sChar.m_cLocation.Y > 0)
     {
-		if (maze[charX-1][charY] != '#') {
+		if (maze[charY-1][charX] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.Y--;
 			bSomethingHappened = true;
@@ -172,7 +182,7 @@ void moveCharacter()
     }
     if (g_abKeyPressed[K_LEFT] && g_sChar.m_cLocation.X > 0)
     {
-		if (maze[charX][charY-1] != '#') {
+		if (maze[charY][charX-1] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.X--;
 			bSomethingHappened = true;
@@ -180,7 +190,7 @@ void moveCharacter()
     }
     if (g_abKeyPressed[K_DOWN] && g_sChar.m_cLocation.Y < g_Console.getConsoleSize().Y - 1)
     {
-		if (maze[charX+1][charY] != '#') {
+		if (maze[charY+1][charX] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.Y++;
 			bSomethingHappened = true;
@@ -188,7 +198,7 @@ void moveCharacter()
     }
     if (g_abKeyPressed[K_RIGHT] && g_sChar.m_cLocation.X < g_Console.getConsoleSize().X - 1)
     {
-		if (maze[charX][charY+1] != '#') {
+		if (maze[charY][charX+1] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.X++;
 			bSomethingHappened = true;
@@ -199,6 +209,10 @@ void moveCharacter()
         g_sChar.m_bActive = !g_sChar.m_bActive;
         bSomethingHappened = true;
     }
+
+	if (bSomethingHappened) {
+		checkTeleport(g_sChar.m_cLocation);
+	}
 
     if (bSomethingHappened)
     {
@@ -437,7 +451,7 @@ void maze5(int& rows, int& cols) {
 
 	string map5[22] = {
 		"##############################",
-		"#     #   #     #    #       #",
+		"#  @  #   #     #    #       #",
 		"# # ### # # ### # ## # #######",
 		"# # #   #   #   #  # # #     #",
 		"# ### ####### ###### # # ### #",
@@ -445,7 +459,7 @@ void maze5(int& rows, int& cols) {
 		"# # ### # ##### # #  # # #   #",
 		"# #     #       #    #   # # #",
 		"# ### ###################### #",
-		"#     #       *      #   # # #",
+		"# @   #       * @    #   # # #",
 		"#######              ##### # #",
 		"#   # #              #     # #",
 		"### # ########################",
@@ -502,8 +516,31 @@ void renderFramerate()
     c.Y = 0;
     g_Console.writeToBuffer(c, ss.str(), 0x59);
 }
+
 void renderToScreen()
 {
     // Writes the buffer to the console, hence you will see what you have written
     g_Console.flushBufferToConsole();
+}
+
+void checkTeleport(COORD c) {
+
+	int Y = g_sChar.m_cLocation.Y - 1;
+	int X = g_sChar.m_cLocation.X;
+
+	 if (maze[Y][X] == '@')
+        {
+             if(g_sChar.m_cLocation.X == a_Tel.a_Loc.X  && g_sChar.m_cLocation.Y == a_Tel.a_Loc.Y)
+                {
+                     g_sChar.m_cLocation.X =a_Tel.b_Loc.X;
+                     g_sChar.m_cLocation.Y =a_Tel.b_Loc.Y;
+                }
+        
+            else if(g_sChar.m_cLocation.X == a_Tel.b_Loc.X  && g_sChar.m_cLocation.Y == a_Tel.b_Loc.Y)
+                {
+                  g_sChar.m_cLocation.X = a_Tel.a_Loc.X;
+                 g_sChar.m_cLocation.Y = a_Tel.a_Loc.Y;
+                }
+         }
+
 }
