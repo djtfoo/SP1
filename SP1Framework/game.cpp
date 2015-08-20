@@ -28,7 +28,8 @@ double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger k
 char ** maze = 0;
 int rows = 0;
 int cols = 0;
-int levelCount = 6;
+int levelCount = 1;
+bool levelClear = true;
 int ItemCounter = 0;
 int MaxItemCount = 0;
 
@@ -41,52 +42,19 @@ int MaxItemCount = 0;
 //--------------------------------------------------------------
 void init( void )
 {
-	g_bQuitGame = false;
-    // Set precision for floating point output
-    g_dElapsedTime = 0.0;
-    g_dBounceTime = 0.0;
+	
+	levelCount = 1;
+	// Set precision for floating point output
+	g_dElapsedTime = 0.0;
+	g_dBounceTime = 0.0;
 
-    // sets the initial state for the game
-    g_eGameState = S_SPLASHSCREEN;
+	// sets the initial state for the game
+	g_eGameState = S_SPLASHSCREEN;
 
-    g_sChar.m_cLocation.X = 1;
-    g_sChar.m_cLocation.Y = 2;
-
-	a_Tel.a_Loc.X = 3;
-    a_Tel.a_Loc.Y = 2;
-    a_Tel.b_Loc.X = 16;
-    a_Tel.b_Loc.Y = 10;
-
-	if (levelCount == 1) {
-		maze1(rows, cols);
-	}
-	else if (levelCount == 2) {
-		maze2(rows, cols);
-	}
-	else if (levelCount == 3) {
-		maze3(rows, cols);
-	}
-	else if (levelCount == 4) {
-		maze4(rows, cols);
-	}
-	else if (levelCount == 5) {
-		maze5(rows, cols);
-	}
-	else if (levelCount == 6) {
-		maze6(rows, cols);
-	}
-
-	for (int i = 0; i < rows; ++i) {
-		for (int j = 0; j < cols; ++j) {
-			if (maze[i][j] == '$') {
-				++MaxItemCount;
-			}
-		}
-	}
-
-    g_sChar.m_bActive = true;
+	g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");
+
 }
 
 //--------------------------------------------------------------
@@ -102,6 +70,71 @@ void shutdown( void )
     colour(FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 
     g_Console.clearBuffer();
+}
+
+void levelInit() {
+
+	if (levelClear && levelCount <= 6) {
+
+		g_sChar.m_cLocation.X = 1;
+		g_sChar.m_cLocation.Y = 2;
+
+		levelClear = false;
+		
+		maze = 0;
+
+		MaxItemCount = 0;
+		ItemCounter = 0;
+
+		a_Tel.a_Loc.X = 3;
+		a_Tel.a_Loc.Y = 2;
+		a_Tel.b_Loc.X = 16;
+		a_Tel.b_Loc.Y = 10;
+
+		/*switch (static_cast<GAMELEVELS>(levelCount)) {
+		case M1 : maze1(rows, cols); break;
+		case M2 : maze2(rows, cols); break;
+		case M3 : maze3(rows, cols); break;
+		case M4 : maze4(rows, cols); break;
+		case M5 : maze5(rows, cols); break;
+		case M6 : maze6(rows, cols); break;
+		case MAX_LEVEL : g_bQuitGame = true; levelClear = false; break;
+		}
+		*/
+
+		if (levelCount == 1) {
+			maze1(rows, cols);
+		}
+		else if (levelCount == 2) {
+			maze2(rows, cols);
+		}
+		else if (levelCount == 3) {
+			maze3(rows, cols);
+		}
+		else if (levelCount == 4) {
+			maze4(rows, cols);
+		}
+		else if (levelCount == 5) {
+			maze5(rows, cols);
+		}
+		else if (levelCount == 6) {
+			maze6(rows, cols);
+		}
+
+		for (int i = 0; i < rows; ++i) {
+			for (int j = 0; j < cols; ++j) {
+				if (maze[i][j] == '$') {
+					++MaxItemCount;
+				}
+			}
+		}
+
+	}
+
+	else if (levelClear && levelCount > 6) {
+		g_bQuitGame = true;
+	}
+
 }
 
 //--------------------------------------------------------------
@@ -240,6 +273,7 @@ void moveCharacter()
 	if (bSomethingHappened) {
 		checkTeleport(g_sChar.m_cLocation);
 		PickUpItems(g_sChar.m_cLocation);
+		exitLevel(g_sChar.m_cLocation);
 	}
 
     if (bSomethingHappened)
@@ -252,8 +286,10 @@ void moveCharacter()
 void processUserInput()
 {
     // quits the game if player hits the escape key
-    if (g_abKeyPressed[K_ESCAPE])
-        g_bQuitGame = true;    
+    if (g_abKeyPressed[K_ESCAPE]) {
+        g_bQuitGame = true;
+		levelClear = true;
+	}
 }
 
 void clearScreen()
@@ -322,13 +358,13 @@ void maze1(int& rows, int& cols) {
 		"##################",
 		"# #@             #",
 		"# ### ######## # #",
-		"#     #  #   # # #",
+		"#    $#  #   # # #",
 		"### ### ## # # # #",
 		"#   #    # # # # #",
 		"# ###### # #@# # #",
 		"#     #@   ### ###",
 		"##### ######     #",
-		"#$# # # *  # #####",
+		"# # #*# *  # #####",
 		"# # ###    #     #",
 		"#   #@#    ##### #",
 		"# ### #    #     #",
@@ -359,15 +395,15 @@ void maze2(int& rows, int& cols) {
 
 	string map2[13] = {
 		"########################",
-		"#      #       #       #",
+		"#     $#       #       #",
 		"#### # # ##### # ##### #",
 		"#    #    ## # #     # #",
 		"# ########## # ##### # #",
 		"#     @#     #     # # #",
 		"#### ############# # # #",
-		"#@   #@    *     #@#$#@#",
+		"#@   #@    *     #*# #@#",
 		"########################",
-		"#     @#   $#@         #",
+		"#     @#    #@         #",
 		"#  #####  ###########  #",
 		"#     @#               #",
 		"########################" };
@@ -392,7 +428,7 @@ void maze3(int& rows, int& cols) {
 		"###########################",
 		"#         #       #       #",
 		"######### # ############# #",
-		"#         #       #       #",
+		"#*       $#       #       #",
 		"##### ############# #######",
 		"# # # #   #   #   #       #",
 		"# # # # #   #   # #########",
@@ -436,7 +472,7 @@ void maze4(int& rows, int& cols) {
 		"#     # # ####### #### ###  #",
 		"#  ###### #    #       # #  #",
 		"## #      ###  # ####### # ##",
-		"#    #         # #          #",
+		"#$  *#         # #          #",
 		"#############################" };
 
 	rows = 16;
@@ -458,9 +494,9 @@ void maze5(int& rows, int& cols) {
 	string map5[14] = {
 		"#######################",
 		"#   #         #       #",
-		"# #   ##  ### ##### # #",
-		"# ####    # #     # # #",
-		"#    #### # ####      #",
+		"# #  $##  ### ##### # #",
+		"# ####    # #$    # # #",
+		"#    #### # #### *    #",
 		"# # #   # #      # # ##",
 		"# # # ############ #  #",
 		"# # # #     *    # ####",
@@ -600,7 +636,20 @@ void PickUpItems(COORD c)
 		//Beep (1440,30)
 		ItemCounter++;
 		maze[charY][charX] = ' ';
-		//still cannot delete the item.
+	}
+
+}
+
+void exitLevel(COORD c) {
+
+	int charY = g_sChar.m_cLocation.Y - 1;
+	int charX = g_sChar.m_cLocation.X;
+
+	if(maze[charY][charX] == '*' && ItemCounter == MaxItemCount)
+	{
+		//Beep (1440,30)
+		++levelCount;
+		levelClear = true;
 	}
 
 }

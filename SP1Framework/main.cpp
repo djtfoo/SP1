@@ -247,12 +247,14 @@ void displayExit()
 void displayGame( void )
 {
     g_Timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-    init();
+	init();
 	while (!g_bQuitGame)      // run this loop until user wants to quit 
-    {        
-        getInput();                         // get keyboard input
-        update(g_Timer.getElapsedTime());   // update the game
-        render();                           // render the graphics output to screen
-        g_Timer.waitUntil(gc_uFrameTime);   // Frame rate limiter. Limits each frame to a specified time in ms.      
-    }
+    {
+		levelInit();
+		getInput();                         // get keyboard input
+		update(g_Timer.getElapsedTime());   // update the game
+		render();                           // render the graphics output to screen
+		g_Timer.waitUntil(gc_uFrameTime);   // Frame rate limiter. Limits each frame to a specified time in ms.      
+	}
+	g_bQuitGame = false;
 }

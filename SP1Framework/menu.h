@@ -11,6 +11,7 @@ enum Sequence
     Exit,             //5
     MAX_SEQUENCE      //Last (6)
 };
+
 const char* menu[] = 
 {
    "Play",

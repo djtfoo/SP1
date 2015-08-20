@@ -27,6 +27,17 @@ enum EGAMESTATES
     S_COUNT
 };
 
+enum GAMELEVELS
+{
+	M1 = 1,
+	M2,
+	M3,
+	M4,
+	M5,
+	M6,
+	MAX_LEVEL
+};
+
 // struct for the game character
 struct SGameChar
 {
@@ -59,6 +70,7 @@ void renderFramerate();     // renders debug information, frame rate, elapsed ti
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
 
 //generating map
+void levelInit();
 void maze1(int& rows, int& cols);
 void maze2(int& rows, int& cols);
 void maze3(int& rows, int& cols);
@@ -70,5 +82,6 @@ void mapgenerator(int rows, int cols);
 //checking things on map
 void checkTeleport(COORD c);
 void PickUpItems(COORD c);
+void exitLevel(COORD c);
 
 #endif // _GAME_H
