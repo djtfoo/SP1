@@ -5,6 +5,7 @@
 #include "game.h"
 #include "menu.h"
 #include <iostream>
+#include <sstream>
 
 using std::cin;
 using std::cout;
@@ -28,7 +29,6 @@ Console g_Console(80, 25, "SP1 Framework");
 // You should not be modifying this unless you know what you are doing
 int main( void )
 {
-    init();      // initialize your variables
     gameLoop();  // main loop
     shutdown();  // do clean up, if any. free memory.
     
@@ -48,11 +48,12 @@ void gameLoop()
         {
             case Play : displayGame(); break;
 			case Instructions : displayInstructions(); break;
+			case HighScore : displayHighscore(); break;
             case Options : displayOptions(); break;
             case Exit : displayExit(); break;
         }
 
-		if (seq != Menu && seq != Exit) {
+		if (seq != Menu) {
 			seq = Menu;
 		}
     }
@@ -82,6 +83,9 @@ void displayMenu(Sequence &s)
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
     g_Console.writeToBuffer(c, "Press '2' for Instructions", 0x09);
     c.Y += 1;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+    g_Console.writeToBuffer(c, "Press '3' for High Score", 0x09);
+	c.Y += 1;
     c.X = g_Console.getConsoleSize().X / 2 - 20;
     g_Console.writeToBuffer(c, "Press '4' to go Options", 0x09);
     c.Y += 1;
@@ -124,7 +128,40 @@ void displayInstructions()
 
 void displayHighscore()
 {
+	clearScreen();
+	COORD c = g_Console.getConsoleSize();
+	c.Y /= 10;
+    c.X = g_Console.getConsoleSize().X / 1.5 - 20;
+    g_Console.writeToBuffer(c, "HIGH SCORE", 0x03);
+	c.Y /= 3;
+	c.X = 0;
+	for (int i = 3; i < 80; ++i) {
+		c.X++;
+		g_Console.writeToBuffer(c, "_", 0x08);
+		if (i == 80) {
+			break;
+		}
+	}
+	c.Y += 4;
+	c.X = 0;
+	for (int i = 3; i < 80; ++i) {
+		c.X++;
+		g_Console.writeToBuffer(c, "_", 0x08);
+	}
 
+	c.Y += 4;
+	c.X = 0;
+	for (int i = 1; i < 11; ++i) {
+		c.Y++;
+		std::ostringstream ss;
+		ss.str("");
+		ss << i;
+		g_Console.writeToBuffer(c, ss.str(), 0x08);
+	}
+	g_Console.flushBufferToConsole();
+
+	int i;
+	cin >> i;
 }
 
 void userInputOPT(SequenceOPT &s)
@@ -210,11 +247,12 @@ void displayExit()
 void displayGame( void )
 {
     g_Timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-    while (!g_bQuitGame)      // run this loop until user wants to quit 
+    init();
+	while (!g_bQuitGame)      // run this loop until user wants to quit 
     {        
         getInput();                         // get keyboard input
         update(g_Timer.getElapsedTime());   // update the game
         render();                           // render the graphics output to screen
         g_Timer.waitUntil(gc_uFrameTime);   // Frame rate limiter. Limits each frame to a specified time in ms.      
-    }    
+    }
 }
