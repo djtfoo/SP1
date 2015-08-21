@@ -97,7 +97,6 @@ void displayMenu(Sequence &s)
 	
 }
 
-
 void displayInstructions()
 {
 	clearScreen();
@@ -230,8 +229,6 @@ void displaySound(){
 
 }
 
-
-
 void displayExit()
 {
 
@@ -256,5 +253,6 @@ void displayGame( void )
 		render();                           // render the graphics output to screen
 		g_Timer.waitUntil(gc_uFrameTime);   // Frame rate limiter. Limits each frame to a specified time in ms.      
 	}
-	g_bQuitGame = false;
+	clearGameScreen();
+	g_bQuitGame = false;		//to enable player to play game again
 }

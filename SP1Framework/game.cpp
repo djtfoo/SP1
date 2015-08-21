@@ -3,6 +3,7 @@
 //
 #include "game.h"
 #include "Framework\console.h"
+#include "Framework\timer.h"
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -22,13 +23,15 @@ Teleporters b_Tel;
 SGameChar   g_sChar;
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
+double	playTime;		//to record the gameplay time only
+double	BufferTime;		//for splashscreen
 
 //map rendering
 //is there something we can do to not be declaring the variables globally?
 char ** maze = 0;
 int rows = 0;
 int cols = 0;
-int levelCount = 1;
+int levelCount;
 bool levelClear = true;
 int ItemCounter = 0;
 int MaxItemCount = 0;
@@ -43,17 +46,19 @@ int MaxItemCount = 0;
 void init( void )
 {
 	
-	levelCount = 1;
 	// Set precision for floating point output
 	g_dElapsedTime = 0.0;
 	g_dBounceTime = 0.0;
+	playTime = 0.0;
+	BufferTime = 3.0;
 
 	// sets the initial state for the game
+	levelCount = 1;
 	g_eGameState = S_SPLASHSCREEN;
 
 	g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
-    g_Console.setConsoleFont(0, 16, L"Consolas");
+    g_Console.setConsoleFont(0, 25, L"Consolas");
 
 }
 
@@ -86,6 +91,7 @@ void levelInit() {
 		MaxItemCount = 0;
 		ItemCounter = 0;
 
+		//randomising of teleporters here
 		a_Tel.a_Loc.X = 3;
 		a_Tel.a_Loc.Y = 2;
 		a_Tel.b_Loc.X = 16;
@@ -131,10 +137,6 @@ void levelInit() {
 
 	}
 
-	else if (levelClear && levelCount > 6) {
-		g_bQuitGame = true;
-	}
-
 }
 
 //--------------------------------------------------------------
@@ -174,17 +176,19 @@ void getInput( void )
 //--------------------------------------------------------------
 void update(double dt)
 {
-    // get the delta time
-    g_dElapsedTime += dt;
-    g_dDeltaTime = dt;
+	
+	// get the delta time
+	g_dElapsedTime += dt;
+	g_dDeltaTime = dt;
 
-    switch (g_eGameState)
-    {
-        case S_SPLASHSCREEN : splashScreenWait(); // game logic for the splash screen
-            break;
-        case S_GAME: gameplay(); // gameplay logic when we are in the game
-            break;
-    }
+	switch (g_eGameState)
+	{
+		case S_SPLASHSCREEN : splashScreenWait();
+			break;
+		case S_GAME : playTime += dt; gameplay();	// gameplay logic when we are in the game
+			break;
+	}
+
 }
 //--------------------------------------------------------------
 // Purpose  : Render function is to update the console screen
@@ -206,12 +210,7 @@ void render()
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
-}
 
-void splashScreenWait()    // waits for time to pass in splash screen
-{
-    if (g_dElapsedTime > 1.0) // wait for 3 seconds to switch to game mode, else do nothing
-        g_eGameState = S_GAME;
 }
 
 void gameplay()            // gameplay logic
@@ -298,19 +297,45 @@ void clearScreen()
     g_Console.clearBuffer(0x1F);
 }
 
+void splashScreenWait() {
+
+	if (g_dElapsedTime > BufferTime) {
+		g_eGameState = S_GAME;
+	}
+
+}
+
 void renderSplashScreen()  // renders the splash screen
 {
-	//we can use this to say "LEVEL 1", etc
-    COORD c = g_Console.getConsoleSize();
+
+	COORD c = g_Console.getConsoleSize();
+	c.Y /= 3;
+	c.X = c.X / 2 - 9;
+	std::ostringstream ss;
+	ss << std::fixed << std::setprecision(3);
+	ss.str("");
+	ss << "Level " << levelCount;
+	g_Console.writeToBuffer(c, ss.str(), 0x03);
+	c.Y += 1;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);
+	c.Y += 1;
+	c.X = g_Console.getConsoleSize().X / 2 - 9;
+	g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x09);
+
+}
+
+void clearGameScreen() {
+
+	clearScreen();
+	COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
-    c.X = c.X / 2 - 9;
-    g_Console.writeToBuffer(c, "A game in 1 second", 0x03);
-    c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 20;
-    g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);
-    c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 9;
-    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x09);
+    c.X = c.X / 2;
+    g_Console.writeToBuffer(c, "YOU WIN!", 0x03);
+	g_Console.flushBufferToConsole();
+
+	Sleep(3000);
+
 }
 
 void renderGame()
@@ -585,7 +610,7 @@ void renderFramerate()
 
     // displays the elapsed time
     ss.str("");
-    ss << g_dElapsedTime << "secs";
+    ss << playTime << "secs";
     c.X = 0;
     c.Y = 0;
     g_Console.writeToBuffer(c, ss.str(), 0x59);
@@ -648,8 +673,15 @@ void exitLevel(COORD c) {
 	if(maze[charY][charX] == '*' && ItemCounter == MaxItemCount)
 	{
 		//Beep (1440,30)
-		++levelCount;
+		if (levelCount == 6) {
+			g_bQuitGame = true;
+		}
+		else {
+			++levelCount;
+		}
 		levelClear = true;
+		g_eGameState = S_SPLASHSCREEN;
+		BufferTime = g_dElapsedTime + 3.0;
 	}
 
 }
