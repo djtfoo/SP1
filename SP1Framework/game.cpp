@@ -22,6 +22,7 @@ SGameChar   g_sChar;
 Enemy   g_Enemy;
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
+double  g_dBounceTimeEnemy;
 double	playTime;		//to record the gameplay time only
 double	BufferTime;		//for splashscreen
 
@@ -51,6 +52,7 @@ void init( void )
 	// Set precision for floating point output
 	g_dElapsedTime = 0.0;
 	g_dBounceTime = 0.0;
+	g_dBounceTimeEnemy = 0.0;
 	playTime = 0.0;
 	BufferTime = 3.0;
 
@@ -373,7 +375,7 @@ void mapgenerator(int rows, int cols) {
 				g_Console.writeToBuffer(c, '*', 0x1D);
 			}
 			else if (maze[i][j] == '#') {
-				g_Console.writeToBuffer(c, 178, 0x0F);
+				g_Console.writeToBuffer(c, (char)178, 0x0F);
 			}
 		}
 	}
@@ -689,32 +691,60 @@ void renderCharacter()
 void renderEnemy()
 {
     WORD enemyColor = 0x0C;
-    g_Console.writeToBuffer(g_Enemy.m_Enemy, (char)1, enemyColor);
+    g_Console.writeToBuffer(g_Enemy.m_Enemy, (char)49, enemyColor);
 }
 
 void moveEnemy()
 {
+    bool bEnemyMoved = false;
+    if (g_dBounceTimeEnemy > g_dElapsedTime)
+        return;
+
+    //Get the enemy coordinates
     int eX = g_Enemy.m_Enemy.X;
     int eY = g_Enemy.m_Enemy.Y-1;
 
+    //If enemy next X position is not a wall
+    //Move 
     if (maze[eY][eX+1] != '#')
     {
         g_Enemy.m_Enemy.X++;
-    }
-    else if (maze[eY][eX+1] == '#')
-    {
-        g_Enemy.m_Enemy.X--;
+		bEnemyMoved = true;
     }
 
+    else if(maze[eY][eX-1] != '#')
+    {
+        g_Enemy.m_Enemy.X--;
+		bEnemyMoved = true;
+    }
+
+	if (maze[eY][eX+1] == '#')
+	{
+		g_Enemy.m_Enemy.X++;
+		bEnemyMoved = true;
+	}
+	else if (maze[eY][eX-1] == '#')
+	{
+		g_Enemy.m_Enemy.X--;
+		bEnemyMoved = true;
+	}
+
+    //Collision
     int gX = g_sChar.m_cLocation.X;
     int gY = g_sChar.m_cLocation.Y;
 
     //If character touches the enemy, spawn the character back to starting location
-    /*if (g_sChar.m_cLocation.X == g_Enemy.m_Enemy.X)
+    if (g_sChar.m_cLocation.X == g_Enemy.m_Enemy.X && g_sChar.m_cLocation.Y == g_Enemy.m_Enemy.Y)
     {
         g_sChar.m_cLocation.X = 1;
         g_sChar.m_cLocation.Y = 2;
-    }*/
+    }
+
+	if (bEnemyMoved)
+    {
+        // set the bounce time to some time in the future to prevent accidental triggers
+        g_dBounceTimeEnemy = g_dElapsedTime + 0.5;
+    }
 }
 
 void renderFramerate()
@@ -769,6 +799,7 @@ void checkTrap(COORD c) {
 
 }
 
+//Shania
 void PickUpItems(COORD c)
 {
 	int charY = g_sChar.m_cLocation.Y - 1;
@@ -783,6 +814,7 @@ void PickUpItems(COORD c)
 
 }
 
+//Jing Ting
 void exitLevel(COORD c) {
 
 	int charY = g_sChar.m_cLocation.Y - 1;

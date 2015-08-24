@@ -47,6 +47,7 @@ int input;
 //options
 void displayOptions();
 void displaySound();
+void userInputSOUND();
 
 struct highScore
 {

@@ -290,9 +290,22 @@ void displaySound(){
 	g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x09);
 	g_Console.flushBufferToConsole();
 
-	//userInputSOUND();
+	userInputSOUND();
+
+}
+
+void userInputSOUND()
+{
 	int i;
 	cin >> i;
+	if(i == 1)
+	{
+		PlaySound( "music.wav", NULL, SND_LOOP | SND_ASYNC); 
+	}
+	else
+	{
+		PlaySound(NULL,NULL,0);
+	}
 
 }
 
