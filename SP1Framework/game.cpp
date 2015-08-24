@@ -23,6 +23,7 @@ double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger k
 char ** maze = 0;
 int levelCount = 1;
 int ItemCounter = 0;
+
 void maze1(int& rows, int& cols);
 void maze2(int& rows, int& cols);
 void maze3(int& rows, int& cols);
@@ -160,8 +161,10 @@ void moveCharacter()
 
     // Updating the location of the character based on the key press
     // providing a beep sound whenver we shift the character
-	int charY = g_sChar.m_cLocation.Y - 1;
-	int charX = g_sChar.m_cLocation.X;
+
+    int charY = g_sChar.m_cLocation.Y - 1;
+    int charX = g_sChar.m_cLocation.X;
+
 
     if (g_abKeyPressed[K_UP] && g_sChar.m_cLocation.Y > 0)
     {
