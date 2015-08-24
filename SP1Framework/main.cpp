@@ -13,7 +13,6 @@
 using std::vector;
 using std::string;
 using std::ifstream;
-using std::ofstream;
 using std::cin;
 
 CStopWatch g_Timer;                            // Timer function to keep track of time and the frame rate

@@ -79,7 +79,6 @@ void renderCharacter();     // renders the character into the buffer
 void renderEnemy();
 void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
-
 void moveEnemy();
 
 void clearGameScreen();
@@ -99,6 +98,5 @@ void randomiseTeleporters(int rows, int cols);
 void checkTrap(COORD c);
 void PickUpItems(COORD c);
 void exitLevel(COORD c);
-
 
 #endif // _GAME_H
