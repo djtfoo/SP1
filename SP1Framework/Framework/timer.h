@@ -29,4 +29,6 @@ public:
     void    waitUntil         ( long long llTime);     // wait until this time in milliseconds has passed
 };
 
+extern CStopWatch g_Timer;
+
 #endif // _TIMER_H

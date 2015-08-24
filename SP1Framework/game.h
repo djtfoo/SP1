@@ -27,11 +27,38 @@ enum EGAMESTATES
     S_COUNT
 };
 
+enum GAMELEVELS
+{
+	M1 = 1,
+	M2,
+	M3,
+	M4,
+	M5,
+	M6,
+	MAX_LEVEL
+};
+
 // struct for the game character
 struct SGameChar
 {
     COORD m_cLocation;
     bool  m_bActive;
+};
+
+struct Enemy
+{
+    COORD m_Enemy;
+};
+
+struct Traps
+{   
+	COORD Loc;
+};
+
+struct ExitTeleporter
+{
+	COORD own_Loc;
+	COORD warp_Loc;
 };
 
 void init        ( void );      // initialize your variables, allocate memory, etc
@@ -49,8 +76,29 @@ void renderSplashScreen();  // renders the splash screen
 void renderGame();          // renders the game stuff
 void renderMap();           // renders the map to the buffer first
 void renderCharacter();     // renders the character into the buffer
+void renderEnemy();
 void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
+
+void moveEnemy();
+
+void clearGameScreen();
+
+//generating map
+void levelInit();
+void maze1(int& rows, int& cols);
+void maze2(int& rows, int& cols);
+void maze3(int& rows, int& cols);
+void maze4(int& rows, int& cols);
+void maze5(int& rows, int& cols);
+void maze6(int& rows, int& cols);
+void mapgenerator(int rows, int cols);
+void randomiseTeleporters(int rows, int cols);
+
+//checking things on map
+void checkTrap(COORD c);
 void PickUpItems(COORD c);
+void exitLevel(COORD c);
+
 
 #endif // _GAME_H

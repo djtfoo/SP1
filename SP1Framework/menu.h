@@ -11,6 +11,7 @@ enum Sequence
     Exit,             //5
     MAX_SEQUENCE      //Last (6)
 };
+
 const char* menu[] = 
 {
    "Play",
@@ -43,6 +44,16 @@ void displayHighscore();
 void displayExit();
 int input;
 
-//options.cpp
+//options
 void displayOptions();
 void displaySound();
+void userInputSOUND();
+
+struct highScore
+{
+	double time;
+	std::string name;
+};
+
+//highscore
+void toCpp();
