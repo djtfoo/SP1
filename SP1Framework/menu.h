@@ -44,6 +44,15 @@ void displayHighscore();
 void displayExit();
 int input;
 
-//options.cpp
+//options
 void displayOptions();
 void displaySound();
+
+struct highScore
+{
+	double time;
+	std::string name;
+};
+
+//highscore
+void toCpp();

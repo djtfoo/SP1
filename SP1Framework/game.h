@@ -45,10 +45,20 @@ struct SGameChar
     bool  m_bActive;
 };
 
-struct Teleporters
+struct Enemy
+{
+    COORD m_Enemy;
+};
+
+struct Traps
 {   
-    COORD a_Loc;
-    COORD b_Loc;
+	COORD Loc;
+};
+
+struct ExitTeleporter
+{
+	COORD own_Loc;
+	COORD warp_Loc;
 };
 
 void init        ( void );      // initialize your variables, allocate memory, etc
@@ -66,8 +76,10 @@ void renderSplashScreen();  // renders the splash screen
 void renderGame();          // renders the game stuff
 void renderMap();           // renders the map to the buffer first
 void renderCharacter();     // renders the character into the buffer
+void renderEnemy();
 void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
+void moveEnemy();
 
 void clearGameScreen();
 
@@ -80,9 +92,10 @@ void maze4(int& rows, int& cols);
 void maze5(int& rows, int& cols);
 void maze6(int& rows, int& cols);
 void mapgenerator(int rows, int cols);
+void randomiseTeleporters(int rows, int cols);
 
 //checking things on map
-void checkTeleport(COORD c);
+void checkTrap(COORD c);
 void PickUpItems(COORD c);
 void exitLevel(COORD c);
 

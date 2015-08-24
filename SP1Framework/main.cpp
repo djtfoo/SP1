@@ -6,10 +6,15 @@
 #include "menu.h"
 #include <iostream>
 #include <sstream>
+#include <fstream>
+#include <string>
+#include <vector>
 
+using std::vector;
+using std::string;
+using std::ifstream;
+using std::ofstream;
 using std::cin;
-using std::cout;
-using std::endl;
 
 CStopWatch g_Timer;                            // Timer function to keep track of time and the frame rate
 bool g_bQuitGame = false;                    // Set to true if you want to quit the game
@@ -70,27 +75,30 @@ void userInput (Sequence &s) //If s is modified, seq is modified as well
 
 void displayMenu(Sequence &s)
 {
-	//use g_Console.writeToBuffer
     clearScreen();
 	COORD c = g_Console.getConsoleSize();
-    c.Y /= 3;
-    c.X = c.X / 2;
-    g_Console.writeToBuffer(c, "MENU", 0x03);
+    
+    c.Y /= 4;
+    c.X = c.X / 2 - 3;
+    g_Console.writeToBuffer(c, "ESCAPEE", 0x13);
+	c.Y += 2;
+    c.X = g_Console.getConsoleSize().X / 2 - 2;
+    g_Console.writeToBuffer (c,"MENU", 0x13);
+    c.Y += 2;
+    c.X = g_Console.getConsoleSize().X / 2 - 11;
+    g_Console.writeToBuffer(c, "Press '1' to play Game", 0x04);
+    c.Y += 1;
+	c.X = g_Console.getConsoleSize().X / 2 - 11;
+    g_Console.writeToBuffer(c, "Press '2' for Instructions", 0x04);
+    c.Y += 1;
+	c.X = g_Console.getConsoleSize().X / 2 - 11;
+    g_Console.writeToBuffer(c, "Press '3' for High Score", 0x04);
 	c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 20;
-    g_Console.writeToBuffer(c, "Press '1' to play Game", 0x09);
+    c.X = g_Console.getConsoleSize().X / 2 - 11;
+    g_Console.writeToBuffer(c, "Press '4' to go Options", 0x04);
     c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 20;
-    g_Console.writeToBuffer(c, "Press '2' for Instructions", 0x09);
-    c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 20;
-    g_Console.writeToBuffer(c, "Press '3' for High Score", 0x09);
-	c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 20;
-    g_Console.writeToBuffer(c, "Press '4' to go Options", 0x09);
-    c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 9;
-    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x09);
+    c.X = g_Console.getConsoleSize().X / 2 - 11;
+    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x04);
 	g_Console.flushBufferToConsole();
 
 	userInput(s);
@@ -101,22 +109,22 @@ void displayInstructions()
 {
 	clearScreen();
 	COORD c = g_Console.getConsoleSize();
-	c.Y /= 7;
-	c.X = g_Console.getConsoleSize().X / 2 - 20;
-	g_Console.writeToBuffer(c, "INSTRUCTIONS", 0x03);
-	c.Y += 4;
+	c.Y /= 3;
+	c.X = g_Console.getConsoleSize().X / 2 - 3;
+	g_Console.writeToBuffer(c, "INSTRUCTIONS", 0x13);
+	c.Y += 1;
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
 	g_Console.writeToBuffer(c, "Players' main objective is to escape the maze.", 0x08);
-	c.Y += 3;
+	c.Y += 1;
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
 	g_Console.writeToBuffer(c, "1) Arrow keys are for movement", 0x08);
-	c.Y += 3;
+	c.Y += 1;
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
 	g_Console.writeToBuffer(c, "2) Collect all objects in the maze", 0x08);
-	c.Y += 3;
+	c.Y += 1;
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
 	g_Console.writeToBuffer(c, "3) Escape the room after collecting ALL objects", 0x08);
-	c.Y += 4;
+	c.Y += 1;
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
 	g_Console.writeToBuffer(c, "Press any key to return", 0x08);
 	g_Console.flushBufferToConsole();
@@ -128,9 +136,10 @@ void displayInstructions()
 void displayHighscore()
 {
 	clearScreen();
+	toCpp();
 	COORD c = g_Console.getConsoleSize();
 	c.Y /= 10;
-    c.X = g_Console.getConsoleSize().X / 1.5 - 20;
+    c.X = g_Console.getConsoleSize().X / 1 - 20;
     g_Console.writeToBuffer(c, "HIGH SCORE", 0x03);
 	c.Y /= 3;
 	c.X = 0;
@@ -148,8 +157,8 @@ void displayHighscore()
 		g_Console.writeToBuffer(c, "_", 0x08);
 	}
 
-	c.Y += 4;
-	c.X = 0;
+	c.Y += 2;
+	c.X = c.X / 2;
 	for (int i = 1; i < 11; ++i) {
 		c.Y++;
 		std::ostringstream ss;
@@ -157,10 +166,68 @@ void displayHighscore()
 		ss << i;
 		g_Console.writeToBuffer(c, ss.str(), 0x08);
 	}
+
+	c.Y += 4;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	g_Console.writeToBuffer(c, "Press any key to return", 0x08);
+	
 	g_Console.flushBufferToConsole();
 
 	int i;
 	cin >> i;
+}
+
+void toCpp()
+{
+	// timings copied to displayHighscore
+	ifstream inData;
+	string data;
+	vector<highScore> highS;
+
+	inData.open ("Timings.txt");
+
+	while (!inData.eof()) {
+		getline (inData, data);
+		std::istringstream tempData(data);
+		string tempName, tempTime;
+		tempData >> tempName;
+		tempData >> tempTime;
+
+		highScore temp;
+		temp.time = std::stod(tempTime);
+		temp.name = tempName;
+		highS.push_back(temp);
+	}
+
+	inData.close();
+
+	for (unsigned int i = 0; i < highS.size(); ++i) {
+		for (unsigned int j = 0; j < highS.size() - 1; ++j) {
+			highScore current = highS[j];
+			highScore next = highS[j+1];
+			if (current.time > next.time) {
+				highScore temp = current;
+				highS[j] = next;
+				highS[j+1] = temp;
+			}
+		}
+	}
+
+	COORD c = g_Console.getConsoleSize();
+	c.Y = 7;
+	c.X = g_Console.getConsoleSize().X / 2;
+	std::ostringstream ss;
+
+	for (unsigned int i = 0; i < highS.size(); ++i, ++c.Y) {
+		highScore temp = highS[i];
+		ss.str("");
+		ss << temp.name << " " << temp.time;
+		g_Console.writeToBuffer(c, ss.str(), 0x1F);
+		if (i == 9) {
+			break;
+		}
+	}
+
 }
 
 void userInputOPT(SequenceOPT &s)
@@ -182,13 +249,13 @@ void displayOptions() {
 
 		COORD c = g_Console.getConsoleSize();
 		c.Y /= 3;
-		c.X = c.X / 2;
-		g_Console.writeToBuffer(c, "OPTIONS", 0x03);
+		c.X = c.X / 2 - 2;
+		g_Console.writeToBuffer(c, "OPTIONS", 0x13);
 		c.Y += 1;
-		c.X = g_Console.getConsoleSize().X / 2 - 20;
+		c.X = g_Console.getConsoleSize().X / 2 - 11;
 		g_Console.writeToBuffer(c, "Press '1' for Sound", 0x09);
 		c.Y += 1;
-		c.X = g_Console.getConsoleSize().X / 2 - 9;
+		c.X = g_Console.getConsoleSize().X / 2 - 11;
 		g_Console.writeToBuffer(c, "Press '2' to go back to Main Menu", 0x09);
 		g_Console.flushBufferToConsole();
 
@@ -213,13 +280,13 @@ void displaySound(){
 	clearScreen();
 	COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
-    c.X = c.X / 2;
-    g_Console.writeToBuffer(c, "EDIT SOUND HERE", 0x03);
+    c.X = c.X / 2 - 6;
+    g_Console.writeToBuffer(c, "EDIT SOUND HERE", 0x13);
 	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	c.X = g_Console.getConsoleSize().X / 2 - 11;
 	g_Console.writeToBuffer(c, "Press '1' to switch on sound", 0x09);
 	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	c.X = g_Console.getConsoleSize().X / 2 - 11;
 	g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x09);
 	g_Console.flushBufferToConsole();
 
@@ -253,6 +320,5 @@ void displayGame( void )
 		render();                           // render the graphics output to screen
 		g_Timer.waitUntil(gc_uFrameTime);   // Frame rate limiter. Limits each frame to a specified time in ms.      
 	}
-	clearGameScreen();
 	g_bQuitGame = false;		//to enable player to play game again
 }

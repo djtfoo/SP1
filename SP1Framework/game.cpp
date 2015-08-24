@@ -8,19 +8,18 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <vector>
 
 using std::string;
+using std::vector;
 
 double  g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
 
-//Teleporters
-Teleporters a_Tel;
-Teleporters b_Tel;
-
 // Game specific variables here
 SGameChar   g_sChar;
+Enemy   g_Enemy;
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 double	playTime;		//to record the gameplay time only
@@ -35,6 +34,9 @@ int levelCount;
 bool levelClear = true;
 int ItemCounter = 0;
 int MaxItemCount = 0;
+
+//Teleporter
+ExitTeleporter Tel;
 
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
@@ -84,18 +86,15 @@ void levelInit() {
 		g_sChar.m_cLocation.X = 1;
 		g_sChar.m_cLocation.Y = 2;
 
+		g_Enemy.m_Enemy.X = 5;
+        g_Enemy.m_Enemy.Y = 2;
+
 		levelClear = false;
 		
 		maze = 0;
 
 		MaxItemCount = 0;
 		ItemCounter = 0;
-
-		//randomising of teleporters here
-		a_Tel.a_Loc.X = 3;
-		a_Tel.a_Loc.Y = 2;
-		a_Tel.b_Loc.X = 16;
-		a_Tel.b_Loc.Y = 10;
 
 		/*switch (static_cast<GAMELEVELS>(levelCount)) {
 		case M1 : maze1(rows, cols); break;
@@ -135,6 +134,8 @@ void levelInit() {
 			}
 		}
 
+		//randomising of teleporters here
+		randomiseTeleporters(rows, cols);
 	}
 
 }
@@ -188,6 +189,7 @@ void update(double dt)
 		case S_GAME : playTime += dt; gameplay();	// gameplay logic when we are in the game
 			break;
 	}
+	moveEnemy();
 
 }
 //--------------------------------------------------------------
@@ -270,7 +272,7 @@ void moveCharacter()
     }
 
 	if (bSomethingHappened) {
-		checkTeleport(g_sChar.m_cLocation);
+		checkTrap(g_sChar.m_cLocation);
 		PickUpItems(g_sChar.m_cLocation);
 		exitLevel(g_sChar.m_cLocation);
 	}
@@ -342,6 +344,7 @@ void renderGame()
 {
     renderMap();        // renders the map to the buffer first
     renderCharacter();  // renders the character into the buffer
+	renderEnemy();
 }
 
 void renderMap()
@@ -377,34 +380,63 @@ void mapgenerator(int rows, int cols) {
 
 }
 
+void randomiseTeleporters(int rows, int cols) {
+
+	COORD c;
+	vector<Traps> trapvec;
+
+	for (int i = 0; i < rows; ++i) {
+		for (int j = 0; j < cols; ++j) {
+			if (maze[i][j] == '@') {
+				c.Y = i+1;
+				c.X = j;
+				if (c.X != Tel.own_Loc.X || c.Y != Tel.own_Loc.Y) {
+					Traps tempTrap;
+					tempTrap.Loc = c;
+					trapvec.push_back(tempTrap);
+				}
+			}
+		}
+	}
+
+	//assigning a random trap to be the teleporter
+	int size = trapvec.size();
+	srand(time(NULL));
+	int teleport = rand() % size;
+	Traps tempTel = trapvec.at(teleport);
+	
+	Tel.warp_Loc = tempTel.Loc;
+
+}
+
 void maze1(int& rows, int& cols) {
 
 	string map1[21] = {
-		"##################",
-		"# #@             #",
-		"# ### ######## # #",
-		"#    $#  #   # # #",
-		"### ### ## # # # #",
-		"#   #    # # # # #",
-		"# ###### # #@# # #",
-		"#     #@   ### ###",
-		"##### ######     #",
-		"# # #*# *  # #####",
-		"# # ###    #     #",
-		"#   #@#    ##### #",
-		"# ### #    #     #",
-		"#     #   @# # # #",
-		"# ### ######## # #",
-		"# # # #@#   ## # #",
-		"### # # # # ## # #",
-		"#@# #   # #    # #",
-		"# # ##### # ## # #",
-		"#         # #  #@#",
-		"##################" };
+        "################################",
+        "# #            #  #            #",
+        "# ### ######## ## ###########  #",
+        "#    $#  #   # #  #            #",
+        "### ### ## # # # ## ############",
+        "# @ #    # # # #               #",
+        "# ###### # # # #  ############ #",
+        "#     #    ### ## #          # #",
+        "# ### ######      #  ######### #",
+        "# # # # *  ########  #   #   # #",
+        "# # ###    #           #   #   #",
+        "#     #    ##### ###############",
+        "# ##### @  #   # #  #     #  # #",
+        "# @   #    # # # #           # #",
+        "# ### ######## # # ##### ##### #",
+        "# # # #     ## # #    #      # #",
+        "### # # # # ## # ########### # #",
+		"# # #   # #    #               #",
+        "# # ##### # ## ############### #",
+		"#   @     # #                  #",
+        "################################" };
 
 	rows = 21;
 	maze = new char * [rows];
-	cols = 18;
+	cols = 32;
 
 	for (int i = 0; i < rows; ++i) {
 		maze[i] = new char[cols];
@@ -414,28 +446,40 @@ void maze1(int& rows, int& cols) {
 		}
 	}
 
+	Tel.own_Loc.X = 8;
+	Tel.own_Loc.Y = 13;
+
 }
 
 void maze2(int& rows, int& cols) {
 
-	string map2[13] = {
-		"########################",
-		"#     $#       #       #",
-		"#### # # ##### # ##### #",
-		"#    #    ## # #     # #",
-		"# ########## # ##### # #",
-		"#     @#     #     # # #",
-		"#### ############# # # #",
-		"#@   #@    *     #*# #@#",
-		"########################",
-		"#     @#    #@         #",
-		"#  #####  ###########  #",
-		"#     @#               #",
-		"########################" };
+	string map2[21] = {
+		"################################",
+		"# #     #              #########",
+		"# ##### ### # ###### #         #",
+		"# # #     # #  #  #  #    # #  #",
+		"# #   # # # ## #  # #### #######",
+        "# ##### ##  #  ###  # #      # #",
+		"# ####### #### # #### ###### # #",
+		"# #  #  # #    #    #   #    # #",
+		"# #   ### ## # ######## #  # # #",
+		"# #######    ###      #  # # # #",
+        "#$    #    # ######## # #### # #",
+		"#####   #### #*     # #        #",
+		"#   # #      #     @######## # #",
+        "## ## ############### #### # # #",
+        "#   #   #   # ###     #  # # # #",
+        "# # # #  #### # #  ####  # # # #",
+        "# ##  ## # #  # #        #   # #",
+        "# #####      ## #  ## #  # # ###",
+        "#  # $#  #         #  #### #   #",
+        "##@     @# # # #   #    #  #   #",
+        "################################" 
+    };
 
-	rows = 13;
+	rows = 21;
 	maze = new char * [rows];
-	cols = 24;
+	cols = 32;
 
 	for (int i = 0; i < rows; ++i) {
 		maze[i] = new char[cols];
@@ -445,30 +489,40 @@ void maze2(int& rows, int& cols) {
 		}
 	}
 
+	Tel.own_Loc.X = 19;
+	Tel.own_Loc.Y = 13;
+
 }
 
 void maze3(int& rows, int& cols) {
 
-	string map3[15] = {
-		"###########################",
-		"#         #       #       #",
-		"######### # ############# #",
-		"#*       $#       #       #",
-		"##### ############# #######",
-		"# # # #   #   #   #       #",
-		"# # # # #   #   # #########",
-		"# # # ############# # #   #",
-		"# # # #             #   # #",
-		"# # # #             ##### #",
-		"# # # #              # #  #",
-		"# # # ############## # # ##",
-		"# # # #    *   #   # # #  #",
-		"# #   #        # # #   ####",
-		"###########################" };
+	string map3[21] = {
+		"################################",
+		"#  # #     #               #   # ",
+		"# $# # ### ###   # ######### # #",
+		"# #          # # # #         # #",
+		"# ## ####### # # # ####### # # #",
+		"#     $#     # # #       # # # #",
+   		"## ### # ### ### # ####### ##  #",
+		"#@  ##   # #   # # #        #  #",
+		"##  ###### # ### # ####### #   #",
+		"#   #  #   #     #         # # #",
+        "# # # ## # ############### # # #",
+		"# #@#    ###  #@         # #####",
+		"# ###  ##    ##         *#   # #",
+		"# @#    # #   ############## # #",
+		"# ##### ###  ##  #      #    # #",
+        "#           ###    #  #   #    #",
+        "## ### ###  # ############## # #",
+        "#  #   #      #   #   #   #    #",
+        "#  #   #  ##### # # # # # ### ##",
+        "##   # #        #   #   #      #",
+        "################################"
+    };
 
-	rows = 15;
+	rows = 21;
 	maze = new char * [rows];
-	cols = 27;
+	cols = 32;
 
 	for (int i = 0; i < rows; ++i) {
 		maze[i] = new char[cols];
@@ -478,31 +532,43 @@ void maze3(int& rows, int& cols) {
 		}
 	}
 
+	Tel.own_Loc.X = 15;
+	Tel.own_Loc.Y = 12;
+
 }
 
 void maze4(int& rows, int& cols) {
 
-	string map4[16] = {
-		"#############################",
-		"#   #         #       #     #",
-		"# # # # ### ###### #    #   #",
-		"# #   #          # # ## #####",
-		"# ##### # # ###### # #   #  #",
-		"# #     # #        ### # #  #",
-		"# # ################ ### #  #",
-		"# #     #          #     #  #",
-		"# ##### # *        # # # #  #",
-		"# #   # ############ # ###  #",
-		"# ### # #            #      #",
-		"#     # # ####### #### ###  #",
-		"#  ###### #    #       # #  #",
-		"## #      ###  # ####### # ##",
-		"#$  *#         # #          #",
-		"#############################" };
+	string map4[24] = {
+		"###################################",
+        "#     #    #          #           #",
+        "##### #### #  ####### #   ######  #",
+        "#$    #    #  #       #   #    #  #",
+        "# #####  # ## ##### ### ### #  #  #",
+        "#$    #  #        #     #   #  #  #",
+        "##### ## ########### #### #########",
+        "#     #           #  #     #      #",
+        "# ##### ## ####   #     #### ######",
+        "#      @#    #    #### ##    #    #",
+        "#### #### ###### ##  # #          #",
+        "#  #     @#   #  #   # # # ########",
+        "#  #### ### #### # ### # # #   #  #",
+        "#           #      #     # # # #  #",
+        "## #######################   #    #",
+        "#@  #     #          *#    ###### #",
+        "# #   #   #@          # ###     # #",
+        "######### ############# #   ##### #",
+        "#       #               #         #",
+        "# ### # #### # ##### ##############",
+        "# #   #      # #       #     #    #",
+        "# ############ ## ### ##  # ##### #",
+        "#      #       #  #       #       #",
+        "###################################"
+};
 
-	rows = 16;
+	rows = 24;
 	maze = new char * [rows];
-	cols = 29;
+	cols = 35;
 
 	for (int i = 0; i < rows; ++i) {
 		maze[i] = new char[cols];
@@ -512,29 +578,44 @@ void maze4(int& rows, int& cols) {
 		}
 	}
 
+	Tel.own_Loc.X = 11;
+	Tel.own_Loc.Y = 17;
+
 }
 
 void maze5(int& rows, int& cols) {
 
-	string map5[14] = {
-		"#######################",
-		"#   #         #       #",
-		"# #  $##  ### ##### # #",
-		"# ####    # #$    # # #",
-		"#    #### # #### *    #",
-		"# # #   # #      # # ##",
-		"# # # ############ #  #",
-		"# # # #     *    # ####",
-		"###   ############ #  #",
-		"# #####            #  #",
-		"#     ######  # ####  #",
-		"##### #   #   #       #",
-		"#       #   # #   #   #",
-		"#######################" };
+	string map5[24] = {
+		
+        "########################################",
+        "#      #@        #          #      #   #",
+        "# #### ##### # # # ######## ### # #### #",
+        "#   $#   #   # #   #   #        # #    #",
+        "######## ##### # ###   # ######## #### #",
+        "#      #       # #       #      # #    #",
+        "# #### # ######### ############ # #  # #",
+        "#    #   #       # #          # # #### #",
+        "#### ###### ###### # ######   # # ######",
+        "#    #@  #         # #        # # ##   #", 
+        "# ##### ###### ##### ########   #  #   #",
+        "# #      #   # #            #  ### ## ##",
+        "# ## # #####   ###########  #    # ## ##",
+        "#    # #     ###        *#### #### ## ##",
+        "###### ## #### #@        #            ##",
+        "#    # #     # ########### #############",
+        "#      #### ## ###       #             #",
+        "# ######    #      ##### ############# #",
+        "# #         ###### #   # #             #",
+        "# ######### #      ### # # #############",
+        "#         # # ######   # #      #      #",
+        "# ######### # #    #   ######## ###### #",
+        "#           #                          #",
+        "########################################"
+    };
 
-	rows = 14;
+	rows = 24;
 	maze = new char * [rows];
-	cols = 23;
+	cols = 40;
 
 	for (int i = 0; i < rows; ++i) {
 		maze[i] = new char[cols];
@@ -544,37 +625,42 @@ void maze5(int& rows, int& cols) {
 		}
 	}
 
+	Tel.own_Loc.X = 16;
+	Tel.own_Loc.Y = 15;
+
 }
 
 void maze6(int& rows, int& cols) {
 
-	string map6[22] = {
-		"##############################",
-		"#  @  #   #     #    #       #",
-		"# # ### # # ### # ## # #######",
-		"# # #   #   #   #  # # #     #",
-		"# ### ####### ###### # # ### #",
-		"# #   #   #   #   ## # # # # #",
-		"# # ### # ##### # #  # # #   #",
-		"# #     #       #    #   # # #",
-		"# ### ###################### #",
-		"# @   #       * @    #   # # #",
-		"#######              ##### # #",
-		"#   # #        $     #     # #",
-		"### # ########################",
-		"#     #      #       #     # #",
-		"############################ #",
-		"#             ##   #   #   # #",
-		"# # ## ########  #   #   #   #",
-		"# # #  #    # # ##############",
-		"#   ####### #                #",
-		"#####     # ################ #",
-		"#     # #   #                #",
-		"##############################" };
+	string map6[23] = {
+        "#######################################",
+        "#  @  #   #     #    #        # #   # #",
+        "# # ### # # ### # ## # #### ### # # # #",
+        "# #@#   #   #   #  #   #      #   #   #",
+        "# ### ####### ###### # # ### ######## #",
+        "# #   #   #   #   ## # # # #    # #   #",
+        "# # ### # ##### # #  # ### ### ## #   #",
+        "# #    @#       #    #   #   #  #     #",
+        "# ### ###################### ## ##### #",
+        "# @   #       * @    #   # # #  #   # #",
+        "##### #              ##### # # ## ### #",
+        "#   # #        $     #     # #        #",
+        "### # ###################### #### #####",
+        "#     #      #       #     # #        #",
+        "## ######################### ### #### #",
+        "#             #    #   #   # #   ##   #",
+        "# # ## ########  #   #   #        # ###",
+        "# # #  #    # # ################# #   #",
+        "#   #### ## #                       ###",
+        "#####     # ###### ########### ###### #",
+        "#     # ### #   #   #  #   # #      # #",
+        "#     # #     #     #    #   #        #",
+        "#######################################" 
+    };
 
-	rows = 22;
+	rows = 23;
 	maze = new char * [rows];
-	cols = 30;
+	cols = 39;
 
 	for (int i = 0; i < rows; ++i) {
 		maze[i] = new char[cols];
@@ -583,6 +669,9 @@ void maze6(int& rows, int& cols) {
 			maze[i][j] = temp[j];
 		}
 	}
+
+	Tel.own_Loc.X = 16;
+	Tel.own_Loc.Y = 10;
 
 }
 
@@ -595,6 +684,37 @@ void renderCharacter()
         charColor = 0x0A;
     }
     g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, charColor);
+}
+
+void renderEnemy()
+{
+    WORD enemyColor = 0x0C;
+    g_Console.writeToBuffer(g_Enemy.m_Enemy, (char)1, enemyColor);
+}
+
+void moveEnemy()
+{
+    int eX = g_Enemy.m_Enemy.X;
+    int eY = g_Enemy.m_Enemy.Y-1;
+
+    if (maze[eY][eX+1] != '#')
+    {
+        g_Enemy.m_Enemy.X++;
+    }
+    else if (maze[eY][eX+1] == '#')
+    {
+        g_Enemy.m_Enemy.X--;
+    }
+
+    int gX = g_sChar.m_cLocation.X;
+    int gY = g_sChar.m_cLocation.Y;
+
+    //If character touches the enemy, spawn the character back to starting location
+    /*if (g_sChar.m_cLocation.X == g_Enemy.m_Enemy.X)
+    {
+        g_sChar.m_cLocation.X = 1;
+        g_sChar.m_cLocation.Y = 2;
+    }*/
 }
 
 void renderFramerate()
@@ -629,25 +749,23 @@ void renderToScreen()
     g_Console.flushBufferToConsole();
 }
 
-void checkTeleport(COORD c) {
+void checkTrap(COORD c) {
 
 	int Y = g_sChar.m_cLocation.Y - 1;
 	int X = g_sChar.m_cLocation.X;
 
-	 if (maze[Y][X] == '@')
-        {
-             if(g_sChar.m_cLocation.X == a_Tel.a_Loc.X  && g_sChar.m_cLocation.Y == a_Tel.a_Loc.Y)
-                {
-                     g_sChar.m_cLocation.X =a_Tel.b_Loc.X;
-                     g_sChar.m_cLocation.Y =a_Tel.b_Loc.Y;
-                }
-        
-            else if(g_sChar.m_cLocation.X == a_Tel.b_Loc.X  && g_sChar.m_cLocation.Y == a_Tel.b_Loc.Y)
-                {
-                  g_sChar.m_cLocation.X = a_Tel.a_Loc.X;
-                 g_sChar.m_cLocation.Y = a_Tel.a_Loc.Y;
-                }
-         }
+	 if (maze[Y][X] == '@') {
+		 if (g_sChar.m_cLocation.X == Tel.own_Loc.X && g_sChar.m_cLocation.Y == Tel.own_Loc.Y) {
+			 g_sChar.m_cLocation = Tel.warp_Loc;
+		 }
+		 else if (g_sChar.m_cLocation.X == Tel.warp_Loc.X && g_sChar.m_cLocation.Y == Tel.warp_Loc.Y) {
+			 g_sChar.m_cLocation = Tel.own_Loc;
+		 }
+		 else {
+			 //it's a trap
+			 maze[Y][X] = ' ';
+		 }
+	 }
 
 }
 
@@ -675,6 +793,7 @@ void exitLevel(COORD c) {
 		//Beep (1440,30)
 		if (levelCount == 6) {
 			g_bQuitGame = true;
+			clearGameScreen();
 		}
 		else {
 			++levelCount;
