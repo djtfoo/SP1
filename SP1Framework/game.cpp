@@ -37,6 +37,7 @@ int levelCount;
 bool levelClear = true;
 int ItemCounter = 0;
 int MaxItemCount = 0;
+int direction = 2;
 
 //Teleporter
 ExitTeleporter Tel;
@@ -710,31 +711,36 @@ void moveEnemy()
     //Get the enemy coordinates
     int eX = g_Enemy.m_Enemy.X;
     int eY = g_Enemy.m_Enemy.Y-1;
+	
+	//If enemy next X position is not a wall
 
-    //If enemy next X position is not a wall
-    //Move 
-    if (maze[eY][eX+1] != '#')
+    if (maze[eY][eX+1] != '#' && direction == 2) //right
     {
         g_Enemy.m_Enemy.X++;
 		bEnemyMoved = true;
     }
 
-    else if(maze[eY][eX-1] != '#')
+    else if(maze[eY][eX-1] != '#' && direction == 1) //left
     {
         g_Enemy.m_Enemy.X--;
 		bEnemyMoved = true;
     }
 
-	if (maze[eY][eX+1] == '#')
-	{
-		g_Enemy.m_Enemy.X++;
-		bEnemyMoved = true;
-	}
-	else if (maze[eY][eX-1] == '#')
+	//Move 
+    if (maze[eY][eX+1] == '#')
 	{
 		g_Enemy.m_Enemy.X--;
 		bEnemyMoved = true;
+		direction = 1;
 	}
+	else if (maze[eY][eX-1] == '#')
+	{
+		g_Enemy.m_Enemy.X++;
+		bEnemyMoved = true;
+		direction = 2;
+	}
+
+
 
     //Collision
     int gX = g_sChar.m_cLocation.X;
