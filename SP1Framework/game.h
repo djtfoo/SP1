@@ -126,9 +126,9 @@ void mapgenerator(int rows, int cols);
 void randomiseTeleporters(int rows, int cols);
 
 //checking things on map
-void checkTrap(COORD c);
-void PickUpItems(COORD c);
-void exitLevel(COORD c);
+void checkTrap();
+void PickUpItems();
+void exitLevel();
 
 //finish the game - Jing Ting
 void clearGame();

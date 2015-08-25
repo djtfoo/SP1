@@ -46,7 +46,7 @@ ExitTeleporter Tel;
 
 //high score name
 char name[11];
-char *pointer = name - 1;
+char * pointer = 0;
 int i = 0;
 
 //--------------------------------------------------------------
@@ -67,7 +67,7 @@ void init( void )
 	BufferTime = 3.0;
 
 	// sets the initial state for the game
-	levelCount = 1;
+	levelCount = 6;
     levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
 
@@ -76,6 +76,7 @@ void init( void )
     g_Console.setConsoleFont(0, 25, L"Consolas");
 
     name[0] = '\0';
+    pointer = name - 1;
 
 }
 
@@ -330,17 +331,15 @@ void moveCharacter()
         bSomethingHappened = true;
     }
 
-	if (bSomethingHappened) {
-		checkTrap(g_sChar.m_cLocation);
-		PickUpItems(g_sChar.m_cLocation);
-		exitLevel(g_sChar.m_cLocation);
-	}
-
     if (bSomethingHappened)
     {
         // set the bounce time to some time in the future to prevent accidental triggers
         g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
+        checkTrap();
+		PickUpItems();
+		exitLevel();
     }
+
 }
 
 void processUserInput()
@@ -552,7 +551,7 @@ void processNameInput(char * name) {
     if (keySomething)
     {
         // set the bounce time to some time in the future to prevent accidental triggers
-        g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
+        g_dBounceTime = g_dElapsedTime + 0.1; // 125ms should be enough
         if (!backspace && pointer < name+9) {
             ++pointer;
         }
@@ -776,12 +775,12 @@ void maze3(int& rows, int& cols) {
 	Tel.own_Loc.Y = 12;
 
     //Enemy 1
-		g_Enemy.m_Enemy.X = 17;
-        g_Enemy.m_Enemy.Y = 10;
-
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 1;
-		g_Enemy2.m_Enemy.Y = 10;
+    g_Enemy.m_Enemy.X = 17;
+    g_Enemy.m_Enemy.Y = 10;
+    
+    //Enemy 2
+    g_Enemy2.m_Enemy.X = 1;
+    g_Enemy2.m_Enemy.Y = 10;
 }
 
 void maze4(int& rows, int& cols) {
@@ -889,7 +888,6 @@ void maze5(int& rows, int& cols) {
 		g_Enemy2.m_Enemy.Y = 20;
 
 }
-
 void maze6(int& rows, int& cols) {
     
 	string map6[23] = {
@@ -1102,7 +1100,7 @@ void renderToScreen()
     g_Console.flushBufferToConsole();
 }
 
-void checkTrap(COORD c) {
+void checkTrap() {
 
 	int Y = g_sChar.m_cLocation.Y - 1;
 	int X = g_sChar.m_cLocation.X;
@@ -1123,7 +1121,7 @@ void checkTrap(COORD c) {
 }
 
 //Shania
-void PickUpItems(COORD c)
+void PickUpItems()
 {
 	int charY = g_sChar.m_cLocation.Y - 1;
 	int charX = g_sChar.m_cLocation.X;
@@ -1138,7 +1136,7 @@ void PickUpItems(COORD c)
 }
 
 //Jing Ting
-void exitLevel(COORD c) {
+void exitLevel() {
 
 	int charY = g_sChar.m_cLocation.Y - 1;
 	int charX = g_sChar.m_cLocation.X;
