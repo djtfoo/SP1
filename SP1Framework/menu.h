@@ -12,6 +12,18 @@ enum Sequence
     MAX_SEQUENCE      //Last (6)
 };
 
+enum MENUKEYS
+{
+    //for gameplay
+    K_1,
+    K_2,
+    K_3,
+    K_4,
+    K_ENT,
+    K_ESC,
+    K_MAX,
+};
+
 const char* menu[] = 
 {
    "Play",
@@ -35,25 +47,31 @@ const char* option[] =
 };
 
 void gameLoop();
-void displayMenu(Sequence &s);
-void userInput(Sequence &s);
+void displayMenu();
 void displayGame();
 void displayInstructions();
 void displayOptions();
 void displayHighscore();
 void displayExit();
-int input;
 
 //options
 void displayOptions();
 void displaySound();
-void userInputSOUND();
 
+//highscore
 struct highScore
 {
 	double time;
 	std::string name;
 };
-
-//highscore
 void toCpp();
+
+//change this
+void userInputSOUND();
+
+//user input
+void userInput(); //to get input
+void processInputMenu(Sequence &s); //to process the input when in main menu
+void processInputOptions(SequenceOPT &s); //to process the input when in options
+void processInputSound(); //to process the input when in sound options
+void processInputBack(Sequence &s); //to process the input when in instructions and high score, to return to main menu

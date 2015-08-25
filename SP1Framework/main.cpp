@@ -20,6 +20,9 @@ bool g_bQuitGame = false;                    // Set to true if you want to quit 
 const unsigned char gc_ucFPS = 100;                // FPS of this game
 const unsigned int gc_uFrameTime = 1000 / gc_ucFPS;    // time for each frame
 
+//detecting key input
+bool    menu_KeyPressed[K_COUNT];
+
 //main loop declaration
 void mainLoop( void );
 
@@ -45,34 +48,58 @@ void gameLoop()
 
     while (seq != Exit)
     {
-
-		displayMenu(seq);
-
+        userInput();
+        
         switch(seq)
         {
-            case Play : displayGame(); break;
-			case Instructions : displayInstructions(); break;
-			case HighScore : displayHighscore(); break;
+            case Menu : displayMenu(); processInputMenu(seq); break;
+            case Play : displayGame(); seq = Menu; break;
+			case Instructions : displayInstructions(); processInputBack(seq); break;
+			case HighScore : displayHighscore(); processInputBack(seq); break;
             case Options : displayOptions(); break;
             case Exit : displayExit(); break;
         }
-
-		if (seq != Menu) {
-			seq = Menu;
-		}
     }
 }
 
-void userInput (Sequence &s) //If s is modified, seq is modified as well
+void userInput() //If s is modified, seq is modified as well
 {
-    int input;
-    cin >> input;
-    //Cannot cin>>s cause it doesn't take in
-    s = static_cast<Sequence>(input);
+    menu_KeyPressed[K_1] = isKeyPressed(49);
+    menu_KeyPressed[K_2] = isKeyPressed(50);
+    menu_KeyPressed[K_3] = isKeyPressed(51);
+    menu_KeyPressed[K_4] = isKeyPressed(52);
+    menu_KeyPressed[K_ENT] = isKeyPressed(VK_RETURN);
+    menu_KeyPressed[K_ESC] = isKeyPressed(VK_ESCAPE);
+}
+
+void processInputMenu(Sequence &s) {
+
+    if (menu_KeyPressed[K_1]) {
+        s = Play;
+    }
+    else if (menu_KeyPressed[K_2]) {
+        s = Instructions;
+    }
+    else if (menu_KeyPressed[K_3]) {
+        s = HighScore;
+    }
+    else if (menu_KeyPressed[K_4]) {
+        s = Options;
+    }
+
+}
+void processInputOptions(SequenceOPT &s); //to process the input when in options
+void processInputSound(); //to process the input when in sound options
+
+void processInputBack(Sequence &s) {
+
+    if (menu_KeyPressed[K_ENT]) {
+        s = Menu;
+    }
 
 }
 
-void displayMenu(Sequence &s)
+void displayMenu()
 {
     clearScreen();
 	COORD c = g_Console.getConsoleSize();
@@ -99,8 +126,6 @@ void displayMenu(Sequence &s)
     c.X = g_Console.getConsoleSize().X / 2 - 11;
     g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x04);
 	g_Console.flushBufferToConsole();
-
-	userInput(s);
 	
 }
 
@@ -125,11 +150,9 @@ void displayInstructions()
 	g_Console.writeToBuffer(c, "3) Escape the room after collecting ALL objects", 0x08);
 	c.Y += 1;
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
-	g_Console.writeToBuffer(c, "Press any key to return", 0x08);
+	g_Console.writeToBuffer(c, "Press ENTER to return", 0x08);
 	g_Console.flushBufferToConsole();
 
-	int i;
-	cin >> i;
 }
 
 void displayHighscore()
@@ -168,12 +191,9 @@ void displayHighscore()
 
 	c.Y += 4;
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
-	g_Console.writeToBuffer(c, "Press any key to return", 0x08);
+	g_Console.writeToBuffer(c, "Press ENTER to return", 0x08);
 	
 	g_Console.flushBufferToConsole();
-
-	int i;
-	cin >> i;
 }
 
 void toCpp()
@@ -229,14 +249,6 @@ void toCpp()
 
 }
 
-void userInputOPT(SequenceOPT &s)
-{
-    int input1;
-    cin >> input1;
-
-    s = static_cast<SequenceOPT>(input1);
-}
-
 void displayOptions() {
 
 	SequenceOPT s = OptionsMenu;
@@ -258,7 +270,7 @@ void displayOptions() {
 		g_Console.writeToBuffer(c, "Press '2' to go back to Main Menu", 0x09);
 		g_Console.flushBufferToConsole();
 
-		userInputOPT(s);
+		userInput();
 
 		switch(s)
 		{
@@ -326,11 +338,10 @@ void displayGame( void )
 	init();
 	while (!g_bQuitGame)      // run this loop until user wants to quit 
     {
-		levelInit();
 		getInput();                         // get keyboard input
 		update(g_Timer.getElapsedTime());   // update the game
 		render();                           // render the graphics output to screen
-		g_Timer.waitUntil(gc_uFrameTime);   // Frame rate limiter. Limits each frame to a specified time in ms.      
-	}
-	g_bQuitGame = false;		//to enable player to play game again
+		g_Timer.waitUntil(gc_uFrameTime);   // Frame rate limiter. Limits each frame to a specified time in ms.
+    }
+    g_bQuitGame = false;		//to enable player to play game again
 }

@@ -35,7 +35,7 @@ char ** maze = 0;
 int rows = 0;
 int cols = 0;
 int levelCount;
-bool levelClear = true;
+bool levelClear;
 int ItemCounter = 0;
 int MaxItemCount = 0;
 int direction = 2;
@@ -43,6 +43,11 @@ int direction2 = 4;
 
 //Teleporter
 ExitTeleporter Tel;
+
+//high score name
+char name[11];
+char *pointer = name - 1;
+int i = 0;
 
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
@@ -63,11 +68,14 @@ void init( void )
 
 	// sets the initial state for the game
 	levelCount = 1;
+    levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
 
 	g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 25, L"Consolas");
+
+    name[0] = '\0';
 
 }
 
@@ -92,7 +100,6 @@ void levelInit() {
 
 		g_sChar.m_cLocation.X = 1;
 		g_sChar.m_cLocation.Y = 2;
-
 
 		levelClear = false;
 		
@@ -168,6 +175,36 @@ void getInput( void )
     g_abKeyPressed[K_RIGHT]  = isKeyPressed(VK_RIGHT);
     g_abKeyPressed[K_SPACE]  = isKeyPressed(VK_SPACE);
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
+
+    //for keying in name for high score
+    g_abKeyPressed[K_A] = isKeyPressed(65);
+    g_abKeyPressed[K_B] = isKeyPressed(66);
+    g_abKeyPressed[K_C] = isKeyPressed(67);
+    g_abKeyPressed[K_D] = isKeyPressed(68);
+    g_abKeyPressed[K_E] = isKeyPressed(69);
+    g_abKeyPressed[K_F] = isKeyPressed(70);
+    g_abKeyPressed[K_G] = isKeyPressed(71);
+    g_abKeyPressed[K_H] = isKeyPressed(72);
+    g_abKeyPressed[K_I] = isKeyPressed(73);
+    g_abKeyPressed[K_J] = isKeyPressed(74);
+    g_abKeyPressed[K_K] = isKeyPressed(75);
+    g_abKeyPressed[K_L] = isKeyPressed(76);
+    g_abKeyPressed[K_M] = isKeyPressed(77);
+    g_abKeyPressed[K_N] = isKeyPressed(78);
+    g_abKeyPressed[K_O] = isKeyPressed(79);
+    g_abKeyPressed[K_P] = isKeyPressed(80);
+    g_abKeyPressed[K_Q] = isKeyPressed(81);
+    g_abKeyPressed[K_R] = isKeyPressed(82);
+    g_abKeyPressed[K_S] = isKeyPressed(83);
+    g_abKeyPressed[K_T] = isKeyPressed(84);
+    g_abKeyPressed[K_U] = isKeyPressed(85);
+    g_abKeyPressed[K_V] = isKeyPressed(86);
+    g_abKeyPressed[K_W] = isKeyPressed(87);
+    g_abKeyPressed[K_X] = isKeyPressed(88);
+    g_abKeyPressed[K_Y] = isKeyPressed(89);
+    g_abKeyPressed[K_Z] = isKeyPressed(90);
+    g_abKeyPressed[K_ENTER] = isKeyPressed(VK_RETURN);
+    g_abKeyPressed[K_BACKSPACE] = isKeyPressed(VK_BACK);
 }
 
 //--------------------------------------------------------------
@@ -195,14 +232,12 @@ void update(double dt)
 	{
 		case S_SPLASHSCREEN : splashScreenWait();
 			break;
+
 		case S_GAME : playTime += dt; gameplay();	// gameplay logic when we are in the game
-			break;
-	}
-	
-	if (g_dBounceTimeEnemy < g_dElapsedTime) {
-		moveEnemy1();
-	moveEnemy2();
-        g_dBounceTimeEnemy += 0.5;
+            break;
+
+        case S_WIN : clearGame();
+            break;
 	}
 
 }
@@ -223,6 +258,8 @@ void render()
             break;
         case S_GAME: renderGame();
             break;
+        case S_WIN : renderClearGame();
+            break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -231,16 +268,24 @@ void render()
 
 void gameplay()            // gameplay logic
 {
+    levelInit();
     processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
     moveCharacter();    // moves the character, collision detection, physics, etc
                         // sound can be played here too.
+
+    if (g_dBounceTimeEnemy < g_dElapsedTime) {
+        moveEnemy1();
+        moveEnemy2();
+        g_dBounceTimeEnemy += 0.5;
+    }
 }
 
 void moveCharacter()
 {
     bool bSomethingHappened = false;
-    if (g_dBounceTime > g_dElapsedTime)
+    if (g_dBounceTime > g_dElapsedTime) {
         return;
+    }
 
     // Updating the location of the character based on the key press
     // providing a beep sound whenver we shift the character
@@ -303,7 +348,6 @@ void processUserInput()
     // quits the game if player hits the escape key
     if (g_abKeyPressed[K_ESCAPE]) {
         g_bQuitGame = true;
-		levelClear = true;
 	}
 }
 
@@ -341,27 +385,181 @@ void renderSplashScreen()  // renders the splash screen
 
 }
 
-void clearGameScreen() {
+//Jing Ting
+void clearGame() {
 
-	clearScreen();
-	COORD c = g_Console.getConsoleSize();
+    processNameInput(name);
+
+}
+
+void renderClearGame() {
+    clearScreen();
+    renderText();
+    renderNameInput(name);
+}
+
+void renderText() {
+    COORD c = g_Console.getConsoleSize();
+    c.X /= 2;
     c.Y /= 3;
-    c.X = c.X / 2;
     g_Console.writeToBuffer(c, "YOU WIN!", 0x03);
 	c.Y++;
 	g_Console.writeToBuffer(c, "Input your name: ", 0x03);
-	g_Console.flushBufferToConsole();
+}
 
-	ofstream outData;
+void renderNameInput(char * name) {
+    COORD c = g_Console.getConsoleSize();
+    c.X /= 2;
+    c.Y /= 3;
+    c.Y += 2;
+    g_Console.writeToBuffer(c, name, 0x03);
+}
 
-	outData.open("Timings.txt", ofstream::app);
+void processNameInput(char * name) {
 
-	string name;
-	std::cin >> name;
+    bool keySomething = false;
+    bool backspace = false;
+    if (g_dBounceTime > g_dElapsedTime)
+        return;
 
-	outData << std::endl << name << " " << playTime;
+    if (pointer != name+9) {
+        if (g_abKeyPressed[K_A]) {
+            *(pointer+1) = 'A';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_B]) {
+            *(pointer+1) = 'B';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_C]) {
+            *(pointer+1) = 'C';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_D]) {
+            *(pointer+1) = 'D';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_E]) {
+            *(pointer+1) = 'E';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_F]) {
+            *(pointer+1) = 'F';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_G]) {
+            *(pointer+1) = 'G';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_H]) {
+            *(pointer+1) = 'H';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_I]) {
+            *(pointer+1) = 'I';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_J]) {
+            *(pointer+1) = 'J';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_K]) {
+            *(pointer+1) = 'K';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_L]) {
+            *(pointer+1) = 'L';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_M]) {
+            *(pointer+1) = 'M';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_N]) {
+            *(pointer+1) = 'N';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_O]) {
+            *(pointer+1) = 'O';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_P]) {
+            *(pointer+1) = 'P';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_Q]) {
+            *(pointer+1) = 'Q';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_R]) {
+            *(pointer+1) = 'R';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_S]) {
+            *(pointer+1) = 'S';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_T]) {
+            *(pointer+1) = 'T';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_U]) {
+            *(pointer+1) = 'U';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_V]) {
+            *(pointer+1) = 'V';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_W]) {
+            *(pointer+1) = 'W';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_X]) {
+            *(pointer+1) = 'X';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_Y]) {
+            *(pointer+1) = 'Y';
+            keySomething = true;
+        }
+        if (g_abKeyPressed[K_Z]) {
+            *(pointer+1) = 'Z';
+            keySomething = true;
+        }
 
-	outData.close();
+    }
+
+    if (g_abKeyPressed[K_BACKSPACE]) {
+        *pointer = '\0';
+        keySomething = true;
+        backspace = true;
+    }
+
+    // saves the name if the player presses ENTER key
+    if (g_abKeyPressed[K_ENTER]) {
+        ofstream outData;
+
+	    outData.open("Timings.txt", ofstream::app);
+
+	    outData << std::endl << name << " " << playTime;
+
+	    outData.close();
+
+        g_bQuitGame = true;
+	}
+
+    if (keySomething)
+    {
+        // set the bounce time to some time in the future to prevent accidental triggers
+        g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
+        if (!backspace && pointer < name+9) {
+            ++pointer;
+        }
+        if (backspace && pointer >= name) {
+            pointer--;
+        }
+    }
 
 }
 
@@ -762,6 +960,7 @@ void renderEnemy()
 	g_Console.writeToBuffer(g_Enemy2.m_Enemy, (char)49, enemyColor);
 }
 
+//Shania
 void moveEnemy1()
 {
     bool bEnemyMoved = false;
@@ -811,6 +1010,7 @@ void moveEnemy1()
 
 }
 
+//Shania
 void moveEnemy2()
 {
 
@@ -869,7 +1069,7 @@ void renderFramerate()
     c.Y = 0;
     g_Console.writeToBuffer(c, ss.str());
 
-    // displays the elapsed time
+    // displays the playtime
     ss.str("");
     ss << playTime << "secs";
     c.X = 0;
@@ -947,15 +1147,14 @@ void exitLevel(COORD c) {
 	{
 		//Beep (1440,30)
 		if (levelCount == 6) {
-			g_bQuitGame = true;
-			clearGameScreen();
+            g_eGameState = S_WIN;
 		}
 		else {
 			++levelCount;
-		}
-		levelClear = true;
-		g_eGameState = S_SPLASHSCREEN;
-		BufferTime = g_dElapsedTime + 3.0;
+            levelClear = true;
+		    g_eGameState = S_SPLASHSCREEN;
+            BufferTime = g_dElapsedTime + 3.0;
+        }
 	}
 
 }
