@@ -114,73 +114,25 @@ void levelInit() {
 
 		if (levelCount == 1) {
 			maze1(rows, cols);
-
-        //Enemy 1
-		g_Enemy.m_Enemy.X = 5;
-        g_Enemy.m_Enemy.Y = 2;
-
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 16;
-		g_Enemy2.m_Enemy.Y = 12;
 		}
 
 		else if (levelCount == 2) {
 			maze2(rows, cols);
-
-        //Enemy 1
-		g_Enemy.m_Enemy.X = 9;
-        g_Enemy.m_Enemy.Y = 2;
-
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 30;
-		g_Enemy2.m_Enemy.Y = 15;
 		}
 		else if (levelCount == 3) {
 			maze3(rows, cols);
-
-        //Enemy 1
-		g_Enemy.m_Enemy.X = 17;
-        g_Enemy.m_Enemy.Y = 10;
-
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 1;
-		g_Enemy2.m_Enemy.Y = 10;
 		}
 
 		else if (levelCount == 4) {
 			maze4(rows, cols);
-        
-        //Enemy 1
-		g_Enemy.m_Enemy.X = 18;
-        g_Enemy.m_Enemy.Y = 16;
-
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 26;
-		g_Enemy2.m_Enemy.Y = 15;
 		}
 
 		else if (levelCount == 5) {
 			maze5(rows, cols);
-        
-        //Enemy 1
-		g_Enemy.m_Enemy.X = 25;
-        g_Enemy.m_Enemy.Y = 15;
-
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 11;
-		g_Enemy2.m_Enemy.Y = 20;
 		}
 
 		else if (levelCount == 6) {
 			maze6(rows, cols);
-
-        //Enemy 1
-		g_Enemy.m_Enemy.X = 25;
-        g_Enemy.m_Enemy.Y = 19;
-
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 5;
-		g_Enemy2.m_Enemy.Y = 10;
 		}
 
 		for (int i = 0; i < rows; ++i) {
@@ -415,6 +367,7 @@ void clearGameScreen() {
 
 void renderGame()
 {
+    renderCounters();   // counters will be rendered in gameplay() only
     renderMap();        // renders the map to the buffer first
     renderCharacter();  // renders the character into the buffer
 	renderEnemy();
@@ -522,6 +475,14 @@ void maze1(int& rows, int& cols) {
 	Tel.own_Loc.X = 8;
 	Tel.own_Loc.Y = 13;
 
+    //Enemy 1
+		g_Enemy.m_Enemy.X = 5;
+        g_Enemy.m_Enemy.Y = 2;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 16;
+		g_Enemy2.m_Enemy.Y = 12;
+
 
 }
 
@@ -565,6 +526,15 @@ void maze2(int& rows, int& cols) {
 	Tel.own_Loc.X = 19;
 	Tel.own_Loc.Y = 13;
 
+    
+        //Enemy 1
+		g_Enemy.m_Enemy.X = 9;
+        g_Enemy.m_Enemy.Y = 2;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 30;
+		g_Enemy2.m_Enemy.Y = 15;
+
 }
 
 void maze3(int& rows, int& cols) {
@@ -607,6 +577,13 @@ void maze3(int& rows, int& cols) {
 	Tel.own_Loc.X = 15;
 	Tel.own_Loc.Y = 12;
 
+    //Enemy 1
+		g_Enemy.m_Enemy.X = 17;
+        g_Enemy.m_Enemy.Y = 10;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 1;
+		g_Enemy2.m_Enemy.Y = 10;
 }
 
 void maze4(int& rows, int& cols) {
@@ -651,6 +628,14 @@ void maze4(int& rows, int& cols) {
 
 	Tel.own_Loc.X = 11;
 	Tel.own_Loc.Y = 17;
+
+    //Enemy 1
+		g_Enemy.m_Enemy.X = 18;
+        g_Enemy.m_Enemy.Y = 16;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 26;
+		g_Enemy2.m_Enemy.Y = 15;
 
 }
 
@@ -697,6 +682,14 @@ void maze5(int& rows, int& cols) {
 	Tel.own_Loc.X = 16;
 	Tel.own_Loc.Y = 15;
 
+      //Enemy 1
+		g_Enemy.m_Enemy.X = 25;
+        g_Enemy.m_Enemy.Y = 15;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 11;
+		g_Enemy2.m_Enemy.Y = 20;
+
 }
 
 void maze6(int& rows, int& cols) {
@@ -740,6 +733,14 @@ void maze6(int& rows, int& cols) {
 
 	Tel.own_Loc.X = 16;
 	Tel.own_Loc.Y = 10;
+
+    //Enemy 1
+		g_Enemy.m_Enemy.X = 25;
+        g_Enemy.m_Enemy.Y = 19;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 5;
+		g_Enemy2.m_Enemy.Y = 10;
 
 }
 
@@ -872,15 +873,27 @@ void renderFramerate()
     ss.str("");
     ss << playTime << "secs";
     c.X = 0;
-    c.Y = 0;
-    g_Console.writeToBuffer(c, ss.str(), 0x59);
+    g_Console.writeToBuffer(c, ss.str());
+}
 
-	// displays the item counter
+void renderCounters() {
+
+    COORD c;
+    // displays the framerate
+    std::ostringstream ss;
+    // displays the item counter
 	ss.str("");
 	ss << "$: " << ItemCounter << "/" << MaxItemCount;
-	c.X = 15;
-	c.Y = 0;
-	g_Console.writeToBuffer(c, ss.str(), 0x59);
+	c.X = 50;
+    c.Y = 8;
+	g_Console.writeToBuffer(c, ss.str());
+
+    // displays the level count
+    ss.str("");
+    ss << "Level: " << levelCount;
+    c.X = 50;
+    c.Y = 10;
+    g_Console.writeToBuffer(c, ss.str());
 }
 
 void renderToScreen()
