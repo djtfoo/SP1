@@ -22,6 +22,7 @@ bool    g_abKeyPressed[K_COUNT];
 // Game specific variables here
 SGameChar   g_sChar;
 Enemy   g_Enemy;
+Enemy   g_Enemy2;
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 double  g_dBounceTimeEnemy;
@@ -38,6 +39,7 @@ bool levelClear = true;
 int ItemCounter = 0;
 int MaxItemCount = 0;
 int direction = 2;
+int direction2 = 4; 
 
 //Teleporter
 ExitTeleporter Tel;
@@ -90,9 +92,15 @@ void levelInit() {
 
 		g_sChar.m_cLocation.X = 1;
 		g_sChar.m_cLocation.Y = 2;
-
+		
+		//Enemy 1
 		g_Enemy.m_Enemy.X = 5;
         g_Enemy.m_Enemy.Y = 2;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 16;
+		g_Enemy2.m_Enemy.Y = 12;
+
 
 		levelClear = false;
 		
@@ -194,7 +202,12 @@ void update(double dt)
 		case S_GAME : playTime += dt; gameplay();	// gameplay logic when we are in the game
 			break;
 	}
-	moveEnemy();
+	
+	if (g_dBounceTimeEnemy < g_dElapsedTime) {
+		moveEnemy1();
+	moveEnemy2();
+        g_dBounceTimeEnemy += 0.5;
+	}
 
 }
 //--------------------------------------------------------------
@@ -700,13 +713,12 @@ void renderEnemy()
 {
     WORD enemyColor = 0x0C;
     g_Console.writeToBuffer(g_Enemy.m_Enemy, (char)49, enemyColor);
+	g_Console.writeToBuffer(g_Enemy2.m_Enemy, (char)49, enemyColor);
 }
 
-void moveEnemy()
+void moveEnemy1()
 {
     bool bEnemyMoved = false;
-    if (g_dBounceTimeEnemy > g_dElapsedTime)
-        return;
 
     //Get the enemy coordinates
     int eX = g_Enemy.m_Enemy.X;
@@ -714,20 +726,20 @@ void moveEnemy()
 	
 	//If enemy next X position is not a wall
 
-    if (maze[eY][eX+1] != '#' && direction == 2) //right
+    if (maze[eY][eX+1] != '#' && direction == 2) //move right
     {
         g_Enemy.m_Enemy.X++;
 		bEnemyMoved = true;
     }
 
-    else if(maze[eY][eX-1] != '#' && direction == 1) //left
+    else if(maze[eY][eX-1] != '#' && direction == 1) //move left
     {
         g_Enemy.m_Enemy.X--;
 		bEnemyMoved = true;
     }
 
 	//Move 
-    if (maze[eY][eX+1] == '#')
+    else if (maze[eY][eX+1] == '#')
 	{
 		g_Enemy.m_Enemy.X--;
 		bEnemyMoved = true;
@@ -740,8 +752,6 @@ void moveEnemy()
 		direction = 2;
 	}
 
-
-
     //Collision
     int gX = g_sChar.m_cLocation.X;
     int gY = g_sChar.m_cLocation.Y;
@@ -753,11 +763,53 @@ void moveEnemy()
         g_sChar.m_cLocation.Y = 2;
     }
 
-	if (bEnemyMoved)
+}
+
+void moveEnemy2()
+{
+
+	bool bEnemyMoved = false;
+   
+    //Get the enemy coordinates
+    int eX = g_Enemy2.m_Enemy.X;
+    int eY = g_Enemy2.m_Enemy.Y-1;
+
+	if (maze[eY-1][eX] != '#' && direction2 == 4) //move up
     {
-        // set the bounce time to some time in the future to prevent accidental triggers
-        g_dBounceTimeEnemy = g_dElapsedTime + 0.5;
+        g_Enemy2.m_Enemy.Y--;
+		bEnemyMoved = true;
     }
+	else if(maze[eY+1][eX] != '#' && direction2 == 3) //move down
+    {
+        g_Enemy2.m_Enemy.Y++;
+		bEnemyMoved = true;
+    }
+
+	//Move 
+    else if (maze[eY+1][eX] == '#')
+	{
+		g_Enemy2.m_Enemy.Y--;
+		bEnemyMoved = true;
+		direction2 = 4;
+	}
+	else if (maze[eY-1][eX] == '#')
+	{
+		g_Enemy2.m_Enemy.Y++;
+		bEnemyMoved = true;
+		direction2 = 3;
+	}
+
+	//Collision
+    int gX = g_sChar.m_cLocation.X;
+    int gY = g_sChar.m_cLocation.Y;
+
+	//If character touches the enemy, spawn the character back to starting location
+    if (g_sChar.m_cLocation.X == g_Enemy2.m_Enemy.X && g_sChar.m_cLocation.Y == g_Enemy2.m_Enemy.Y)
+    {
+        g_sChar.m_cLocation.X = 1;
+        g_sChar.m_cLocation.Y = 2;
+    }
+
 }
 
 void renderFramerate()
