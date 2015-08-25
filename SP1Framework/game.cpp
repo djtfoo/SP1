@@ -92,14 +92,6 @@ void levelInit() {
 
 		g_sChar.m_cLocation.X = 1;
 		g_sChar.m_cLocation.Y = 2;
-		
-		//Enemy 1
-		g_Enemy.m_Enemy.X = 5;
-        g_Enemy.m_Enemy.Y = 2;
-
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 16;
-		g_Enemy2.m_Enemy.Y = 12;
 
 
 		levelClear = false;
@@ -122,21 +114,73 @@ void levelInit() {
 
 		if (levelCount == 1) {
 			maze1(rows, cols);
+
+        //Enemy 1
+		g_Enemy.m_Enemy.X = 5;
+        g_Enemy.m_Enemy.Y = 2;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 16;
+		g_Enemy2.m_Enemy.Y = 12;
 		}
+
 		else if (levelCount == 2) {
 			maze2(rows, cols);
+
+        //Enemy 1
+		g_Enemy.m_Enemy.X = 9;
+        g_Enemy.m_Enemy.Y = 2;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 30;
+		g_Enemy2.m_Enemy.Y = 15;
 		}
 		else if (levelCount == 3) {
 			maze3(rows, cols);
+
+        //Enemy 1
+		g_Enemy.m_Enemy.X = 17;
+        g_Enemy.m_Enemy.Y = 10;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 1;
+		g_Enemy2.m_Enemy.Y = 10;
 		}
+
 		else if (levelCount == 4) {
 			maze4(rows, cols);
+        
+        //Enemy 1
+		g_Enemy.m_Enemy.X = 18;
+        g_Enemy.m_Enemy.Y = 16;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 26;
+		g_Enemy2.m_Enemy.Y = 15;
 		}
+
 		else if (levelCount == 5) {
 			maze5(rows, cols);
+        
+        //Enemy 1
+		g_Enemy.m_Enemy.X = 25;
+        g_Enemy.m_Enemy.Y = 15;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 11;
+		g_Enemy2.m_Enemy.Y = 20;
 		}
+
 		else if (levelCount == 6) {
 			maze6(rows, cols);
+
+        //Enemy 1
+		g_Enemy.m_Enemy.X = 25;
+        g_Enemy.m_Enemy.Y = 19;
+
+		//Enemy2
+		g_Enemy2.m_Enemy.X = 5;
+		g_Enemy2.m_Enemy.Y = 10;
 		}
 
 		for (int i = 0; i < rows; ++i) {
@@ -477,6 +521,7 @@ void maze1(int& rows, int& cols) {
 
 	Tel.own_Loc.X = 8;
 	Tel.own_Loc.Y = 13;
+
 
 }
 
