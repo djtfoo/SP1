@@ -41,7 +41,7 @@ Console g_Console(80, 25, "SP1 Framework");
 // You should not be modifying this unless you know what you are doing
 int main( void )
 {
-	g_Console.setConsoleFont(0, 25, L"Consolas");
+	//g_Console.setConsoleFont(0, 25, L"Raster");
     gameLoop();  // main loop
     shutdown();  // do clean up, if any. free memory.
     
