@@ -64,7 +64,7 @@ void init( void )
 	BufferTime = 3.0;
 
 	// sets the initial state for the game
-	levelCount = 1;
+	levelCount = 6;
     levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
 
@@ -726,13 +726,12 @@ void maze1(int& rows, int& cols) {
     g_Enemy2.m_Enemy.Y = 12;
     g_Enemy2.d = up;
     enemyvec.push_back(g_Enemy2);
-
 }
 
 void maze2(int& rows, int& cols) {
 
 	string map2[21] = {
-        "################################",    // 5 Items, 5 teleports, 2 AI, 2 traps 
+        "################################",    // 5 Items, 5 teleports, 3 AI, 2 traps 
 		"# #                  #    #    #",
 		"# # ### ### # ###### # #  # #  #",
 		"# # #     # #  #  #  #@#  # # $#",
@@ -784,12 +783,20 @@ void maze2(int& rows, int& cols) {
     g_Enemy2.d = up;
     enemyvec.push_back(g_Enemy2);
 
+	//Enemy3
+	Enemy g_Enemy3;
+	g_Enemy3.m_Enemy.X = 2;
+	g_Enemy3.m_Enemy.Y = 20;
+	g_Enemy3.d = right;
+	enemyvec.push_back(g_Enemy3);
+
+
 }
 
 void maze3(int& rows, int& cols) {
 
 	string map3[21] = {
-        "################################",    // 8 Items, 8 teleports, 2 AI, 3 traps
+        "################################",    // 8 Items, 8 teleports, 3 AI, 3 traps
         "# #  #     #               #   #",
         "# #  # ### ###   # ######### # #",
         "# #          # # # #@        # #",
@@ -799,7 +806,7 @@ void maze3(int& rows, int& cols) {
         "#  $#    # #  @# # #$      #   #",
         "##  ###### # ### # ####### #   #",
         "#   # @#   #     #         # # #",
-        "# # # ## # ############### #$#@#",
+        "#   # ## # ############### #$#@#",
         "# #@#    ###@ #@         # #####",
         "# ###  ##     #         *#   #$#",
         "#  #    #$#   ############## # #",
@@ -828,37 +835,44 @@ void maze3(int& rows, int& cols) {
 
     //Enemy 1
     Enemy g_Enemy1;
-    g_Enemy1.m_Enemy.X = 17;
-    g_Enemy1.m_Enemy.Y = 10;
+    g_Enemy1.m_Enemy.X = 13;
+    g_Enemy1.m_Enemy.Y = 13;
     g_Enemy1.d = right;
     enemyvec.push_back(g_Enemy1);
     
     //Enemy 2
     Enemy g_Enemy2;
-    g_Enemy2.m_Enemy.X = 1;
-    g_Enemy2.m_Enemy.Y = 10;
-    g_Enemy2.d = up;
+    g_Enemy2.m_Enemy.X = 30;
+    g_Enemy2.m_Enemy.Y = 9;
+    g_Enemy2.d = right;
     enemyvec.push_back(g_Enemy2);
+
+	//Enemy 3
+	Enemy g_Enemy3;
+	g_Enemy3.m_Enemy.X = 3;
+	g_Enemy3.m_Enemy.Y = 10;
+	g_Enemy3.d = up;
+	enemyvec.push_back(g_Enemy3);
 }
 
 void maze4(int& rows, int& cols) {
 
 	string map4[24] = {
-        "###################################",   // 10 Items, 10 teleportss, 2 AI, 5 traps
+        "###################################",   // 10 Items, 10 teleportss, 4 AI, 5 traps
         "#     #@   #          #           #",
         "##### #### #  ####### #   ######  #",
         "#     #    #  #$      #   #    #  #",
         "# #####  # ## ##### ### ### #  #  #",
-        "#@    #  #        #     #   #$ #  #",
+        "#@    #  #        #     #   #  #$ #",
         "##### ## ########### #### #########",
         "#    $#          @#  #     #    @ #",
         "# ##### ## ####   #     #### ######",
         "#       #    #    #### ##@   #   $#",
-        "#### #### ###### ##  # #          #",
+        "#### #### ###### ##               #",
 		"#$ #     @#    # #  $# # # ########",
         "#  #### ### #### # ### # # #$  #  #",
         "#           #      #     # # # #  #",
-        "## #######################   #    #",
+        "## #################### ##   #    #",
         "#   #     #          *#    ###### #",
         "# #   #   #@          # ###     # #",
         "######### ############# #   ##### #",
@@ -898,12 +912,26 @@ void maze4(int& rows, int& cols) {
     g_Enemy2.d = up;
     enemyvec.push_back(g_Enemy2);
 
+	//Enemy3
+	Enemy g_Enemy3;
+	g_Enemy3.m_Enemy.X = 24;
+	g_Enemy3.m_Enemy.Y = 2;
+	g_Enemy3.d = right ;
+	enemyvec.push_back(g_Enemy3);
+
+	//Enemy4
+	Enemy g_Enemy4;
+	g_Enemy4.m_Enemy.X = 25;
+	g_Enemy4.m_Enemy.Y = 11;
+	g_Enemy4.d = right ;
+	enemyvec.push_back(g_Enemy4);
+
 }
 
 void maze5(int& rows, int& cols) {
 
 	string map5[24] = {
-        "########################################",   // 10 Items, 15 teleports, 2 AI, 8 traps
+        "########################################",   // 10 Items, 15 teleports, 5 AI, 8 traps
         "#      #         #          #      #@  #",
         "# #### ##### # # # ######## ### # #### #",
         "#    #   #@  # #   # @ #        # #    #",
@@ -956,33 +984,54 @@ void maze5(int& rows, int& cols) {
     g_Enemy2.m_Enemy.Y = 20;
     g_Enemy2.d = up;
     enemyvec.push_back(g_Enemy2);
+
+	//Enemy3
+	Enemy g_Enemy3;
+    g_Enemy3.m_Enemy.X = 31;
+    g_Enemy3.m_Enemy.Y = 11;
+    g_Enemy3.d = up;
+    enemyvec.push_back(g_Enemy3);
+
+	//Enemy4
+    Enemy g_Enemy4;
+    g_Enemy4.m_Enemy.X = 14;
+    g_Enemy4.m_Enemy.Y = 23;
+    g_Enemy4.d = right;
+    enemyvec.push_back(g_Enemy4);
+
+	//Enemy5
+    Enemy g_Enemy5;
+    g_Enemy5.m_Enemy.X = 30;
+    g_Enemy5.m_Enemy.Y = 23;
+    g_Enemy5.d = right;
+    enemyvec.push_back(g_Enemy5);
 }
 
 void maze6(int& rows, int& cols) {
     
 	string map6[23] = {
         "#######################################",  //  10 Items, 15 teleports, 2AI, 15traps
-        "#     #   #  @  #    #       $# #   # #",
+        "#     #   #  @  #    #       $# #   #@#",
         "# # ### # # ### # ## # #### ### # # # #",
-        "# #@#   #   #   #  #   #      #   # @ #",
+        "# #@#   #   #   #  #   #      #       #",
         "# ### ####### ###### # # ### ######## #",
-        "# #   # $ #@  #   ## # # # #@   #$#   #",
+        "# #   # $ #@  #   ##   # # #@   #$#   #",
         "# # ### # ##### # #  # ### ### ## #   #",
         "# #     #       #    #  $#   #  #     #",
         "# ### #################### # ## ##### #",
-        "#     #       * @    #@    # #  #  $# #",
-		"##### #              ####### # ## ### #",
+        "#     #       * @    #@    #    #  $# #",
+		"##### #              ### ### # ## ### #",
         "#@  # #        $     #    $# #        #",
-        "### # ################ ##### #### #####",
+        "#   # ################ ##### #### #####",
 		"#     #$   # #         # @ # #        #",
 		"## #######   # ####### # # ########## #",
 		"#          # @   #   # # # # #    #@  #",
-        "# # ## ########      #   #        # ###",
+        "# # ## ## #####      #   #        # ###",
         "# # #@ #    #@# ################# #   #",
         "#   #### ## #     @                 ###",
         "#####    $# ###### ########### ###### #",
 		"# @ #   ### #   #   #  # $ #   #  @ # #",
-		"# #   # #     #     #    #   #   ##   #",
+		"#     # #     #     #    #   #   ##   #",
 		"#######################################" };
 
 	rows = 23;
@@ -1000,7 +1049,7 @@ void maze6(int& rows, int& cols) {
 	Tel.own_Loc.X = 16;
 	Tel.own_Loc.Y = 10;
 
-    //Enemy 1
+    //Enemy1
     Enemy g_Enemy1;
 	g_Enemy1.m_Enemy.X = 25;
     g_Enemy1.m_Enemy.Y = 19;
@@ -1013,6 +1062,63 @@ void maze6(int& rows, int& cols) {
     g_Enemy2.m_Enemy.Y = 10;
     g_Enemy2.d = up;
     enemyvec.push_back(g_Enemy2);
+
+	//Enemy3
+    Enemy g_Enemy3;
+	g_Enemy3.m_Enemy.X = 8;
+    g_Enemy3.m_Enemy.Y = 11;
+    g_Enemy3.d = right;
+    enemyvec.push_back(g_Enemy3);
+
+	//Enemy4
+    Enemy g_Enemy4;
+	g_Enemy4.m_Enemy.X = 3;
+    g_Enemy4.m_Enemy.Y = 13;
+    g_Enemy4.d = right;
+    enemyvec.push_back(g_Enemy4);
+
+	//Enemy5
+    Enemy g_Enemy5;
+	g_Enemy5.m_Enemy.X = 36;
+    g_Enemy5.m_Enemy.Y = 4;
+    g_Enemy5.d = right;
+    enemyvec.push_back(g_Enemy5);
+
+	//Enemy6
+    Enemy g_Enemy6;
+	g_Enemy6.m_Enemy.X = 32;
+    g_Enemy6.m_Enemy.Y = 12;
+    g_Enemy6.d = right;
+    enemyvec.push_back(g_Enemy6);
+
+	//Enemy7
+    Enemy g_Enemy7;
+	g_Enemy7.m_Enemy.X = 11;
+    g_Enemy7.m_Enemy.Y = 15;
+    g_Enemy7.d = right;
+    enemyvec.push_back(g_Enemy7);
+
+	//Enemy8
+    Enemy g_Enemy8;
+	g_Enemy8.m_Enemy.X = 13;
+    g_Enemy8.m_Enemy.Y = 12;
+    g_Enemy8.d = up;
+    enemyvec.push_back(g_Enemy8);
+	 
+	//Enemy9
+    Enemy g_Enemy9;
+    g_Enemy9.m_Enemy.X = 7;
+    g_Enemy9.m_Enemy.Y = 21;
+    g_Enemy9.d = up;
+    enemyvec.push_back(g_Enemy9);
+
+    //Enemy10
+    Enemy g_Enemy10;
+    g_Enemy10.m_Enemy.X =22;
+    g_Enemy10.m_Enemy.Y = 8;
+    g_Enemy10.d = up;
+    enemyvec.push_back(g_Enemy10);
+
 }
 
 void renderCharacter()
