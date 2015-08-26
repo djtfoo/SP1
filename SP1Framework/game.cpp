@@ -176,6 +176,10 @@ void getInput( void )
     g_abKeyPressed[K_SPACE]  = isKeyPressed(VK_SPACE);
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
 
+	//for pause screen
+	g_abKeyPressed[K_ONE] = isKeyPressed(49);
+	g_abKeyPressed[K_TWO] = isKeyPressed(50);
+
     //for keying in name for high score
     g_abKeyPressed[K_A] = isKeyPressed(65);
     g_abKeyPressed[K_B] = isKeyPressed(66);
@@ -236,6 +240,9 @@ void update(double dt)
 		case S_GAME : playTime += dt; gameplay();	// gameplay logic when we are in the game
             break;
 
+		case S_PAUSE : pauseGame(); 
+			break;
+
         case S_WIN : clearGame();
             break;
 	}
@@ -260,6 +267,8 @@ void render()
             break;
         case S_WIN : renderClearGame();
             break;
+		case S_PAUSE : renderPauseGame();
+			break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -349,9 +358,20 @@ void moveCharacter()
 
 void processUserInput()
 {
-    // quits the game if player hits the escape key
-    if (g_abKeyPressed[K_ESCAPE]) {
-        g_bQuitGame = true;
+    // pauses the game if player hits the escape key
+	if (g_abKeyPressed[K_ESCAPE]) {
+		g_eGameState = S_PAUSE;
+	}
+}
+
+void processPauseInput()
+{
+	if (g_abKeyPressed[K_ONE]) {
+		g_eGameState = S_GAME;
+	}
+
+	if (g_abKeyPressed[K_TWO]) {
+		g_bQuitGame = true;
 	}
 }
 
@@ -400,6 +420,22 @@ void renderClearGame() {
     clearScreen();
     renderText();
     renderNameInput(name);
+}
+
+void pauseGame() {
+	processPauseInput();
+}
+
+void renderPauseGame() {
+
+	clearScreen();
+	COORD c = g_Console.getConsoleSize();
+	c.X /= 2;
+	c.Y /= 3;
+	g_Console.writeToBuffer(c, "Press '2' to quit game", 0x03);
+	c.X /= 2;
+	c.Y /= 3;
+	g_Console.writeToBuffer(c, "Press '1' to return", 0x03);
 }
 
 void renderText() {

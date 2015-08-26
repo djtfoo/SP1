@@ -7,6 +7,7 @@
 extern CStopWatch g_swTimer;
 extern bool g_bQuitGame;
 
+
 // Enumeration to store the control keys that your game will have
 enum EKEYS
 {
@@ -17,6 +18,8 @@ enum EKEYS
     K_RIGHT,
     K_ESCAPE,
     K_SPACE,
+	K_ONE,
+	K_TWO,
     //for keying in name for highscore
     K_A,
     K_B,
@@ -55,6 +58,7 @@ enum EGAMESTATES
     S_SPLASHSCREEN,
     S_GAME,
     S_WIN,
+	S_PAUSE,
     S_COUNT
 };
 
@@ -110,7 +114,8 @@ void shutdown    ( void );      // do clean up, free memory
 void splashScreenWait();    // waits for time to pass in splash screen
 void gameplay();            // gameplay logic
 void moveCharacter();       // moves the character, collision detection, physics, etc
-void processUserInput();    // checks if you should change states or do something else with the game, e.g. pause, exit
+void processUserInput();	// checks if you should change states or do something else with the game, e.g. pause, exit
+void processPauseInput();
 void clearScreen();         // clears the current screen and draw from scratch 
 void renderSplashScreen();  // renders the splash screen
 void renderGame();          // renders the game stuff
@@ -143,9 +148,11 @@ void exitLevel();
 
 //finish the game - Jing Ting
 void clearGame();
+void pauseGame();
 void processNameInput(char * name);
 void renderNameInput(char * name);
 void renderClearGame();
+void renderPauseGame();
 void renderText();
 
 #endif // _GAME_H
