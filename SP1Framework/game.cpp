@@ -1074,32 +1074,50 @@ void renderFramerate()
     c.X = g_Console.getConsoleSize().X - 9;
     c.Y = 0;
     g_Console.writeToBuffer(c, ss.str());
-
-    // displays the playtime
-    ss.str("");
-    ss << playTime << "secs";
-    c.X = 0;
-    g_Console.writeToBuffer(c, ss.str());
 }
 
 void renderCounters() {
 
     COORD c;
-    // displays the framerate
+    c.X = 0;
+    c.Y = 0;
+    g_Console.writeToBuffer(c,"ESCAPEE");
+
     std::ostringstream ss;
+    // displays the playtime
+    ss.str("");
+    ss << "Timer: " << playTime << "secs";
+    c.X = 50;
+    c.Y = 6;
+    g_Console.writeToBuffer(c, ss.str());
+    
     // displays the item counter
 	ss.str("");
 	ss << "$: " << ItemCounter << "/" << MaxItemCount;
-	c.X = 50;
     c.Y = 8;
 	g_Console.writeToBuffer(c, ss.str());
 
     // displays the level count
     ss.str("");
     ss << "Level: " << levelCount;
-    c.X = 50;
     c.Y = 10;
     g_Console.writeToBuffer(c, ss.str());
+
+    if (ItemCounter < MaxItemCount)
+    {
+        c.X = 40;
+        c.Y = 12;
+        g_Console.writeToBuffer(c,"You have not collected enough items");
+        c.X = 50;
+        c.Y = 14;
+        g_Console.writeToBuffer(c,"Exit is locked");
+    }
+    else
+    {
+        c.X = 45;
+        c.Y = 12;
+        g_Console.writeToBuffer(c,"Exit is unlocked");
+    }
 }
 
 void renderToScreen()
