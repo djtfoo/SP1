@@ -55,6 +55,7 @@ void displayHighscore();
 void displayExit();
 
 //options
+void options();
 void displayOptions();
 void displaySound();
 
@@ -71,7 +72,8 @@ void userInputSOUND();
 
 //user input
 void userInput(); //to get input
+void addTime();
 void processInputMenu(Sequence &s); //to process the input when in main menu
-void processInputOptions(SequenceOPT &s); //to process the input when in options
-void processInputSound(); //to process the input when in sound options
 void processInputBack(Sequence &s); //to process the input when in instructions and high score, to return to main menu
+void processInputOptions(SequenceOPT &s); //to process the input when in options
+void processInputSound(SequenceOPT &s); //to process the input when in sound options

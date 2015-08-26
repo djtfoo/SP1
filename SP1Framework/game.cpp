@@ -64,7 +64,7 @@ void init( void )
 	BufferTime = 3.0;
 
 	// sets the initial state for the game
-	levelCount = 6;
+	levelCount = 1;
     levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
 
@@ -592,7 +592,7 @@ void processNameInput(char * name) {
     if (keySomething)
     {
         // set the bounce time to some time in the future to prevent accidental triggers
-        g_dBounceTime = g_dElapsedTime + 0.1; // 125ms should be enough
+        g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
         if (!backspace && pointer < name+9) {
             ++pointer;
         }
@@ -1191,7 +1191,6 @@ void moveEnemy(Enemy& g_Enemy)
 		g_Enemy.m_Enemy.Y++;
 		g_Enemy.d = down;
 	}
-
 
 }
 

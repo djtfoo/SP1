@@ -13,17 +13,20 @@
 using std::vector;
 using std::string;
 using std::ifstream;
-using std::cin;
 
 CStopWatch g_Timer;                            // Timer function to keep track of time and the frame rate
 bool g_bQuitGame = false;                    // Set to true if you want to quit the game
 const unsigned char gc_ucFPS = 100;                // FPS of this game
 const unsigned int gc_uFrameTime = 1000 / gc_ucFPS;    // time for each frame
 
-bool inputDetected = false;
+Sequence seq = Menu;
+bool exitGame = false;
 
 //detecting key input
-bool    menu_KeyPressed[K_COUNT];
+bool menu_KeyPressed[K_COUNT];
+bool inputDetected = false;
+double BounceTime = 0.5;
+double ElapsedTime = 0.0;
 
 //main loop declaration
 void mainLoop( void );
@@ -46,11 +49,9 @@ int main( void )
 
 void gameLoop()
 {
-    Sequence seq = Menu;
 
-    while (seq != Exit)
+    while (!exitGame)
     {
-        
         switch(seq)
         {
             case Menu : displayMenu();
@@ -59,14 +60,16 @@ void gameLoop()
                     processInputMenu(seq);
                 }
                 inputDetected = false;
+                ElapsedTime = 0.0;
                 break;
-            case Play : displayGame(); seq = Menu; break;
+            case Play : displayGame(); seq = Menu; ElapsedTime = 0.0; break;
 			case Instructions : displayInstructions();
                 while (!inputDetected) {
                     userInput();
                     processInputBack(seq);
                 }
                 inputDetected = false;
+                ElapsedTime = 0.0;
                 break;
 			case HighScore : displayHighscore();
                 while (!inputDetected) {
@@ -74,8 +77,9 @@ void gameLoop()
                     processInputBack(seq);
                 }
                 inputDetected = false;
+                ElapsedTime = 0.0;
                 break;
-            case Options : displayOptions(); break;
+            case Options : options(); break;
             case Exit : displayExit(); break;
         }
     }
@@ -89,9 +93,21 @@ void userInput() //If s is modified, seq is modified as well
     menu_KeyPressed[K_4] = isKeyPressed(52);
     menu_KeyPressed[K_ENT] = isKeyPressed(VK_RETURN);
     menu_KeyPressed[K_ESC] = isKeyPressed(VK_ESCAPE);
+    
+    addTime();
+}
+
+void addTime() {
+
+    ElapsedTime += g_Timer.getElapsedTime();
+
 }
 
 void processInputMenu(Sequence &s) {
+
+    if (ElapsedTime <= BounceTime) {
+        return;
+    }
 
     if (menu_KeyPressed[K_1]) {
         s = Play;
@@ -109,10 +125,12 @@ void processInputMenu(Sequence &s) {
         s = Options;
         inputDetected = true;
     }
+    else if (menu_KeyPressed[K_ESC]) {
+        s = Exit;
+        inputDetected = true;
+    }
 
 }
-void processInputOptions(SequenceOPT &s); //to process the input when in options
-void processInputSound(); //to process the input when in sound options
 
 void processInputBack(Sequence &s) {
 
@@ -120,6 +138,46 @@ void processInputBack(Sequence &s) {
         s = Menu;
         inputDetected = true;
     }
+
+}
+
+void processInputOptions(SequenceOPT &s) {
+
+    if (ElapsedTime <= BounceTime) {
+        return;
+    }
+
+    if(menu_KeyPressed[K_1])
+	{
+		s = Sound;
+        inputDetected = true;
+	}
+	else if (menu_KeyPressed[K_ENT])
+	{
+		s = Back;
+        inputDetected = true;
+	}
+    
+}
+
+void processInputSound(SequenceOPT &s) {
+
+    if (ElapsedTime <= BounceTime) {
+        return;
+    }
+
+    if(menu_KeyPressed[K_1])
+	{
+		PlaySound( "music.wav", NULL, SND_LOOP | SND_ASYNC);
+        s = OptionsMenu;
+        inputDetected = true;
+	}
+	else if (menu_KeyPressed[K_2])
+	{
+		PlaySound(NULL,NULL,0);
+        s = OptionsMenu;
+        inputDetected = true;
+	}
 
 }
 
@@ -273,80 +331,79 @@ void toCpp()
 
 }
 
-void displayOptions() {
+void options() {
 
-	SequenceOPT s = OptionsMenu;
+    SequenceOPT s = OptionsMenu;
+    ElapsedTime = 0.0;
 
-	while (s != Back) {
-
-		//use g_Console.writeToBuffer
-		clearScreen();
-
-		COORD c = g_Console.getConsoleSize();
-		c.Y /= 3;
-		c.X = c.X / 2 - 2;
-		g_Console.writeToBuffer(c, "OPTIONS", 0x13);
-		c.Y += 1;
-		c.X = g_Console.getConsoleSize().X / 2 - 11;
-		g_Console.writeToBuffer(c, "Press '1' for Sound", 0x09);
-		c.Y += 1;
-		c.X = g_Console.getConsoleSize().X / 2 - 11;
-		g_Console.writeToBuffer(c, "Press '2' to go back to Main Menu", 0x09);
-		g_Console.flushBufferToConsole();
-
-		userInput();
-
-		switch(s)
-		{
-			case Sound : displaySound(); break;
-			case Back : s = Back; break;
-		}
-
-		if (s != OptionsMenu && s != Back) {
-			s = OptionsMenu;
-		}
-
-	}
+    while (seq != Menu)
+    {
+        
+        switch(s)
+        {
+            case OptionsMenu : displayOptions();
+                while (!inputDetected) {
+                    userInput();
+                    processInputOptions(s);
+                }
+                inputDetected = false;
+                break;
+            case Sound : displaySound();
+                ElapsedTime = 0.0;
+                while (!inputDetected) {
+                    userInput();
+                    processInputSound(s);
+                }
+                inputDetected = false;
+                ElapsedTime = 0.0;
+                break;
+            case Back : seq = Menu; break;
+        }
+    }
 
 }
 
-void displaySound(){
+void displayOptions() {
 
-	clearScreen();
-	COORD c = g_Console.getConsoleSize();
+    clearScreen();
+
+    COORD c = g_Console.getConsoleSize();
+    c.Y /= 3;
+    c.X = c.X / 2 - 2;
+    g_Console.writeToBuffer(c, "OPTIONS", 0x13);
+    c.Y += 1;
+    c.X = g_Console.getConsoleSize().X / 2 - 11;
+    g_Console.writeToBuffer(c, "Press '1' for Sound", 0x09);
+    c.Y += 1;
+    c.X = g_Console.getConsoleSize().X / 2 - 11;
+    g_Console.writeToBuffer(c, "Press ENTER to go back to Main Menu", 0x09);
+    g_Console.flushBufferToConsole();
+
+}
+
+void displaySound() {
+    
+    clearScreen();
+
+    COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
     c.X = c.X / 2 - 6;
     g_Console.writeToBuffer(c, "EDIT SOUND HERE", 0x13);
-	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 11;
-	g_Console.writeToBuffer(c, "Press '1' to switch on sound", 0x09);
-	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 11;
-	g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x09);
-	g_Console.flushBufferToConsole();
-
-	userInputSOUND();
-
-}
-
-void userInputSOUND()
-{
-	int i;
-	cin >> i;
-	if(i == 1)
-	{
-		PlaySound( "music.wav", NULL, SND_LOOP | SND_ASYNC); 
-	}
-	else
-	{
-		PlaySound(NULL,NULL,0);
-	}
+    c.Y += 1;
+    c.X = g_Console.getConsoleSize().X / 2 - 11;
+    g_Console.writeToBuffer(c, "Press '1' to switch on sound", 0x09);
+    c.Y += 1;
+    c.X = g_Console.getConsoleSize().X / 2 - 11;
+    g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x09);
+    g_Console.flushBufferToConsole();
 
 }
 
 void displayExit()
 {
-
+    clearScreen();
+    exitGame = true;
+    Sleep(3000);
 }
 
 //--------------------------------------------------------------
