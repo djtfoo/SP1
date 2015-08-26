@@ -70,7 +70,6 @@ void init( void )
 
 	g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
-    g_Console.setConsoleFont(0, 25, L"Consolas");
 
     name[0] = '\0';
     pointer = name - 1;
@@ -419,6 +418,7 @@ void clearGame() {
 void renderClearGame() {
     clearScreen();
     renderText();
+	renderPlaytime();
     renderNameInput(name);
 }
 
@@ -740,11 +740,11 @@ void maze2(int& rows, int& cols) {
         "# #     # #### # ## # ###### # #",
         "# # ##### #    #        #    # #",
 		"# #    @# ## # ######## #  # # #",
-        "# #######    #        # #  # # #",
-        "#     #    # ######## # #### # #",
+        "# #######    #        # #  #   #",
+        "#     #    # ######## # ####   #",
         "#####   #### #*     #          #",
-        "# $ # #      #     @# ###### # #",
-        "## ## ############### #  # # # #",
+        "# $ # #      #     @# ######   #",
+        "## ## ############### #  # #   #",
         "#   #   #   #   #     #  # # # #",
 		"# # ### ### # # #  ####  # # # #",
         "# # @ # #@    # #        #   #$#",
@@ -877,7 +877,7 @@ void maze4(int& rows, int& cols) {
         "# #   #   #@          # ###     # #",
         "######### ############# #   ##### #",
         "#       #$              #         #",
-        "# ### # #### # ##### ##############",
+        "# ### # #### # ##### ###### #######",
         "# #@ $#      # #      @#     #$   #",
         "# ############ ## ### ##  # ##### #",
         "#     @#       #  #       #@      #",
@@ -1223,15 +1223,14 @@ void renderCounters() {
     c.X = 0;
     c.Y = 0;
     g_Console.writeToBuffer(c,"ESCAPEE");
-
-    std::ostringstream ss;
-    // displays the playtime
-    ss.str("");
-    ss << "Timer: " << playTime << "secs";
+    
+	// displays the playtime
+	std::ostringstream ss;
+	ss << "Timer: " << playTime << "secs";
     c.X = 50;
     c.Y = 6;
     g_Console.writeToBuffer(c, ss.str());
-    
+
     // displays the item counter
 	ss.str("");
 	ss << "$: " << ItemCounter << "/" << MaxItemCount;
@@ -1259,6 +1258,18 @@ void renderCounters() {
         c.Y = 12;
         g_Console.writeToBuffer(c,"Exit is unlocked");
     }
+}
+
+void renderPlaytime() {
+
+	COORD c;
+	std::ostringstream ss;
+    // displays the playtime
+    ss << "Time: " << playTime << "secs";
+    c.X = 50;
+    c.Y = 6;
+    g_Console.writeToBuffer(c, ss.str());
+
 }
 
 void renderToScreen()

@@ -154,5 +154,6 @@ void renderNameInput(char * name);
 void renderClearGame();
 void renderPauseGame();
 void renderText();
+void renderPlaytime();
 
 #endif // _GAME_H
