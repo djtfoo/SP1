@@ -20,6 +20,8 @@ bool g_bQuitGame = false;                    // Set to true if you want to quit 
 const unsigned char gc_ucFPS = 100;                // FPS of this game
 const unsigned int gc_uFrameTime = 1000 / gc_ucFPS;    // time for each frame
 
+bool inputDetected = false;
+
 //detecting key input
 bool    menu_KeyPressed[K_COUNT];
 
@@ -48,14 +50,31 @@ void gameLoop()
 
     while (seq != Exit)
     {
-        userInput();
         
         switch(seq)
         {
-            case Menu : displayMenu(); processInputMenu(seq); break;
+            case Menu : displayMenu();
+                while (!inputDetected) {
+                    userInput();
+                    processInputMenu(seq);
+                }
+                inputDetected = false;
+                break;
             case Play : displayGame(); seq = Menu; break;
-			case Instructions : displayInstructions(); processInputBack(seq); break;
-			case HighScore : displayHighscore(); processInputBack(seq); break;
+			case Instructions : displayInstructions();
+                while (!inputDetected) {
+                    userInput();
+                    processInputBack(seq);
+                }
+                inputDetected = false;
+                break;
+			case HighScore : displayHighscore();
+                while (!inputDetected) {
+                    userInput();
+                    processInputBack(seq);
+                }
+                inputDetected = false;
+                break;
             case Options : displayOptions(); break;
             case Exit : displayExit(); break;
         }
@@ -76,15 +95,19 @@ void processInputMenu(Sequence &s) {
 
     if (menu_KeyPressed[K_1]) {
         s = Play;
+        inputDetected = true;
     }
     else if (menu_KeyPressed[K_2]) {
         s = Instructions;
+        inputDetected = true;
     }
     else if (menu_KeyPressed[K_3]) {
         s = HighScore;
+        inputDetected = true;
     }
     else if (menu_KeyPressed[K_4]) {
         s = Options;
+        inputDetected = true;
     }
 
 }
@@ -95,6 +118,7 @@ void processInputBack(Sequence &s) {
 
     if (menu_KeyPressed[K_ENT]) {
         s = Menu;
+        inputDetected = true;
     }
 
 }
