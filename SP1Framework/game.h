@@ -76,9 +76,18 @@ struct SGameChar
     bool  m_bActive;
 };
 
+enum Direction {
+    left = 1,
+    right,
+    down,
+    up,
+    MAX_DIRECTION
+};
+
 struct Enemy
 {
     COORD m_Enemy;
+    Direction d;
 };
 
 struct Traps
@@ -111,8 +120,10 @@ void renderEnemy();
 void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
 void renderCounters();      // renders item counter, level count. for gameplay() only
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
-void moveEnemy1();
-void moveEnemy2();
+
+//Enemy
+void moveEnemy(Enemy& g_Enemy);
+void enemyCollisionWithPlayer(Enemy g_Enemy);
 
 //generating map - Jing Ting
 void levelInit();

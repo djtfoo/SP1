@@ -21,8 +21,7 @@ bool    g_abKeyPressed[K_COUNT];
 
 // Game specific variables here
 SGameChar   g_sChar;
-Enemy   g_Enemy;
-Enemy   g_Enemy2;
+vector<Enemy> enemyvec;
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 double  g_dBounceTimeEnemy;
@@ -38,8 +37,6 @@ int levelCount;
 bool levelClear;
 int ItemCounter = 0;
 int MaxItemCount = 0;
-int direction = 2;
-int direction2 = 4; 
 
 //Teleporter
 ExitTeleporter Tel;
@@ -67,7 +64,7 @@ void init( void )
 	BufferTime = 3.0;
 
 	// sets the initial state for the game
-	levelCount = 6;
+	levelCount = 1;
     levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
 
@@ -99,15 +96,17 @@ void levelInit() {
 
 	if (levelClear && levelCount <= 6) {
 
+        //resetting the player's coordinates to the default starting point (the top left corner)
 		g_sChar.m_cLocation.X = 1;
 		g_sChar.m_cLocation.Y = 2;
 
-		levelClear = false;
+		levelClear = false; //to prevent levelInit() from running again while the player hasn't finished the level
 		
+        //clearing out the values that are different for each level
 		maze = 0;
-
 		MaxItemCount = 0;
 		ItemCounter = 0;
+        enemyvec.clear();
 
 		/*switch (static_cast<GAMELEVELS>(levelCount)) {
 		case M1 : maze1(rows, cols); break;
@@ -274,10 +273,16 @@ void gameplay()            // gameplay logic
     moveCharacter();    // moves the character, collision detection, physics, etc
                         // sound can be played here too.
 
+    //check if each enemy is colliding with the player
+    for (unsigned int i = 0; i < enemyvec.size(); ++i) {
+            enemyCollisionWithPlayer(enemyvec[i]);
+        }
+
     if (g_dBounceTimeEnemy < g_dElapsedTime) {
-        moveEnemy1();
-        moveEnemy2();
-        g_dBounceTimeEnemy += 0.5;
+        for (unsigned int i = 0; i < enemyvec.size(); ++i) {
+            moveEnemy(enemyvec[i]);
+        }
+        g_dBounceTimeEnemy = g_dElapsedTime + 0.3;
     }
 }
 
@@ -673,13 +678,18 @@ void maze1(int& rows, int& cols) {
 	Tel.own_Loc.Y = 13;
 
     //Enemy 1
-		g_Enemy.m_Enemy.X = 5;
-        g_Enemy.m_Enemy.Y = 2;
+    Enemy g_Enemy1;
+	g_Enemy1.m_Enemy.X = 5;
+    g_Enemy1.m_Enemy.Y = 2;
+    g_Enemy1.d = right;
+    enemyvec.push_back(g_Enemy1);
 
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 16;
-		g_Enemy2.m_Enemy.Y = 12;
-
+    //Enemy2
+    Enemy g_Enemy2;
+    g_Enemy2.m_Enemy.X = 16;
+    g_Enemy2.m_Enemy.Y = 12;
+    g_Enemy2.d = up;
+    enemyvec.push_back(g_Enemy2);
 
 }
 
@@ -724,13 +734,19 @@ void maze2(int& rows, int& cols) {
 	Tel.own_Loc.Y = 13;
 
     
-        //Enemy 1
-		g_Enemy.m_Enemy.X = 9;
-        g_Enemy.m_Enemy.Y = 2;
+    //Enemy 1
+    Enemy g_Enemy1;
+    g_Enemy1.m_Enemy.X = 9;
+    g_Enemy1.m_Enemy.Y = 2;
+    g_Enemy1.d = right;
+    enemyvec.push_back(g_Enemy1);
 
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 30;
-		g_Enemy2.m_Enemy.Y = 15;
+    //Enemy2
+    Enemy g_Enemy2;
+    g_Enemy2.m_Enemy.X = 30;
+    g_Enemy2.m_Enemy.Y = 15;
+    g_Enemy2.d = up;
+    enemyvec.push_back(g_Enemy2);
 
 }
 
@@ -775,12 +791,18 @@ void maze3(int& rows, int& cols) {
 	Tel.own_Loc.Y = 12;
 
     //Enemy 1
-    g_Enemy.m_Enemy.X = 17;
-    g_Enemy.m_Enemy.Y = 10;
+    Enemy g_Enemy1;
+    g_Enemy1.m_Enemy.X = 17;
+    g_Enemy1.m_Enemy.Y = 10;
+    g_Enemy1.d = right;
+    enemyvec.push_back(g_Enemy1);
     
     //Enemy 2
+    Enemy g_Enemy2;
     g_Enemy2.m_Enemy.X = 1;
     g_Enemy2.m_Enemy.Y = 10;
+    g_Enemy2.d = up;
+    enemyvec.push_back(g_Enemy2);
 }
 
 void maze4(int& rows, int& cols) {
@@ -827,12 +849,18 @@ void maze4(int& rows, int& cols) {
 	Tel.own_Loc.Y = 17;
 
     //Enemy 1
-		g_Enemy.m_Enemy.X = 18;
-        g_Enemy.m_Enemy.Y = 16;
+    Enemy g_Enemy1;
+    g_Enemy1.m_Enemy.X = 18;
+    g_Enemy1.m_Enemy.Y = 16;
+    g_Enemy1.d = right;
+    enemyvec.push_back(g_Enemy1);
 
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 26;
-		g_Enemy2.m_Enemy.Y = 15;
+    //Enemy2
+    Enemy g_Enemy2;
+    g_Enemy2.m_Enemy.X = 26;
+    g_Enemy2.m_Enemy.Y = 15;
+    g_Enemy2.d = up;
+    enemyvec.push_back(g_Enemy2);
 
 }
 
@@ -879,15 +907,21 @@ void maze5(int& rows, int& cols) {
 	Tel.own_Loc.X = 16;
 	Tel.own_Loc.Y = 15;
 
-      //Enemy 1
-		g_Enemy.m_Enemy.X = 25;
-        g_Enemy.m_Enemy.Y = 15;
+    //Enemy 1
+    Enemy g_Enemy1;
+    g_Enemy1.m_Enemy.X = 25;
+    g_Enemy1.m_Enemy.Y = 15;
+    g_Enemy1.d = right;
+    enemyvec.push_back(g_Enemy1);
 
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 11;
-		g_Enemy2.m_Enemy.Y = 20;
-
+    //Enemy2
+    Enemy g_Enemy2;
+    g_Enemy2.m_Enemy.X = 11;
+    g_Enemy2.m_Enemy.Y = 20;
+    g_Enemy2.d = up;
+    enemyvec.push_back(g_Enemy2);
 }
+
 void maze6(int& rows, int& cols) {
     
 	string map6[23] = {
@@ -931,13 +965,18 @@ void maze6(int& rows, int& cols) {
 	Tel.own_Loc.Y = 10;
 
     //Enemy 1
-		g_Enemy.m_Enemy.X = 25;
-        g_Enemy.m_Enemy.Y = 19;
-
-		//Enemy2
-		g_Enemy2.m_Enemy.X = 5;
-		g_Enemy2.m_Enemy.Y = 10;
-
+    Enemy g_Enemy1;
+	g_Enemy1.m_Enemy.X = 25;
+    g_Enemy1.m_Enemy.Y = 19;
+    g_Enemy1.d = right;
+    enemyvec.push_back(g_Enemy1);
+    
+    //Enemy2
+    Enemy g_Enemy2;
+    g_Enemy2.m_Enemy.X = 5;
+    g_Enemy2.m_Enemy.Y = 10;
+    g_Enemy2.d = up;
+    enemyvec.push_back(g_Enemy2);
 }
 
 void renderCharacter()
@@ -954,101 +993,70 @@ void renderCharacter()
 void renderEnemy()
 {
     WORD enemyColor = 0x0C;
-    g_Console.writeToBuffer(g_Enemy.m_Enemy, (char)49, enemyColor);
-	g_Console.writeToBuffer(g_Enemy2.m_Enemy, (char)49, enemyColor);
+    for (unsigned int i = 0; i < enemyvec.size(); ++i) {
+        Enemy tempEnemy = enemyvec[i];
+        COORD tempE = tempEnemy.m_Enemy;
+        g_Console.writeToBuffer(tempE, (char)49, enemyColor);
+    }
 }
 
-//Shania
-void moveEnemy1()
+//Shania + Jing Ting
+void moveEnemy(Enemy& g_Enemy)
 {
-    bool bEnemyMoved = false;
 
     //Get the enemy coordinates
     int eX = g_Enemy.m_Enemy.X;
     int eY = g_Enemy.m_Enemy.Y-1;
 	
+    //Move the enemy
 	//If enemy next X position is not a wall
-
-    if (maze[eY][eX+1] != '#' && direction == 2) //move right
+    if (g_Enemy.d == right && maze[eY][eX+1] != '#') //move right
     {
         g_Enemy.m_Enemy.X++;
-		bEnemyMoved = true;
     }
 
-    else if(maze[eY][eX-1] != '#' && direction == 1) //move left
+    else if(g_Enemy.d == left && maze[eY][eX-1] != '#') //move left
     {
         g_Enemy.m_Enemy.X--;
-		bEnemyMoved = true;
+    }
+    else if (g_Enemy.d == up && maze[eY-1][eX] != '#') //move up
+    {
+        g_Enemy.m_Enemy.Y--;
+    }
+	else if(g_Enemy.d == down && maze[eY+1][eX] != '#') //move down
+    {
+        g_Enemy.m_Enemy.Y++;
     }
 
-	//Move 
-    else if (maze[eY][eX+1] == '#')
+	//change direction
+    else if (g_Enemy.d == right && maze[eY][eX+1] == '#')
 	{
 		g_Enemy.m_Enemy.X--;
-		bEnemyMoved = true;
-		direction = 1;
+		g_Enemy.d = left;
 	}
-	else if (maze[eY][eX-1] == '#')
+	else if (g_Enemy.d == left && maze[eY][eX-1] == '#')
 	{
 		g_Enemy.m_Enemy.X++;
-		bEnemyMoved = true;
-		direction = 2;
+		g_Enemy.d = right;
+	}
+    else if (g_Enemy.d == down && maze[eY+1][eX] == '#')
+	{
+		g_Enemy.m_Enemy.Y--;
+		g_Enemy.d = up;
+	}
+	else if (g_Enemy.d == up && maze[eY-1][eX] == '#')
+	{
+		g_Enemy.m_Enemy.Y++;
+		g_Enemy.d = down;
 	}
 
-    //Collision
-    int gX = g_sChar.m_cLocation.X;
-    int gY = g_sChar.m_cLocation.Y;
-
-    //If character touches the enemy, spawn the character back to starting location
-    if (g_sChar.m_cLocation.X == g_Enemy.m_Enemy.X && g_sChar.m_cLocation.Y == g_Enemy.m_Enemy.Y)
-    {
-        g_sChar.m_cLocation.X = 1;
-        g_sChar.m_cLocation.Y = 2;
-    }
 
 }
 
-//Shania
-void moveEnemy2()
-{
-
-	bool bEnemyMoved = false;
-   
-    //Get the enemy coordinates
-    int eX = g_Enemy2.m_Enemy.X;
-    int eY = g_Enemy2.m_Enemy.Y-1;
-
-	if (maze[eY-1][eX] != '#' && direction2 == 4) //move up
-    {
-        g_Enemy2.m_Enemy.Y--;
-		bEnemyMoved = true;
-    }
-	else if(maze[eY+1][eX] != '#' && direction2 == 3) //move down
-    {
-        g_Enemy2.m_Enemy.Y++;
-		bEnemyMoved = true;
-    }
-
-	//Move 
-    else if (maze[eY+1][eX] == '#')
-	{
-		g_Enemy2.m_Enemy.Y--;
-		bEnemyMoved = true;
-		direction2 = 4;
-	}
-	else if (maze[eY-1][eX] == '#')
-	{
-		g_Enemy2.m_Enemy.Y++;
-		bEnemyMoved = true;
-		direction2 = 3;
-	}
-
-	//Collision
-    int gX = g_sChar.m_cLocation.X;
-    int gY = g_sChar.m_cLocation.Y;
+void enemyCollisionWithPlayer(Enemy g_Enemy) {
 
 	//If character touches the enemy, spawn the character back to starting location
-    if (g_sChar.m_cLocation.X == g_Enemy2.m_Enemy.X && g_sChar.m_cLocation.Y == g_Enemy2.m_Enemy.Y)
+    if (g_sChar.m_cLocation.X == g_Enemy.m_Enemy.X && g_sChar.m_cLocation.Y == g_Enemy.m_Enemy.Y)
     {
         g_sChar.m_cLocation.X = 1;
         g_sChar.m_cLocation.Y = 2;
@@ -1108,13 +1116,16 @@ void checkTrap() {
 	 if (maze[Y][X] == '@') {
 		 if (g_sChar.m_cLocation.X == Tel.own_Loc.X && g_sChar.m_cLocation.Y == Tel.own_Loc.Y) {
 			 g_sChar.m_cLocation = Tel.warp_Loc;
+             g_dBounceTime = g_dElapsedTime + 0.3;
 		 }
 		 else if (g_sChar.m_cLocation.X == Tel.warp_Loc.X && g_sChar.m_cLocation.Y == Tel.warp_Loc.Y) {
 			 g_sChar.m_cLocation = Tel.own_Loc;
+             g_dBounceTime = g_dElapsedTime + 0.3;
 		 }
 		 else {
 			 //it's a trap
 			 maze[Y][X] = ' ';
+             g_dBounceTime = g_dElapsedTime + 1;
 		 }
 	 }
 
