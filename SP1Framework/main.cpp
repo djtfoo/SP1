@@ -403,6 +403,13 @@ void displaySound() {
 void displayExit()
 {
     clearScreen();
+
+    COORD c = g_Console.getConsoleSize();
+    c.Y /= 3;
+    c.X = c.X / 2 - 6;
+    g_Console.writeToBuffer(c, "BYE~~", 0x13);
+    g_Console.flushBufferToConsole();
+
     exitGame = true;
     Sleep(3000);
 }

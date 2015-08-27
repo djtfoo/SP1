@@ -64,7 +64,7 @@ void init( void )
 	BufferTime = 3.0;
 
 	// sets the initial state for the game
-	levelCount = 2;
+	levelCount = 1;
     levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
 
@@ -401,10 +401,10 @@ void renderSplashScreen()  // renders the splash screen
 	g_Console.writeToBuffer(c, ss.str(), 0x03);
 	c.Y += 1;
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
-	g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);
+	//g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);
 	c.Y += 1;
 	c.X = g_Console.getConsoleSize().X / 2 - 9;
-	g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x09);
+	g_Console.writeToBuffer(c, "Press 'Esc' to pause", 0x09);
 
 }
 
@@ -637,7 +637,7 @@ void mapgenerator(int rows, int cols) {
 				g_Console.writeToBuffer(c, '*', 0x1D);
 			}
 			else if (maze[i][j] == '#') {
-				g_Console.writeToBuffer(c, (char)178, 0x0F);
+				g_Console.writeToBuffer(c, (char)178, 0x1F);
 			}
 		}
 	}
@@ -1124,21 +1124,21 @@ void maze6(int& rows, int& cols) {
 void renderCharacter()
 {
     // Draw the location of the character
-    WORD charColor = 0x0C;
+    WORD charColor = 0x1C;
     if (g_sChar.m_bActive)
     {
-        charColor = 0x0A;
+        charColor = 0x1A;
     }
     g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, charColor);
 }
 
 void renderEnemy()
 {
-    WORD enemyColor = 0x0C;
+    WORD enemyColor = 0x1C;
     for (unsigned int i = 0; i < enemyvec.size(); ++i) {
         Enemy tempEnemy = enemyvec[i];
         COORD tempE = tempEnemy.m_Enemy;
-        g_Console.writeToBuffer(tempE, (char)49, enemyColor);
+        g_Console.writeToBuffer(tempE, (char)88, enemyColor);
     }
 }
 
