@@ -377,7 +377,7 @@ void processPauseInput()
 void clearScreen()
 {
     // Clears the buffer with this colour attribute
-    g_Console.clearBuffer(0x1F);
+    g_Console.clearBuffer(0x0F);
 }
 
 void splashScreenWait() {
@@ -628,20 +628,19 @@ void mapgenerator(int rows, int cols) {
 		for (int j = 0; j < cols; ++j) {
 			c.X = j;
 			if (maze[i][j] == '@') {
-				g_Console.writeToBuffer(c, '@', 0x1A);
+				g_Console.writeToBuffer(c, '@', 0x0E);
 			}
 			else if (maze[i][j] == '$') {
-				g_Console.writeToBuffer(c, '$', 0x1C);
+				g_Console.writeToBuffer(c, '$', 0x0A);
 			}
 			else if (maze[i][j] == '*') {
-				g_Console.writeToBuffer(c, '*', 0x1D);
+				g_Console.writeToBuffer(c, '*', 0x0D);
 			}
 			else if (maze[i][j] == '#') {
-				g_Console.writeToBuffer(c, (char)178, 0x1F);
+				g_Console.writeToBuffer(c, (char)178, 0x0B);
 			}
 		}
 	}
-
 }
 
 void randomiseTeleporters(int rows, int cols) {
@@ -1134,11 +1133,10 @@ void renderCharacter()
 
 void renderEnemy()
 {
-    WORD enemyColor = 0x1C;
     for (unsigned int i = 0; i < enemyvec.size(); ++i) {
         Enemy tempEnemy = enemyvec[i];
         COORD tempE = tempEnemy.m_Enemy;
-        g_Console.writeToBuffer(tempE, (char)88, enemyColor);
+        g_Console.writeToBuffer(tempE, (char)88, 0x0C);
     }
 }
 

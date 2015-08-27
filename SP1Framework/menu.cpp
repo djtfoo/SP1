@@ -132,28 +132,90 @@ void displayMenu()
 	}
     clearScreen();
 	COORD c = g_Console.getConsoleSize();
-    
-    c.Y /= 4;
-    c.X = c.X / 2 - 3;
-    g_Console.writeToBuffer(c, "ESCAPEE", 0x13);
+
+    //GAME NAME
+    c.X /= 2 + 2;
+    c.Y /= 8;
+     for (int i = 20; i < 60; ++i) {
+		c.X++;
+		g_Console.writeToBuffer(c, "=", 0x06);
+		if (i == 60) {
+			break;
+		}
+    }
+    c.Y += 2;
+    c.X = g_Console.getConsoleSize().X / 2-3;
+    g_Console.writeToBuffer(c, "ESCAPEE", 0x0A);
+    c.X = 20;
 	c.Y += 2;
-    c.X = g_Console.getConsoleSize().X / 2 - 2;
-    g_Console.writeToBuffer (c,"MENU", 0x13);
+    for (int i = 20; i < 60; ++i) {
+		c.X++;
+		g_Console.writeToBuffer(c, "=", 0x06);
+		if (i == 60) {
+			break;
+		}
+    }
+    c.Y = 3;
+    for (int i = 0; i < 15; ++i)
+    {
+        c.Y++;
+        g_Console.writeToBuffer(c, "-", 0x06);
+        if (i == 15)
+        {
+            break;
+        }
+
+    }
+    c.Y = 3;
+    c.X = 21;
+    for (int i = 0; i < 15; ++i)
+    {
+        c.Y++;
+        g_Console.writeToBuffer(c, "-", 0x06);
+        if (i == 15)
+        {
+            break;
+        }
+    }
+
+    c.Y ++;
+    c.X = 20;
+        for (int i = 20; i < 60; ++i) {
+		c.X++;
+		g_Console.writeToBuffer(c, "=", 0x06);
+		if (i == 60) {
+			break;
+		}
+    }
+
+    c.Y = 7;
+    c.Y ++;
+    c.X = g_Console.getConsoleSize().X / 2-4;
+    c.Y += 2;
+
+    g_Console.writeToBuffer(c,"~~    ~~",0x04);
+    c.X += 2;
+    g_Console.writeToBuffer (c,"MENU", 0x0B);
+  
     c.Y += 2;
     c.X = g_Console.getConsoleSize().X / 2 - 11;
-    g_Console.writeToBuffer(c, "Press '1' to play Game", 0x04);
+    g_Console.writeToBuffer(c, "Press '1' to play Game", 0x0D);
     c.Y += 1;
+
 	c.X = g_Console.getConsoleSize().X / 2 - 11;
-    g_Console.writeToBuffer(c, "Press '2' for Instructions", 0x04);
+    g_Console.writeToBuffer(c, "Press '2' for Instructions", 0x0D);
     c.Y += 1;
+
 	c.X = g_Console.getConsoleSize().X / 2 - 11;
-    g_Console.writeToBuffer(c, "Press '3' for High Score", 0x04);
+    g_Console.writeToBuffer(c, "Press '3' for High Score", 0x0D);
 	c.Y += 1;
+
     c.X = g_Console.getConsoleSize().X / 2 - 11;
-    g_Console.writeToBuffer(c, "Press '4' to go Options", 0x04);
+    g_Console.writeToBuffer(c, "Press '4' to go Options", 0x0D);
     c.Y += 1;
+
     c.X = g_Console.getConsoleSize().X / 2 - 11;
-    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x04);
+    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x0D);
 	g_Console.flushBufferToConsole();
 	
 }
@@ -317,7 +379,7 @@ void displayOptions() {
     COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
     c.X = c.X / 2 - 2;
-    g_Console.writeToBuffer(c, "OPTIONS", 0x13);
+    g_Console.writeToBuffer(c, "OPTIONS", 0x03);
     c.Y += 1;
     c.X = g_Console.getConsoleSize().X / 2 - 11;
     g_Console.writeToBuffer(c, "Press '1' for Sound", 0x09);
@@ -352,8 +414,8 @@ void displayExit()
 
     COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
-    c.X = c.X / 2 - 6;
-    g_Console.writeToBuffer(c, "BYE~~", 0x13);
+    c.X = c.X / 3;
+    g_Console.writeToBuffer(c, "HAVE A NICE DAY, BYE~~", 0x03);
     g_Console.flushBufferToConsole();
 
     exitGame = true;
