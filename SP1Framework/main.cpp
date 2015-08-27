@@ -29,6 +29,7 @@ Console g_Console(80, 25, "SP1 Framework");
 bool inputDetected = false;
 double BounceTime = 0.3;
 double ElapsedTime = 0.0;
+bool playmusic = true;
 
 // TODO:
 // Bug in waitUntil. it waits for the time from getElapsedTime to waitUntil, but should be insignificant.

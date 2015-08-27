@@ -56,6 +56,9 @@ void toCpp();
 extern Sequence seq;
 extern bool exitGame;
 
+//PlaySound
+extern bool playmusic;
+
 //user input
 void userInput();   //to get input
 void addTime();     //this is to set a buffer between detection of input for different menu screens, or else the previous input will be read by the next userInput()

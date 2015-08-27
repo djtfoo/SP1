@@ -107,21 +107,29 @@ void processInputSound(SequenceOPT &s) {
 
     if(menu_KeyPressed[K_1])
 	{
-		PlaySound( "music.wav", NULL, SND_LOOP | SND_ASYNC);
+		if (!playmusic) {
+			PlaySound( "music.wav", NULL, SND_LOOP | SND_ASYNC);
+		}
         s = OptionsMenu;
         inputDetected = true;
+		playmusic = true;
 	}
 	else if (menu_KeyPressed[K_2])
 	{
 		PlaySound(NULL,NULL,0);
         s = OptionsMenu;
         inputDetected = true;
+		playmusic = false;
 	}
 
 }
 
 void displayMenu()
 {
+	if(playmusic)
+	{
+		PlaySound( "music.wav", NULL, SND_LOOP | SND_ASYNC);
+	}
     clearScreen();
 	COORD c = g_Console.getConsoleSize();
     
@@ -361,6 +369,10 @@ void displayExit()
 //--------------------------------------------------------------
 void displayGame( void )
 {
+	if(playmusic)
+	{
+		PlaySound( "gamemusic.wav", NULL, SND_LOOP | SND_ASYNC);
+	}
     g_Timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	init();
 	while (!g_bQuitGame)      // run this loop until user wants to quit 
