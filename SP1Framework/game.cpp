@@ -1223,11 +1223,12 @@ void renderCounters() {
     c.X = 0;
     c.Y = 0;
     g_Console.writeToBuffer(c,"ESCAPEE");
-    
-	// displays the playtime
+
 	std::ostringstream ss;
-	ss << "Timer: " << playTime << "secs";
-    c.X = 50;
+
+     // displays the level count
+    ss.str("");
+    ss << "Level: " << levelCount;
     c.Y = 6;
     g_Console.writeToBuffer(c, ss.str());
 
@@ -1237,12 +1238,14 @@ void renderCounters() {
     c.Y = 8;
 	g_Console.writeToBuffer(c, ss.str());
 
-    // displays the level count
-    ss.str("");
-    ss << "Level: " << levelCount;
+    
+	// displays the playtime
+    ss << "Timer: " << playTime << "secs";
+    c.X = 50;
     c.Y = 10;
     g_Console.writeToBuffer(c, ss.str());
 
+    //show if the exit is locked/unlocked
     if (ItemCounter < MaxItemCount)
     {
         c.X = 40;
