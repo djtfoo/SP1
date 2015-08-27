@@ -64,7 +64,7 @@ void init( void )
 	BufferTime = 3.0;
 
 	// sets the initial state for the game
-	levelCount = 1;
+	levelCount = 3;
     levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
 
