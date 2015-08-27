@@ -790,19 +790,19 @@ void maze3(int& rows, int& cols) {
 
 	string map3[21] = {
         "################################",    // 8 Items, 8 teleports, 3 AI, 3 traps
-        "# #  #     #               #   #",
+        "# #  #  @  #               #   #",
         "# #  # ### ###   # ######### # #",
         "# #          # # # #@        # #",
         "# ## ####### # # # ####### # # #",
         "#      #     #$# #       # # # #",
 		"## ##  # ### ### # ####### ### #",
-        "#  $#    # #  @# # #$      #   #",
+        "#   #    # #  @# # #$      #   #",
         "##  ###### # ### # ####### #   #",
-        "#   # @#   #     #         # # #",
+        "#   #  #   #     #         # # #",
         "#   # ## # ############### #$#@#",
         "# #@#    ###@ #@         # #####",
         "# ###  ##     #         *#   #$#",
-        "#  #    #$#   ############## # #",
+        "# $#    #$#   ############## # #",
         "# ##### ###   #  #      #    # #",
 		"#           ###    #  #   #    #",
         "## ### ###  #$############## # #",
@@ -842,7 +842,7 @@ void maze3(int& rows, int& cols) {
 
 	//Enemy 3
 	Enemy g_Enemy3;
-	g_Enemy3.m_Enemy.X = 3;
+	g_Enemy3.m_Enemy.X = 1;
 	g_Enemy3.m_Enemy.Y = 10;
 	g_Enemy3.d = up;
 	enemyvec.push_back(g_Enemy3);
@@ -980,9 +980,9 @@ void maze5(int& rows, int& cols) {
 
 	//Enemy3
 	Enemy g_Enemy3;
-    g_Enemy3.m_Enemy.X = 31;
-    g_Enemy3.m_Enemy.Y = 11;
-    g_Enemy3.d = up;
+    g_Enemy3.m_Enemy.X = 3;
+    g_Enemy3.m_Enemy.Y = 12;
+    g_Enemy3.d = right;
     enemyvec.push_back(g_Enemy3);
 
 	//Enemy4
