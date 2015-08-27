@@ -77,7 +77,6 @@ enum GAMELEVELS
 struct SGameChar
 {
     COORD m_cLocation;
-    bool  m_bActive;
 };
 
 enum Direction {

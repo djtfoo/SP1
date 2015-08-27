@@ -68,7 +68,6 @@ void init( void )
     levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
 
-	g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
 
     name[0] = '\0';
@@ -314,7 +313,7 @@ void moveCharacter()
 			bSomethingHappened = true;
 		}
     }
-    if (g_abKeyPressed[K_LEFT] && g_sChar.m_cLocation.X > 0)
+    else if (g_abKeyPressed[K_LEFT] && g_sChar.m_cLocation.X > 0)
     {
 		if (maze[charY][charX-1] != '#') {
 			//Beep(1440, 30);
@@ -322,7 +321,7 @@ void moveCharacter()
 			bSomethingHappened = true;
 		}
     }
-    if (g_abKeyPressed[K_DOWN] && g_sChar.m_cLocation.Y < g_Console.getConsoleSize().Y - 1)
+    else if (g_abKeyPressed[K_DOWN] && g_sChar.m_cLocation.Y < g_Console.getConsoleSize().Y - 1)
     {
 		if (maze[charY+1][charX] != '#') {
 			//Beep(1440, 30);
@@ -330,18 +329,13 @@ void moveCharacter()
 			bSomethingHappened = true;
 		}
     }
-    if (g_abKeyPressed[K_RIGHT] && g_sChar.m_cLocation.X < g_Console.getConsoleSize().X - 1)
+    else if (g_abKeyPressed[K_RIGHT] && g_sChar.m_cLocation.X < g_Console.getConsoleSize().X - 1)
     {
 		if (maze[charY][charX+1] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.X++;
 			bSomethingHappened = true;
 		}
-    }
-    if (g_abKeyPressed[K_SPACE])
-    {
-        g_sChar.m_bActive = !g_sChar.m_bActive;
-        bSomethingHappened = true;
     }
 
     if (bSomethingHappened)
@@ -1123,12 +1117,7 @@ void maze6(int& rows, int& cols) {
 void renderCharacter()
 {
     // Draw the location of the character
-    WORD charColor = 0x1C;
-    if (g_sChar.m_bActive)
-    {
-        charColor = 0x1A;
-    }
-    g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, charColor);
+    g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0A);
 }
 
 void renderEnemy()
