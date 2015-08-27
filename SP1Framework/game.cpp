@@ -721,9 +721,9 @@ void maze1(int& rows, int& cols) {
 
     //Enemy2
     Enemy g_Enemy2;
-    g_Enemy2.m_Enemy.X = 16;
-    g_Enemy2.m_Enemy.Y = 12;
-    g_Enemy2.d = up;
+    g_Enemy2.m_Enemy.X = 27;
+    g_Enemy2.m_Enemy.Y = 14;
+    g_Enemy2.d = left;
     enemyvec.push_back(g_Enemy2);
 }
 

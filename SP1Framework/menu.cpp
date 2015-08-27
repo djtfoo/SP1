@@ -107,7 +107,7 @@ void processInputSound(SequenceOPT &s) {
     if(menu_KeyPressed[K_1])
 	{
 		if (!playmusic) {
-			PlaySound( "music.wav", NULL, SND_LOOP | SND_ASYNC);
+			PlaySound( "menumusic.wav", NULL, SND_LOOP | SND_ASYNC);
 		}
         s = OptionsMenu;
         inputDetected = true;
@@ -127,7 +127,7 @@ void displayMenu()
 {
 	if(playmusic)
 	{
-		PlaySound( "music.wav", NULL, SND_LOOP | SND_ASYNC);
+		PlaySound( "menumusic.wav", NULL, SND_LOOP | SND_ASYNC);
 	}
     clearScreen();
 	COORD c = g_Console.getConsoleSize();
