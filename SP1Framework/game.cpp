@@ -1229,6 +1229,7 @@ void renderCounters() {
      // displays the level count
     ss.str("");
     ss << "Level: " << levelCount;
+    c.X = 50;
     c.Y = 6;
     g_Console.writeToBuffer(c, ss.str());
 
@@ -1240,12 +1241,12 @@ void renderCounters() {
 
     
 	// displays the playtime
+    ss.str("");
     ss << "Timer: " << playTime << "secs";
-    c.X = 50;
     c.Y = 10;
     g_Console.writeToBuffer(c, ss.str());
 
-    //show if the exit is locked/unlocked
+    //show if the exit is locked
     if (ItemCounter < MaxItemCount)
     {
         c.X = 40;
