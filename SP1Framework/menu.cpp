@@ -47,7 +47,6 @@ void processInputMenu(Sequence &s) {
     if (ElapsedTime <= BounceTime) {
         return;
     }
-
     if (menu_KeyPressed[K_1]) {
         s = Play;
         inputDetected = true;
@@ -134,28 +133,30 @@ void displayMenu()
 	COORD c = g_Console.getConsoleSize();
 
     //GAME NAME
-    c.X /= 2 + 2;
+    c.X /= 5;
+    c.X += 1;
     c.Y /= 8;
-     for (int i = 20; i < 60; ++i) {
+     for (int i = 20; i < 62; ++i) {
 		c.X++;
 		g_Console.writeToBuffer(c, "=", 0x06);
-		if (i == 60) {
+		if (i == 62) {
 			break;
 		}
     }
     c.Y += 2;
-    c.X = g_Console.getConsoleSize().X / 2-3;
+    c.X = g_Console.getConsoleSize().X / 2-5;
     g_Console.writeToBuffer(c, "ESCAPEE", 0x0A);
-    c.X = 20;
+    c.X = g_Console.getConsoleSize().X / 4;
 	c.Y += 2;
-    for (int i = 20; i < 60; ++i) {
+    for (int i = 20; i < 58; ++i) {
 		c.X++;
 		g_Console.writeToBuffer(c, "=", 0x06);
-		if (i == 60) {
+		if (i == 58) {
 			break;
 		}
     }
-    c.Y = 3;
+    c.Y /= 4;
+    c.Y += 2;
     for (int i = 0; i < 15; ++i)
     {
         c.Y++;
@@ -166,8 +167,11 @@ void displayMenu()
         }
 
     }
-    c.Y = 3;
-    c.X = 21;
+    c.Y = 0;
+    c.Y /= 8;
+    c.Y += 3;
+    c.X /= 2;
+    c.X -= 10;
     for (int i = 0; i < 15; ++i)
     {
         c.Y++;
@@ -179,7 +183,9 @@ void displayMenu()
     }
 
     c.Y ++;
-    c.X = 20;
+    c.X = 0;
+    c.X = g_Console.getConsoleSize().X / 4;
+    c.X -= 2;
         for (int i = 20; i < 60; ++i) {
 		c.X++;
 		g_Console.writeToBuffer(c, "=", 0x06);
@@ -188,33 +194,32 @@ void displayMenu()
 		}
     }
 
-    c.Y = 7;
-    c.Y ++;
-    c.X = g_Console.getConsoleSize().X / 2-4;
+    c.Y = 0;
+    c.Y /= 2;
+    c.Y += 8;
+    c.X = g_Console.getConsoleSize().X / 2;
+    c.X -= 4;
     c.Y += 2;
-
-    g_Console.writeToBuffer(c,"~~    ~~",0x04);
-    c.X += 2;
     g_Console.writeToBuffer (c,"MENU", 0x0B);
   
     c.Y += 2;
-    c.X = g_Console.getConsoleSize().X / 2 - 11;
+    c.X = g_Console.getConsoleSize().X / 2 - 13;
     g_Console.writeToBuffer(c, "Press '1' to play Game", 0x0D);
     c.Y += 1;
 
-	c.X = g_Console.getConsoleSize().X / 2 - 11;
+	c.X = g_Console.getConsoleSize().X / 2 - 13;
     g_Console.writeToBuffer(c, "Press '2' for Instructions", 0x0D);
     c.Y += 1;
 
-	c.X = g_Console.getConsoleSize().X / 2 - 11;
+	c.X = g_Console.getConsoleSize().X / 2 - 13;
     g_Console.writeToBuffer(c, "Press '3' for High Score", 0x0D);
 	c.Y += 1;
 
-    c.X = g_Console.getConsoleSize().X / 2 - 11;
+    c.X = g_Console.getConsoleSize().X / 2 - 13;
     g_Console.writeToBuffer(c, "Press '4' to go Options", 0x0D);
     c.Y += 1;
 
-    c.X = g_Console.getConsoleSize().X / 2 - 11;
+    c.X = g_Console.getConsoleSize().X / 2 - 13;
     g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x0D);
 	g_Console.flushBufferToConsole();
 	
@@ -224,24 +229,24 @@ void displayInstructions()
 {
 	clearScreen();
 	COORD c = g_Console.getConsoleSize();
-	c.Y /= 3;
-	c.X = g_Console.getConsoleSize().X / 2 - 3;
-	g_Console.writeToBuffer(c, "INSTRUCTIONS", 0x13);
+	c.Y /= 4;
+	c.X = g_Console.getConsoleSize().X / 2 - 6;
+	g_Console.writeToBuffer(c, "INSTRUCTIONS", 0x0B);
+	c.Y += 2;
+	c.X = g_Console.getConsoleSize().X / 2 - 23;
+	g_Console.writeToBuffer(c, "Players' main objective is to escape the maze.", 0x0A);
+	c.Y += 2;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	g_Console.writeToBuffer(c, "1) Arrow keys are for movement", 0x0D);
 	c.Y += 1;
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
-	g_Console.writeToBuffer(c, "Players' main objective is to escape the maze.", 0x08);
+	g_Console.writeToBuffer(c, "2) Collect all objects in the maze", 0x0D);
 	c.Y += 1;
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
-	g_Console.writeToBuffer(c, "1) Arrow keys are for movement", 0x08);
-	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 20;
-	g_Console.writeToBuffer(c, "2) Collect all objects in the maze", 0x08);
-	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 20;
-	g_Console.writeToBuffer(c, "3) Escape the room after collecting ALL objects", 0x08);
-	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 20;
-	g_Console.writeToBuffer(c, "Press ENTER to return", 0x08);
+	g_Console.writeToBuffer(c, "3) Escape the room after collecting ALL objects", 0x0D);
+	c.Y += 4;
+	c.X = g_Console.getConsoleSize().X / 3+4;
+	g_Console.writeToBuffer(c, "Press ENTER to return", 0x0B);
 	g_Console.flushBufferToConsole();
 
 }
@@ -252,13 +257,13 @@ void displayHighscore()
 	toCpp();
 	COORD c = g_Console.getConsoleSize();
 	c.Y /= 10;
-    c.X = g_Console.getConsoleSize().X / 1 - 20;
-    g_Console.writeToBuffer(c, "HIGH SCORE", 0x03);
+    c.X = g_Console.getConsoleSize().X / 2 - 7;
+    g_Console.writeToBuffer(c, "HIGH SCORE", 0x0B);
 	c.Y /= 3;
 	c.X = 0;
 	for (int i = 3; i < 80; ++i) {
 		c.X++;
-		g_Console.writeToBuffer(c, "_", 0x08);
+		g_Console.writeToBuffer(c, "_", 0x06);
 		if (i == 80) {
 			break;
 		}
@@ -267,11 +272,11 @@ void displayHighscore()
 	c.X = 0;
 	for (int i = 3; i < 80; ++i) {
 		c.X++;
-		g_Console.writeToBuffer(c, "_", 0x08);
+		g_Console.writeToBuffer(c, "_", 0x06);
 	}
 
 	c.Y += 2;
-	c.X = c.X / 2;
+	c.X = c.X / 2 - 10;
 	for (int i = 1; i < 11; ++i) {
 		c.Y++;
 		std::ostringstream ss;
@@ -281,8 +286,8 @@ void displayHighscore()
 	}
 
 	c.Y += 4;
-	c.X = g_Console.getConsoleSize().X / 2 - 20;
-	g_Console.writeToBuffer(c, "Press ENTER to return", 0x08);
+	c.X = g_Console.getConsoleSize().X / 2 - 10;
+	g_Console.writeToBuffer(c, "Press ENTER to return", 0x0B);
 	
 	g_Console.flushBufferToConsole();
 }
@@ -325,14 +330,14 @@ void toCpp()
 
 	COORD c = g_Console.getConsoleSize();
 	c.Y = 7;
-	c.X = g_Console.getConsoleSize().X / 2;
+	c.X = g_Console.getConsoleSize().X / 2 - 10;
 	std::ostringstream ss;
 
 	for (unsigned int i = 0; i < highS.size(); ++i, ++c.Y) {
 		highScore temp = highS[i];
 		ss.str("");
 		ss << temp.name << " " << temp.time;
-		g_Console.writeToBuffer(c, ss.str(), 0x1F);
+		g_Console.writeToBuffer(c, ss.str(), 0xA1);
 		if (i == 9) {
 			break;
 		}
@@ -378,14 +383,14 @@ void displayOptions() {
 
     COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
-    c.X = c.X / 2 - 2;
-    g_Console.writeToBuffer(c, "OPTIONS", 0x03);
-    c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 11;
-    g_Console.writeToBuffer(c, "Press '1' for Sound", 0x09);
-    c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 11;
-    g_Console.writeToBuffer(c, "Press ENTER to go back to Main Menu", 0x09);
+    c.X = c.X / 2 - 5;
+    g_Console.writeToBuffer(c, "OPTIONS", 0x0B);
+    c.Y += 3;
+    c.X = g_Console.getConsoleSize().X / 2 - 12;
+    g_Console.writeToBuffer(c, "Press '1' for Sound", 0x0D);
+    c.Y += 3;
+    c.X = g_Console.getConsoleSize().X / 2 - 17;
+    g_Console.writeToBuffer(c, "Press ENTER to go back to Main Menu", 0x0B);
     g_Console.flushBufferToConsole();
 
 }
@@ -396,14 +401,13 @@ void displaySound() {
 
     COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
-    c.X = c.X / 2 - 6;
-    g_Console.writeToBuffer(c, "EDIT SOUND HERE", 0x13);
-    c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 11;
-    g_Console.writeToBuffer(c, "Press '1' to switch on sound", 0x09);
-    c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 11;
-    g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x09);
+    c.X = c.X / 2 - 9;
+    g_Console.writeToBuffer(c, "EDIT SOUND HERE", 0x0B);
+    c.Y += 3;
+    c.X = g_Console.getConsoleSize().X / 2 - 15;
+    g_Console.writeToBuffer(c, "Press '1' to switch on sound", 0x0D);
+    c.Y += 2;
+    g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x0D);
     g_Console.flushBufferToConsole();
 
 }
@@ -415,11 +419,11 @@ void displayExit()
     COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
     c.X = c.X / 3;
-    g_Console.writeToBuffer(c, "HAVE A NICE DAY, BYE~~", 0x03);
+    g_Console.writeToBuffer(c, "HAVE A NICE DAY, BYE~~", 0x0B);
     g_Console.flushBufferToConsole();
 
     exitGame = true;
-    Sleep(3000);
+    Sleep(2000);
 }
 
 //--------------------------------------------------------------

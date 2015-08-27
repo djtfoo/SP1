@@ -393,18 +393,18 @@ void renderSplashScreen()  // renders the splash screen
 
 	COORD c = g_Console.getConsoleSize();
 	c.Y /= 3;
-	c.X = c.X / 2 - 9;
+	c.X = c.X / 2 - 3;
 	std::ostringstream ss;
 	ss << std::fixed << std::setprecision(3);
 	ss.str("");
 	ss << "Level " << levelCount;
-	g_Console.writeToBuffer(c, ss.str(), 0x03);
+	g_Console.writeToBuffer(c, ss.str(), 0x0B);
 	c.Y += 1;
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
 	//g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);
 	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 9;
-	g_Console.writeToBuffer(c, "Press 'Esc' to pause", 0x09);
+	c.X = g_Console.getConsoleSize().X / 2 - 10;
+	g_Console.writeToBuffer(c, "Press 'Esc' to pause", 0x0B);
 
 }
 
