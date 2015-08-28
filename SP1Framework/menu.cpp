@@ -394,8 +394,8 @@ void displayOptions() {
     c.X = g_Console.getConsoleSize().X / 2 - 12;
     g_Console.writeToBuffer(c, "Press '1' for Sound", 0x0D);
     c.Y += 3;
-    c.X = g_Console.getConsoleSize().X / 2 - 17;
-    g_Console.writeToBuffer(c, "Press ENTER to go back to Main Menu", 0x0B);
+    c.X = g_Console.getConsoleSize().X / 2 -11;    
+    g_Console.writeToBuffer(c, "Press ENTER to Return", 0x0B);
     g_Console.flushBufferToConsole();
 
 }
