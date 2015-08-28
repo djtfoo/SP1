@@ -24,6 +24,10 @@ bool g_bQuitGame = false;                    // Set to true if you want to quit 
 const unsigned char gc_ucFPS = 100;                // FPS of this game
 const unsigned int gc_uFrameTime = 1000 / gc_ucFPS;    // time for each frame
 
+//PlaySound
+bool playmusic = true;      //check if user wants music or not
+bool menuplaymusic = true;  //while user remains in the menus, don't refresh the main menu music
+
 void userInput() //If s is modified, seq is modified as well
 {
     menu_KeyPressed[K_1] = isKeyPressed(49);
@@ -125,9 +129,10 @@ void processInputSound(SequenceOPT &s) {
 
 void displayMenu()
 {
-	if(playmusic)
+	if(playmusic && menuplaymusic)
 	{
 		PlaySound( "menumusic.wav", NULL, SND_LOOP | SND_ASYNC);
+        menuplaymusic = false;
 	}
     clearScreen();
 	COORD c = g_Console.getConsoleSize();
@@ -423,7 +428,7 @@ void displayExit()
     g_Console.flushBufferToConsole();
 
     exitGame = true;
-    Sleep(2000);
+    Sleep(1500);
 }
 
 //--------------------------------------------------------------
@@ -438,6 +443,7 @@ void displayGame( void )
 	if(playmusic)
 	{
 		PlaySound( "gamemusic.wav", NULL, SND_LOOP | SND_ASYNC);
+        menuplaymusic = true;
 	}
     g_Timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	init();

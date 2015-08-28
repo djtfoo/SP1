@@ -55,7 +55,6 @@ int i = 0;
 //--------------------------------------------------------------
 void init( void )
 {
-	
 	// Set precision for floating point output
 	g_dElapsedTime = 0.0;
 	g_dBounceTime = 0.0;
