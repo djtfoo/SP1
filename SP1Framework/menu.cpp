@@ -141,39 +141,30 @@ void displayMenu()
 	COORD c = g_Console.getConsoleSize();
 
     c.X /= 5;
-    c.X += 1;
+    c.X += 2;
     c.Y /= 8;
-     for (int i = 20; i < 62; ++i) {
-		c.X++;
+    for (int i = 0; i < 40; ++i) {
+		++c.X;
 		g_Console.writeToBuffer(c, "=", 0x06);
-		if (i == 62) {
-			break;
-		}
     }
     c.Y += 2;
     //SHOW GAME NAME
     c.X = g_Console.getConsoleSize().X / 2-5;
     g_Console.writeToBuffer(c, "ESCAPEE", 0x0A);
     c.X = g_Console.getConsoleSize().X / 4;
+    --c.X;
 	c.Y += 2;
-    for (int i = 20; i < 58; ++i) {
-		c.X++;
+    for (int i = 0; i < 38; ++i) {
+		++c.X;
 		g_Console.writeToBuffer(c, "=", 0x06);
-		if (i == 58) {
-			break;
-		}
     }
+    ++c.X;
     c.Y /= 4;
     c.Y += 2;
     for (int i = 0; i < 15; ++i)
     {
-        c.Y++;
+        ++c.Y;
         g_Console.writeToBuffer(c, "-", 0x06);
-        if (i == 15)
-        {
-            break;
-        }
-
     }
     c.Y = 0;
     c.Y /= 8;
@@ -182,24 +173,17 @@ void displayMenu()
     c.X -= 10;
     for (int i = 0; i < 15; ++i)
     {
-        c.Y++;
+        ++c.Y;
         g_Console.writeToBuffer(c, "-", 0x06);
-        if (i == 15)
-        {
-            break;
-        }
     }
 
-    c.Y ++;
+    ++c.Y;
     c.X = 0;
     c.X = g_Console.getConsoleSize().X / 4;
     c.X -= 2;
-        for (int i = 20; i < 60; ++i) {
-		c.X++;
+        for (int i = 0; i < 40; ++i) {
+		++c.X;
 		g_Console.writeToBuffer(c, "=", 0x06);
-		if (i == 60) {
-			break;
-		}
     }
 
     c.Y = 0;

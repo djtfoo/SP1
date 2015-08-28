@@ -29,7 +29,6 @@ double	playTime;		//to record the gameplay time only
 double	BufferTime;		//for splashscreen
 
 //map rendering
-//is there something we can do to not be declaring the variables globally?
 char ** maze = 0;
 int rows = 0;
 int cols = 0;
@@ -45,6 +44,12 @@ ExitTeleporter Tel;
 char name[11];
 char * pointer = 0;
 int i = 0;
+
+//PlaySound - victory screen
+bool victoryplaymusic = true;
+
+bool prevKeyPressed = g_abKeyPressed[K_ESCAPE];
+double bouncePrevKey = 0.0;
 
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
@@ -415,6 +420,11 @@ void renderSplashScreen()  // renders the splash screen
 //Jing Ting
 void clearGame() {
 
+    if (playmusic && victoryplaymusic) {
+        PlaySound("victory.wav", NULL, SND_ASYNC);
+        victoryplaymusic = false;
+    }
+
     processNameInput(name);
 
 }
@@ -422,7 +432,6 @@ void clearGame() {
 void renderClearGame() {
     clearScreen();
     renderText();
-	renderPlaytime();
     renderNameInput(name);
 }
 
@@ -443,20 +452,53 @@ void renderPauseGame() {
 }
 
 void renderText() {
+
     COORD c = g_Console.getConsoleSize();
+
     c.X /= 2;
+    c.X -= 15;
     c.Y /= 3;
+    c.Y -= 2;
+
+    for (int i = 0; i < 30; ++i) {
+		++c.X;
+		g_Console.writeToBuffer(c, "=", 0x06);
+    }
+
+    c.X = g_Console.getConsoleSize().X / 2 - 3;
+    c.Y = g_Console.getConsoleSize().Y / 3;
     g_Console.writeToBuffer(c, "YOU WIN!", 0x03);
-	c.Y++;
-	g_Console.writeToBuffer(c, "Input your name: ", 0x03);
+
+    // displays the playtime
+    std::ostringstream ss;
+    ss.str("");
+    ss << "Time: " << playTime << "secs";
+    c.X = g_Console.getConsoleSize().X / 2 - 8;
+    ++c.Y;
+    g_Console.writeToBuffer(c, ss.str());
+
+    c.X = g_Console.getConsoleSize().X / 2 - 7;
+    c.Y += 2;
+	g_Console.writeToBuffer(c, "INPUT YOUR NAME: ", 0x03);
+
+    c.X = g_Console.getConsoleSize().X / 2;
+    c.X -= 15;
+    c.Y += 3;
+
+    for (int i = 0; i < 30; ++i) {
+		++c.X;
+		g_Console.writeToBuffer(c, "=", 0x06);
+    }
+
 }
 
 void renderNameInput(char * name) {
     COORD c = g_Console.getConsoleSize();
-    c.X /= 2;
+    c.X = c.X / 2 - 5;
     c.Y /= 3;
-    c.Y += 2;
-    g_Console.writeToBuffer(c, name, 0x03);
+    c.Y += 4;
+    g_Console.writeToBuffer(c, "          ", 0x13);
+    g_Console.writeToBuffer(c, name, 0x13);
 }
 
 void processNameInput(char * name) {
@@ -467,109 +509,140 @@ void processNameInput(char * name) {
         return;
 
     if (pointer != name+9) {
-        if (g_abKeyPressed[K_A]) {
+        if (g_abKeyPressed[K_A] && !prevKeyPressed) {
             *(pointer+1) = 'A';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_A];
         }
-        if (g_abKeyPressed[K_B]) {
+        if (g_abKeyPressed[K_B] && !prevKeyPressed) {
             *(pointer+1) = 'B';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_B];
         }
-        if (g_abKeyPressed[K_C]) {
+        if (g_abKeyPressed[K_C] && !prevKeyPressed) {
             *(pointer+1) = 'C';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_C];
         }
-        if (g_abKeyPressed[K_D]) {
+        if (g_abKeyPressed[K_D] && !prevKeyPressed) {
             *(pointer+1) = 'D';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_D];
         }
-        if (g_abKeyPressed[K_E]) {
+        if (g_abKeyPressed[K_E] && !prevKeyPressed) {
             *(pointer+1) = 'E';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_E];
         }
-        if (g_abKeyPressed[K_F]) {
+        if (g_abKeyPressed[K_F] && !prevKeyPressed) {
             *(pointer+1) = 'F';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_F];
         }
-        if (g_abKeyPressed[K_G]) {
+        if (g_abKeyPressed[K_G] && !prevKeyPressed) {
             *(pointer+1) = 'G';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_G];
         }
-        if (g_abKeyPressed[K_H]) {
+        if (g_abKeyPressed[K_H] && !prevKeyPressed) {
             *(pointer+1) = 'H';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_H];
         }
-        if (g_abKeyPressed[K_I]) {
+        if (g_abKeyPressed[K_I] && !prevKeyPressed) {
             *(pointer+1) = 'I';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_I];
         }
-        if (g_abKeyPressed[K_J]) {
+        if (g_abKeyPressed[K_J] && !prevKeyPressed) {
             *(pointer+1) = 'J';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_J];
         }
-        if (g_abKeyPressed[K_K]) {
+        if (g_abKeyPressed[K_K] && !prevKeyPressed) {
             *(pointer+1) = 'K';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_K];
         }
-        if (g_abKeyPressed[K_L]) {
+        if (g_abKeyPressed[K_L] && !prevKeyPressed) {
             *(pointer+1) = 'L';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_L];
         }
-        if (g_abKeyPressed[K_M]) {
+        if (g_abKeyPressed[K_M] && !prevKeyPressed) {
             *(pointer+1) = 'M';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_M];
         }
-        if (g_abKeyPressed[K_N]) {
+        if (g_abKeyPressed[K_N] && !prevKeyPressed) {
             *(pointer+1) = 'N';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_N];
         }
-        if (g_abKeyPressed[K_O]) {
+        if (g_abKeyPressed[K_O] && !prevKeyPressed) {
             *(pointer+1) = 'O';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_O];
         }
-        if (g_abKeyPressed[K_P]) {
+        if (g_abKeyPressed[K_P] && !prevKeyPressed) {
             *(pointer+1) = 'P';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_P];
         }
-        if (g_abKeyPressed[K_Q]) {
+        if (g_abKeyPressed[K_Q] && !prevKeyPressed) {
             *(pointer+1) = 'Q';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_Q];
         }
-        if (g_abKeyPressed[K_R]) {
+        if (g_abKeyPressed[K_R] && !prevKeyPressed) {
             *(pointer+1) = 'R';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_R];
         }
-        if (g_abKeyPressed[K_S]) {
+        if (g_abKeyPressed[K_S] && !prevKeyPressed) {
             *(pointer+1) = 'S';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_S];
         }
-        if (g_abKeyPressed[K_T]) {
+        if (g_abKeyPressed[K_T] && !prevKeyPressed) {
             *(pointer+1) = 'T';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_T];
         }
-        if (g_abKeyPressed[K_U]) {
+        if (g_abKeyPressed[K_U] && !prevKeyPressed) {
             *(pointer+1) = 'U';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_U];
         }
-        if (g_abKeyPressed[K_V]) {
+        if (g_abKeyPressed[K_V] && !prevKeyPressed) {
             *(pointer+1) = 'V';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_V];
         }
-        if (g_abKeyPressed[K_W]) {
+        if (g_abKeyPressed[K_W] && !prevKeyPressed) {
             *(pointer+1) = 'W';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_W];
         }
-        if (g_abKeyPressed[K_X]) {
+        if (g_abKeyPressed[K_X] && !prevKeyPressed) {
             *(pointer+1) = 'X';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_X];
         }
-        if (g_abKeyPressed[K_Y]) {
+        if (g_abKeyPressed[K_Y] && !prevKeyPressed) {
             *(pointer+1) = 'Y';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_Y];
         }
-        if (g_abKeyPressed[K_Z]) {
+        if (g_abKeyPressed[K_Z] && !prevKeyPressed) {
             *(pointer+1) = 'Z';
             keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_Z];
+        }
+        if (g_abKeyPressed[K_SPACE] && !prevKeyPressed) {
+            *(pointer+1) = ' ';
+            keySomething = true;
+            prevKeyPressed = g_abKeyPressed[K_SPACE];
         }
 
     }
@@ -595,14 +668,17 @@ void processNameInput(char * name) {
 
     if (keySomething)
     {
-        // set the bounce time to some time in the future to prevent accidental triggers
-        g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
         if (!backspace && pointer < name+9) {
             ++pointer;
+            bouncePrevKey = g_dElapsedTime + 0.08;
         }
         if (backspace && pointer >= name) {
             pointer--;
+            g_dBounceTime = g_dElapsedTime + 0.1; // set the bounce time to some time in the future to prevent backspacing too much
         }
+    }
+    if (bouncePrevKey < g_dElapsedTime) {
+        prevKeyPressed = g_abKeyPressed[K_ESCAPE];
     }
 
 }
@@ -1135,7 +1211,7 @@ void renderEnemy()
     for (unsigned int i = 0; i < enemyvec.size(); ++i) {
         Enemy tempEnemy = enemyvec[i];
         COORD tempE = tempEnemy.m_Enemy;
-        g_Console.writeToBuffer(tempE, (char)88, 0x0C);
+        g_Console.writeToBuffer(tempE, 'X', 0x0C);
     }
 }
 
@@ -1259,18 +1335,6 @@ void renderCounters() {
         c.Y = 12;
         g_Console.writeToBuffer(c,"Exit is unlocked");
     }
-}
-
-void renderPlaytime() {
-
-	COORD c;
-	std::ostringstream ss;
-    // displays the playtime
-    ss << "Time: " << playTime << "secs";
-    c.X = 50;
-    c.Y = 6;
-    g_Console.writeToBuffer(c, ss.str());
-
 }
 
 void renderToScreen()

@@ -117,7 +117,6 @@ void splashScreenWait();    // waits for time to pass in splash screen
 void gameplay();            // gameplay logic
 void moveCharacter();       // moves the character, collision detection, physics, etc
 void processUserInput();	// checks if you should change states or do something else with the game, e.g. pause, exit
-void processPauseInput();
 void clearScreen();         // clears the current screen and draw from scratch 
 void renderSplashScreen();  // renders the splash screen
 void renderGame();          // renders the game stuff
@@ -150,12 +149,14 @@ void exitLevel();
 
 //finish the game - Jing Ting
 void clearGame();
-void pauseGame();
 void processNameInput(char * name);
-void renderNameInput(char * name);
 void renderClearGame();
-void renderPauseGame();
 void renderText();
-void renderPlaytime();
+void renderNameInput(char * name);
+
+//pause the game - Glennda
+void pauseGame();
+void renderPauseGame();
+void processPauseInput();
 
 #endif // _GAME_H
