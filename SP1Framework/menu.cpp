@@ -46,6 +46,7 @@ void addTime() {
 
 }
 
+//for the switch sequence, 1 = player, 2 = instructions, 3 = highscore, 4 = options and 5 for exit
 void processInputMenu(Sequence &s) {
 
     if (ElapsedTime <= BounceTime) {
@@ -74,6 +75,7 @@ void processInputMenu(Sequence &s) {
 
 }
 
+//Go back to main menu
 void processInputBack(Sequence &s) {
 
     if (menu_KeyPressed[K_ENT]) {
@@ -127,6 +129,7 @@ void processInputSound(SequenceOPT &s) {
 
 }
 
+//User interface for main menu
 void displayMenu()
 {
 	if(playmusic && menuplaymusic)
@@ -137,7 +140,6 @@ void displayMenu()
     clearScreen();
 	COORD c = g_Console.getConsoleSize();
 
-    //GAME NAME
     c.X /= 5;
     c.X += 1;
     c.Y /= 8;
@@ -149,6 +151,7 @@ void displayMenu()
 		}
     }
     c.Y += 2;
+    //SHOW GAME NAME
     c.X = g_Console.getConsoleSize().X / 2-5;
     g_Console.writeToBuffer(c, "ESCAPEE", 0x0A);
     c.X = g_Console.getConsoleSize().X / 4;

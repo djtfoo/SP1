@@ -44,6 +44,7 @@ int main( void )
     return 0;
 }
 
+//looping for switch to check if the player is not inputing 'ESC' for exit
 void gameLoop()
 {
 
@@ -51,6 +52,7 @@ void gameLoop()
     {
         switch(seq)
         {
+            //Display the menu once game starts
             case Menu : displayMenu();
                 while (!inputDetected) {
                     userInput();
@@ -59,7 +61,9 @@ void gameLoop()
                 inputDetected = false;
                 ElapsedTime = 0.0;
                 break;
+            //Display the game once player presses 1
             case Play : displayGame(); seq = Menu; ElapsedTime = 0.0; break;
+            //Display instructions page once player presses 2
 			case Instructions : displayInstructions();
                 while (!inputDetected) {
                     userInput();
@@ -68,6 +72,7 @@ void gameLoop()
                 inputDetected = false;
                 ElapsedTime = 0.0;
                 break;
+            //Display high score page once player presses 3
 			case HighScore : displayHighscore();
                 while (!inputDetected) {
                     userInput();
@@ -76,7 +81,9 @@ void gameLoop()
                 inputDetected = false;
                 ElapsedTime = 0.0;
                 break;
+            //Display options page once player presses 4
             case Options : options(); break;
+            //Exit when player presses 5
             case Exit : displayExit(); break;
         }
     }

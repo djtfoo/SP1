@@ -304,32 +304,43 @@ void moveCharacter()
 	int charY = g_sChar.m_cLocation.Y - 1;
 	int charX = g_sChar.m_cLocation.X;
 
+    //Character moving up
     if (g_abKeyPressed[K_UP] && g_sChar.m_cLocation.Y > 0)
     {
+        //Only move in that direction if its not a "wall"
 		if (maze[charY-1][charX] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.Y--;
 			bSomethingHappened = true;
 		}
     }
+
+    //Character moving left
     else if (g_abKeyPressed[K_LEFT] && g_sChar.m_cLocation.X > 0)
     {
+        //Only move in that direction if its not a "wall"
 		if (maze[charY][charX-1] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.X--;
 			bSomethingHappened = true;
 		}
     }
+    
+    //Character moving down
     else if (g_abKeyPressed[K_DOWN] && g_sChar.m_cLocation.Y < g_Console.getConsoleSize().Y - 1)
     {
+        //Only move in that direction if its not a "wall"
 		if (maze[charY+1][charX] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.Y++;
 			bSomethingHappened = true;
 		}
     }
+
+    //Character moving right
     else if (g_abKeyPressed[K_RIGHT] && g_sChar.m_cLocation.X < g_Console.getConsoleSize().X - 1)
     {
+        //Only move in that direction if its not a "wall"
 		if (maze[charY][charX+1] != '#') {
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.X++;
@@ -569,7 +580,7 @@ void processNameInput(char * name) {
         backspace = true;
     }
 
-    // saves the name if the player presses ENTER key
+    //saves the name into the text file if the player presses ENTER key
     if (g_abKeyPressed[K_ENTER]) {
         ofstream outData;
 
@@ -1273,17 +1284,20 @@ void checkTrap() {
 	int Y = g_sChar.m_cLocation.Y - 1;
 	int X = g_sChar.m_cLocation.X;
 
+     //Checking if player is on the teleporter at the exit point (the locations of exit teleporters are saved at each map)
 	 if (maze[Y][X] == '@') {
 		 if (g_sChar.m_cLocation.X == Tel.own_Loc.X && g_sChar.m_cLocation.Y == Tel.own_Loc.Y) {
 			 g_sChar.m_cLocation = Tel.warp_Loc;
              g_dBounceTime = g_dElapsedTime + 0.3;
 		 }
+         //Checking if player is on the teleporter at the "random assigned" teleporters
+         //Move player to the exit point
 		 else if (g_sChar.m_cLocation.X == Tel.warp_Loc.X && g_sChar.m_cLocation.Y == Tel.warp_Loc.Y) {
 			 g_sChar.m_cLocation = Tel.own_Loc;
              g_dBounceTime = g_dElapsedTime + 0.3;
 		 }
 		 else {
-			 //it's a trap
+			 //it's a trap, delete the '@' sign and make the player immobile for 1 second with the player bounce time
 			 maze[Y][X] = ' ';
              g_dBounceTime = g_dElapsedTime + 1;
 		 }
