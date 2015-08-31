@@ -37,6 +37,7 @@ double ElapsedTime = 0.0;
 // You should not be modifying this unless you know what you are doing
 int main( void )
 {
+	SetConsoleTitle ("Escapee");
 	//g_Console.setConsoleFont(0, 25, L"Raster");
     gameLoop();  // main loop
     shutdown();  // do clean up, if any. free memory.
