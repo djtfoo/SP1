@@ -27,6 +27,54 @@ const unsigned int gc_uFrameTime = 1000 / gc_ucFPS;    // time for each frame
 bool playmusic = true;      //check if user wants music or not
 bool menuplaymusic = true;  //while user remains in the menus, don't refresh the main menu music
 
+//Storyline
+bool storyLine = true;
+
+void storyline()
+{
+	clearScreen();
+
+	COORD c = g_Console.getConsoleSize();
+
+	c.X = g_Console.getConsoleSize().X / 3-1;
+	c.Y = g_Console.getConsoleSize().Y / 5-1;
+	g_Console.writeToBuffer(c, "You are a greedy treasure hunter." , 0x0A);
+	c.Y += 2;
+	c.X -= 6;
+	g_Console.writeToBuffer(c, "One day, you heard about a Pyramid which has" , 0x0A);
+	c.Y += 2;
+	c.X -= 4;
+	g_Console.writeToBuffer(c, "a lot of hidden treasures from the previous pharaoh." , 0x0A);
+	c.Y += 2;
+	c.X += 6;
+    g_Console.writeToBuffer(c, "However, it is said to be well-guarded," , 0x0A);
+	c.Y += 2;
+	c.X -= 3;
+	g_Console.writeToBuffer(c, "and no one has ever returned from the pyramid.", 0x0A);
+	c.Y += 2;
+	c.X += 1;
+	g_Console.writeToBuffer(c, "Yet, you are unfazed, and visits the pyramid. ", 0x0A);
+	c.Y += 2;
+	c.X += 3;
+	g_Console.writeToBuffer(c, "As you attempted to climb the pyramid,", 0x0A);
+	c.Y += 2;
+	c.X += 8;
+	g_Console.writeToBuffer(c, "you fell into a maze.", 0x0A);
+	c.Y += 3;
+	c.X -= 1;
+	g_Console.writeToBuffer(c, "Press ENTER to continue", 0x0A);
+	g_Console.flushBufferToConsole();
+	while(storyLine){
+
+		userInput();
+
+		if(menu_KeyPressed[K_ENT])
+		{
+			storyLine = false;
+		}
+	}
+}
+
 void userInput()
 {
     menu_KeyPressed[K_1] = isKeyPressed(49);
@@ -146,7 +194,7 @@ void displayMenu()
     c.Y /= 8;
     for (int i = 0; i < 40; ++i) {
 		++c.X;
-		g_Console.writeToBuffer(c, "=", 0x06);
+		g_Console.writeToBuffer(c, "=", 0x0D);
     }
     c.Y += 2;
     //SHOW GAME NAME
@@ -157,7 +205,7 @@ void displayMenu()
 	c.Y += 2;
     for (int i = 0; i < 38; ++i) {
 		++c.X;
-		g_Console.writeToBuffer(c, "=", 0x06);
+		g_Console.writeToBuffer(c, "=", 0x0D);
     }
     ++c.X;
     c.Y /= 4;
@@ -165,7 +213,7 @@ void displayMenu()
     for (int i = 0; i < 15; ++i)
     {
         ++c.Y;
-        g_Console.writeToBuffer(c, "-", 0x06);
+        g_Console.writeToBuffer(c, "-", 0x0D);
     }
     c.Y = 0;
     c.Y /= 8;
@@ -175,7 +223,7 @@ void displayMenu()
     for (int i = 0; i < 15; ++i)
     {
         ++c.Y;
-        g_Console.writeToBuffer(c, "-", 0x06);
+        g_Console.writeToBuffer(c, "-", 0x0D);
     }
 
     ++c.Y;
@@ -184,7 +232,7 @@ void displayMenu()
     c.X -= 2;
         for (int i = 0; i < 40; ++i) {
 		++c.X;
-		g_Console.writeToBuffer(c, "=", 0x06);
+		g_Console.writeToBuffer(c, "=", 0x0D);
     }
 
     c.Y = 0;
@@ -197,23 +245,23 @@ void displayMenu()
   
     c.Y += 2;
     c.X = g_Console.getConsoleSize().X / 2 - 13;
-    g_Console.writeToBuffer(c, "Press '1' to play Game", 0x0D);
+    g_Console.writeToBuffer(c, "Press '1' to play Game", 0x0A);
     c.Y += 1;
 
 	c.X = g_Console.getConsoleSize().X / 2 - 13;
-    g_Console.writeToBuffer(c, "Press '2' for Instructions", 0x0D);
+    g_Console.writeToBuffer(c, "Press '2' for Instructions", 0x0A);
     c.Y += 1;
 
 	c.X = g_Console.getConsoleSize().X / 2 - 13;
-    g_Console.writeToBuffer(c, "Press '3' for High Score", 0x0D);
+    g_Console.writeToBuffer(c, "Press '3' for High Score", 0x0A);
 	c.Y += 1;
 
     c.X = g_Console.getConsoleSize().X / 2 - 13;
-    g_Console.writeToBuffer(c, "Press '4' to go Options", 0x0D);
+    g_Console.writeToBuffer(c, "Press '4' to go Options", 0x0A);
     c.Y += 1;
 
     c.X = g_Console.getConsoleSize().X / 2 - 13;
-    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x0D);
+    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x0A);
 	g_Console.flushBufferToConsole();
 	
 }

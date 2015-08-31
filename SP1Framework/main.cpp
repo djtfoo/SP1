@@ -17,6 +17,9 @@ using std::ifstream;
 //main loop declaration
 void mainLoop( void );
 
+//storyline
+void storyline();
+
 //defining the game state
 Sequence seq = Menu;
 bool exitGame = false;
@@ -36,6 +39,7 @@ double ElapsedTime = 0.0;
 // You should not be modifying this unless you know what you are doing
 int main( void )
 {
+	storyline();
 	//g_Console.setConsoleFont(0, 25, L"Raster");
     gameLoop();  // main loop
     shutdown();  // do clean up, if any. free memory.
@@ -47,7 +51,6 @@ int main( void )
 //Display according to what the user inputs with the case switching
 void gameLoop()
 {
-
     while (!exitGame)
     {
         switch(seq)
