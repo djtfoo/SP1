@@ -79,6 +79,7 @@ struct SGameChar
     COORD m_cLocation;
 };
 
+// Enumeration to store the directions of the game enemy
 enum Direction {
     left = 1,
     right,
@@ -87,9 +88,10 @@ enum Direction {
     MAX_DIRECTION
 };
 
+// Struct for the game enemy - wei min
 struct Enemy
 {
-    COORD m_Enemy;
+    COORD m_Enemy;  
     Direction d;
 };
 
@@ -98,6 +100,7 @@ struct Traps
 	COORD Loc;
 };
 
+//Store co-ordinates - wei min
 struct ExitTeleporter
 {
 	COORD own_Loc;
@@ -128,8 +131,8 @@ void renderCounters();      // renders item counter, level count. for gameplay()
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
 
 //Enemy
-void moveEnemy(Enemy& g_Enemy);
-void enemyCollisionWithPlayer(Enemy g_Enemy);
+void moveEnemy(Enemy& g_Enemy); //shania
+void enemyCollisionWithPlayer(Enemy g_Enemy); //wei min
 
 //generating map - Jing Ting
 void levelInit();

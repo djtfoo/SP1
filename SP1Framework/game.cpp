@@ -68,7 +68,7 @@ void init( void )
 	BufferTime = 3.0;
 
 	// sets the initial state for the game
-	levelCount = 1;
+	levelCount = 6;
     levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
 
@@ -121,6 +121,7 @@ void levelInit() {
 		}
 		*/
 
+		//Render map based on the levels
 		if (levelCount == 1) {
 			maze1(rows, cols);
 		}
@@ -144,6 +145,7 @@ void levelInit() {
 			maze6(rows, cols);
 		}
 
+		//Checking for max item count for each map 
 		for (int i = 0; i < rows; ++i) {
 			for (int j = 0; j < cols; ++j) {
 				if (maze[i][j] == '$') {
@@ -152,7 +154,7 @@ void levelInit() {
 			}
 		}
 
-		//randomising of teleporters here
+		//randomising of teleporters for each map
 		randomiseTeleporters(rows, cols);
 	}
 
@@ -263,7 +265,7 @@ void render()
     clearScreen();      // clears the current screen and draw from scratch 
     switch (g_eGameState)
     {
-        case S_SPLASHSCREEN: renderSplashScreen();
+        case S_SPLASHSCREEN: renderSplashScreen(); //Splashscreen shows for a few seconds with the level counter
             break;
         case S_GAME: renderGame();
             break;
@@ -297,6 +299,7 @@ void gameplay()            // gameplay logic
     }
 }
 
+//Movement for the character (UP,DOWN,LEFT,RIGHT) and check for collision with maze walls
 void moveCharacter()
 {
     bool bSomethingHappened = false;
@@ -417,7 +420,6 @@ void renderSplashScreen()  // renders the splash screen
 
 }
 
-//Jing Ting
 void clearGame() {
 
     if (playmusic && victoryplaymusic) {
@@ -429,6 +431,7 @@ void clearGame() {
 
 }
 
+//Render text for winning and get name for highscore
 void renderClearGame() {
     clearScreen();
     renderText();
@@ -451,6 +454,7 @@ void renderPauseGame() {
 	g_Console.writeToBuffer(c, "Press '1' to return", 0x03);
 }
 
+//Render the text for the win page
 void renderText() {
 
     COORD c = g_Console.getConsoleSize();
@@ -685,7 +689,7 @@ void processNameInput(char * name) {
 
 void renderGame()
 {
-    renderCounters();   // counters will be rendered in gameplay() only
+    renderCounters();   // counters will be rendered in gameplay() only (not in the splashscreen)
     renderMap();        // renders the map to the buffer first
     renderCharacter();  // renders the character into the buffer
 	renderEnemy();
@@ -694,11 +698,12 @@ void renderGame()
 void renderMap()
 {
     // Set up sample colours, and output shadings
-
 	mapgenerator(rows, cols);
 
 }
 
+//After map is rendered in to the buffer, this is called out to show out the ascii codes for each of the items
+//Eg walls, items, etc
 void mapgenerator(int rows, int cols) {
 
 	COORD c;
@@ -755,7 +760,7 @@ void randomiseTeleporters(int rows, int cols) {
 void maze1(int& rows, int& cols) {
 
 	string map1[21] = {
-        "################################",   // 3 Items, 5 teleports, 2 AI, 1 trap
+        "################################",   // 3 Items, 5 teleports, 2 AI
         "#              #  #@           #",   
 		"##### ######## ## ###########  #",
 		"#     # @# $ # #  #            #",
@@ -794,10 +799,10 @@ void maze1(int& rows, int& cols) {
 
     //Enemy 1
     Enemy g_Enemy1;
-	g_Enemy1.m_Enemy.X = 5;
-    g_Enemy1.m_Enemy.Y = 2;
-    g_Enemy1.d = right;
-    enemyvec.push_back(g_Enemy1);
+	g_Enemy1.m_Enemy.X = 5;   //g_Enemy1's X coordinate
+    g_Enemy1.m_Enemy.Y = 2;   //g_Enemy1's Y coordinate
+    g_Enemy1.d = right;       //g_Enemy1's direction
+    enemyvec.push_back(g_Enemy1);  //Store the X & Y coordinates and direction of g_Enemy1 into enemyvec
 
     //Enemy2
     Enemy g_Enemy2;
@@ -810,7 +815,7 @@ void maze1(int& rows, int& cols) {
 void maze2(int& rows, int& cols) {
 
 	string map2[21] = {
-        "################################",    // 5 Items, 5 teleports, 3 AI, 2 traps 
+        "################################",    // 5 Items, 5 teleports, 3 AI
 		"# #                  #    #    #",
 		"# # ### ### # ###### # #  # #  #",
 		"# # #     # #  #  #  #@#  # # $#",
@@ -875,7 +880,7 @@ void maze2(int& rows, int& cols) {
 void maze3(int& rows, int& cols) {
 
 	string map3[21] = {
-        "################################",    // 8 Items, 8 teleports, 3 AI, 3 traps
+        "################################",    // 8 Items, 8 teleports, 3 AI
         "# #  #  @  #               #   #",
         "# #  # ### ###   # ######### # #",
         "# #          # # # #@        # #",
@@ -937,7 +942,7 @@ void maze3(int& rows, int& cols) {
 void maze4(int& rows, int& cols) {
 
 	string map4[24] = {
-        "###################################",   // 10 Items, 10 teleportss, 4 AI, 5 traps
+        "###################################",   // 10 Items, 10 teleportss, 4 AI
         "#     #@   #          #           #",
         "##### #### #  ####### #   ######  #",
         "#     #    #  #$      #   #    #  #",
@@ -1010,7 +1015,7 @@ void maze4(int& rows, int& cols) {
 void maze5(int& rows, int& cols) {
 
 	string map5[24] = {
-        "########################################",   // 10 Items, 15 teleports, 5 AI, 8 traps
+        "########################################",   // 10 Items, 15 teleports, 5 AI
         "#      #         #          #      #@  #",
         "# #### ##### # # # ######## ### # #### #",
         "#    #   #@  # #   # @ #        # #    #",
@@ -1089,7 +1094,7 @@ void maze5(int& rows, int& cols) {
 void maze6(int& rows, int& cols) {
     
 	string map6[23] = {
-        "#######################################",  //  10 Items, 15 teleports, 2AI, 15traps
+        "#######################################",  //  10 Items, 15 teleports, 2AI
         "#     #   #  @  #    #       $# #   #@#",
         "# # ### # # ### # ## # #### ### # # # #",
         "# #@#   #   #   #  #   #      #       #",
@@ -1208,14 +1213,13 @@ void renderCharacter()
 
 void renderEnemy()
 {
-    for (unsigned int i = 0; i < enemyvec.size(); ++i) {
+    for (unsigned int i = 0; i < enemyvec.size(); ++i) {  // Use for loop is to check through the enemyvec for each level.
         Enemy tempEnemy = enemyvec[i];
-        COORD tempE = tempEnemy.m_Enemy;
-        g_Console.writeToBuffer(tempE, 'X', 0x0C);
+        COORD tempE = tempEnemy.m_Enemy;            
+        g_Console.writeToBuffer(tempE, 'X', 0x0C);   
     }
 }
 
-//Shania + Jing Ting
 void moveEnemy(Enemy& g_Enemy)
 {
 
@@ -1369,22 +1373,20 @@ void checkTrap() {
 
 }
 
-//Shania
 void PickUpItems()
 {
 	int charY = g_sChar.m_cLocation.Y - 1;
 	int charX = g_sChar.m_cLocation.X;
 
-	if(maze[charY][charX] == '$')
+	if(maze[charY][charX] == '$')  //Check if the coordinates the character is on has $ 
 	{
 		//Beep (1440,30)
-		ItemCounter++;
-		maze[charY][charX] = ' ';
+		ItemCounter++;             //Add 1 to the ItemCounter
+		maze[charY][charX] = ' ';  //Change the $ to a space
 	}
 
 }
 
-//Jing Ting
 void exitLevel() {
 
 	int charY = g_sChar.m_cLocation.Y - 1;

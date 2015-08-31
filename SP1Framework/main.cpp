@@ -45,6 +45,7 @@ int main( void )
 }
 
 //looping for switch to check if the player is not inputing 'ESC' for exit
+//Display according to what the user inputs with the case switching
 void gameLoop()
 {
 

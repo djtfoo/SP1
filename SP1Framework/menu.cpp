@@ -28,7 +28,7 @@ const unsigned int gc_uFrameTime = 1000 / gc_ucFPS;    // time for each frame
 bool playmusic = true;      //check if user wants music or not
 bool menuplaymusic = true;  //while user remains in the menus, don't refresh the main menu music
 
-void userInput() //If s is modified, seq is modified as well
+void userInput()
 {
     menu_KeyPressed[K_1] = isKeyPressed(49);
     menu_KeyPressed[K_2] = isKeyPressed(50);
@@ -104,6 +104,7 @@ void processInputOptions(SequenceOPT &s) {
     
 }
 
+//Detect the player's input to on and off the sounds in the game
 void processInputSound(SequenceOPT &s) {
 
     if (ElapsedTime <= BounceTime) {
@@ -130,6 +131,7 @@ void processInputSound(SequenceOPT &s) {
 }
 
 //User interface for main menu
+//Writetobuffer to buffer the text and after wards flush to show the text in the screen
 void displayMenu()
 {
 	if(playmusic && menuplaymusic)
@@ -337,6 +339,7 @@ void toCpp()
 
 }
 
+//To get the user input and use switch sequence to check which one they inputed
 void options() {
 
     SequenceOPT s = OptionsMenu;
@@ -369,6 +372,7 @@ void options() {
 
 }
 
+//Display the options to adjust sound or go back inside Options
 void displayOptions() {
 
     clearScreen();
@@ -387,6 +391,7 @@ void displayOptions() {
 
 }
 
+//Display the options to on or off the sound in the game
 void displaySound() {
     
     clearScreen();
