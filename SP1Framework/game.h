@@ -18,8 +18,11 @@ enum EKEYS
     K_RIGHT,
     K_ESCAPE,
     K_SPACE,
+    //for gameplay_pause
 	K_ONE,
 	K_TWO,
+    K_THREE,
+    K_FOUR,
     //for keying in name for highscore
     K_A,
     K_B,
@@ -58,7 +61,9 @@ enum EGAMESTATES
     S_SPLASHSCREEN,
     S_GAME,
     S_WIN,
-	S_PAUSE,
+    S_PAUSE,
+    S_PAUSEONE,
+    S_PAUSETWO,
     S_COUNT
 };
 
@@ -159,7 +164,13 @@ void renderNameInput(char * name);
 
 //pause the game - Glennda
 void pauseGame();
+void pauseOne();
+void pauseTwo();
 void renderPauseGame();
+void renderPauseSound();
+void renderPauseChar();
 void processPauseInput();
+void processPauseSound();
+void processPauseChar();
 
 #endif // _GAME_H

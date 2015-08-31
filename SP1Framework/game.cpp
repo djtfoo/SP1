@@ -1,5 +1,6 @@
 // This is the main file for the game logic and function
 
+#include "menu.h"
 #include "game.h"
 #include "Framework\console.h"
 #include "Framework\timer.h"
@@ -51,6 +52,8 @@ bool victoryplaymusic = true;
 bool prevKeyPressed = g_abKeyPressed[K_ESCAPE];
 double bouncePrevKey = 0.0;
 
+CHAR charIcon = (char)1;
+
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
 //            Initialize variables, allocate memory, load data from file, etc. 
@@ -76,7 +79,6 @@ void init( void )
 
     name[0] = '\0';
     pointer = name - 1;
-
 }
 
 //--------------------------------------------------------------
@@ -183,6 +185,8 @@ void getInput( void )
 	//for pause screen
 	g_abKeyPressed[K_ONE] = isKeyPressed(49);
 	g_abKeyPressed[K_TWO] = isKeyPressed(50);
+    g_abKeyPressed[K_THREE] = isKeyPressed(51);
+    g_abKeyPressed[K_FOUR] = isKeyPressed(52);
 
     //for keying in name for high score
     g_abKeyPressed[K_A] = isKeyPressed(65);
@@ -244,8 +248,14 @@ void update(double dt)
 		case S_GAME : playTime += dt; gameplay();	// gameplay logic when we are in the game
             break;
 
-		case S_PAUSE : pauseGame(); 
+		case S_PAUSE : pauseGame();         // main stage of pause
 			break;
+
+        case S_PAUSEONE : pauseOne();       // sub stage of pause; game sounds
+            break;
+
+        case S_PAUSETWO : pauseTwo();       // sub stage of pause; character icon change
+            break;
 
         case S_WIN : clearGame();
             break;
@@ -269,10 +279,14 @@ void render()
             break;
         case S_GAME: renderGame();
             break;
-        case S_WIN : renderClearGame();
-            break;
 		case S_PAUSE : renderPauseGame();
 			break;
+        case S_PAUSEONE : renderPauseSound();
+			break;
+        case S_PAUSETWO : renderPauseChar();
+            break;
+        case S_WIN : renderClearGame();
+            break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -377,13 +391,85 @@ void processUserInput()
 
 void processPauseInput()
 {
+    if (g_dElapsedTime <= g_dBounceTime) {
+        return;
+    }
+
 	if (g_abKeyPressed[K_ONE]) {
+        g_dBounceTime = g_dElapsedTime + 0.1;
 		g_eGameState = S_GAME;
-	}
+	}// returns back to game
 
 	if (g_abKeyPressed[K_TWO]) {
-		g_bQuitGame = true;
+        g_dBounceTime = g_dElapsedTime + 0.1;
+		g_eGameState = S_PAUSEONE;
+	}// toggling game sounds
+
+    if (g_abKeyPressed[K_THREE]) {
+        g_dBounceTime = g_dElapsedTime + 0.1;
+        g_eGameState = S_PAUSETWO;
+    }// character icon change
+
+    if (g_abKeyPressed[K_FOUR]) {
+        g_dBounceTime = g_dElapsedTime + 0.1;
+        g_bQuitGame = true;
+    }// exit game, return to Main Menu
+    
+}
+
+void pauseOne()
+{
+    processPauseSound();
+}
+
+void pauseTwo()
+{
+    processPauseChar();
+}
+
+void processPauseSound()
+{
+    if (g_dElapsedTime <= g_dBounceTime) {
+        return;
+    }
+
+    if (g_abKeyPressed[K_ONE]) {
+        g_dBounceTime = g_dElapsedTime + 0.1;
+        if (!playmusic) {
+            PlaySound( "gamemusic.wav", NULL, SND_LOOP | SND_ASYNC);
+        }
+        g_eGameState = S_PAUSE;
+	    playmusic = true;
+    }
+    else if (g_abKeyPressed[K_TWO]) {
+        g_dBounceTime = g_dElapsedTime + 0.1;
+        PlaySound(NULL,NULL,0);
+        g_eGameState = S_PAUSE;
+		playmusic = false;
 	}
+}
+
+void processPauseChar()
+{
+    if (g_dElapsedTime <= g_dBounceTime) {
+        return;
+    }
+
+    if (g_abKeyPressed[K_Z]) {
+        g_dBounceTime = g_dElapsedTime + 0.1;
+        charIcon = (char)2;
+        g_eGameState = S_PAUSE;
+    }
+    else if (g_abKeyPressed[K_X]) {
+        g_dBounceTime = g_dElapsedTime + 0.1;
+        charIcon = (char)3;
+        g_eGameState = S_PAUSE;
+    }
+    else if (g_abKeyPressed[K_C]) {
+        g_dBounceTime = g_dElapsedTime + 0.1;
+        charIcon = (char)4;
+        g_eGameState = S_PAUSE;     // automatically returns back to the main pause page after selection
+    }
 }
 
 void clearScreen()
@@ -446,12 +532,40 @@ void renderPauseGame() {
 
 	clearScreen();
 	COORD c = g_Console.getConsoleSize();
-	c.X /= 2;
-	c.Y /= 3;
-	g_Console.writeToBuffer(c, "Press '2' to quit game", 0x03);
-	c.X /= 2;
-	c.Y /= 3;
+	c.Y /= 4;
+    c.Y += 2;
+	c.X = g_Console.getConsoleSize().X / 2 - 23;
 	g_Console.writeToBuffer(c, "Press '1' to return", 0x03);
+	c.Y += 2;
+	c.X = g_Console.getConsoleSize().X / 2 - 23;
+	g_Console.writeToBuffer(c, "Press '2' for sound", 0x03);
+    c.Y += 2;
+	c.X = g_Console.getConsoleSize().X / 2 - 23;
+	g_Console.writeToBuffer(c, "Press '3' for Character Icon change", 0x03);
+    c.Y += 2;
+	c.X = g_Console.getConsoleSize().X / 2 - 23;
+	g_Console.writeToBuffer(c, "Press '4' to quit game", 0x03);
+}
+
+void renderPauseSound() {
+    clearScreen();
+	COORD c = g_Console.getConsoleSize();
+	c.Y /= 4;
+    c.Y += 2;
+	c.X = g_Console.getConsoleSize().X / 2 - 23;
+    g_Console.writeToBuffer(c, "Press '1' to switch on sound", 0x03);
+    c.Y += 2;
+	c.X = g_Console.getConsoleSize().X / 2 - 23;
+	g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x03);
+}
+
+void renderPauseChar() {
+    clearScreen();
+	COORD c = g_Console.getConsoleSize();
+	c.Y /= 4;
+    c.Y += 2;
+	c.X = g_Console.getConsoleSize().X / 2 - 23;
+    g_Console.writeToBuffer(c, "Press 'Z', 'X', or 'C' to switch to Player Icon", 0x03);
 }
 
 //Render the text for the win page
@@ -1208,7 +1322,7 @@ void maze6(int& rows, int& cols) {
 void renderCharacter()
 {
     // Draw the location of the character
-    g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0A);
+    g_Console.writeToBuffer(g_sChar.m_cLocation, charIcon, 0x0A);
 }
 
 void renderEnemy()
