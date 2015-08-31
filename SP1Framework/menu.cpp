@@ -1,15 +1,14 @@
 //This is the file for displaying the different game states
-
-#include "Framework\timer.h"
-#include "Framework\console.h"
-#include "game.h"
-#include "menu.h"
-
 #include <iostream>
 #include <sstream>
 #include <fstream>
 #include <string>
 #include <vector>
+
+#include "Framework\timer.h"
+#include "Framework\console.h"
+#include "game.h"
+#include "menu.h"
 
 using std::vector;
 using std::string;

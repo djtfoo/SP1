@@ -1,16 +1,15 @@
 // This is the main file for the game logic and function
-
-#include "menu.h"
-#include "game.h"
-#include "Framework\console.h"
-#include "Framework\timer.h"
-
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <string>
 #include <vector>
 #include <fstream>
+
+#include "Framework\console.h"
+#include "Framework\timer.h"
+#include "menu.h"
+#include "game.h"
 
 using std::ofstream;
 using std::string;
