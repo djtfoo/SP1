@@ -1229,25 +1229,25 @@ void moveEnemy(Enemy& g_Enemy)
 	
     //Move the enemy
 	//If enemy next X position is not a wall
-    if (g_Enemy.d == right && maze[eY][eX+1] != '#') //move right
+    if (g_Enemy.d == right && maze[eY][eX+1] != '#') //if not a wall, and direction is right, move right
     {
-        g_Enemy.m_Enemy.X++;
+        g_Enemy.m_Enemy.X++;     //enemy's x-axis increase by 1
     }
 
-    else if(g_Enemy.d == left && maze[eY][eX-1] != '#') //move left
+    else if(g_Enemy.d == left && maze[eY][eX-1] != '#') //if not a wall, and direction is left, move left
     {
-        g_Enemy.m_Enemy.X--;
+        g_Enemy.m_Enemy.X--;     //enemy's x-axis decrease by 1
     }
-    else if (g_Enemy.d == up && maze[eY-1][eX] != '#') //move up
+    else if (g_Enemy.d == up && maze[eY-1][eX] != '#') //if not a wall, and direction is up, move up
     {
-        g_Enemy.m_Enemy.Y--;
+        g_Enemy.m_Enemy.Y--;      //enemy's y-axis decrease by 1
     }
-	else if(g_Enemy.d == down && maze[eY+1][eX] != '#') //move down
+	else if(g_Enemy.d == down && maze[eY+1][eX] != '#') //if not a wall, and direction is down, move down
     {
-        g_Enemy.m_Enemy.Y++;
+        g_Enemy.m_Enemy.Y++;     //enemy's y-axis increase by 1
     }
 
-	//change direction
+	//change direction when a wall is detected
     else if (g_Enemy.d == right && maze[eY][eX+1] == '#')
 	{
 		g_Enemy.m_Enemy.X--;
@@ -1375,7 +1375,7 @@ void checkTrap() {
 
 void PickUpItems()
 {
-	int charY = g_sChar.m_cLocation.Y - 1;
+	int charY = g_sChar.m_cLocation.Y - 1; //call the coordinates of the player
 	int charX = g_sChar.m_cLocation.X;
 
 	if(maze[charY][charX] == '$')  //Check if the coordinates the character is on has $ 

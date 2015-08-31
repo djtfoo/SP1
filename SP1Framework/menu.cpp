@@ -118,14 +118,14 @@ void processInputSound(SequenceOPT &s) {
 		}
         s = OptionsMenu;
         inputDetected = true;
-		playmusic = true;
+		playmusic = true;  //boolean to keep playing the music
 	}
 	else if (menu_KeyPressed[K_2])
 	{
 		PlaySound(NULL,NULL,0);
         s = OptionsMenu;
         inputDetected = true;
-		playmusic = false;
+		playmusic = false;  //boolean to stop playing music even after going back to main page and in game
 	}
 
 }
@@ -350,12 +350,12 @@ void options() {
         
         switch(s)
         {
-            case OptionsMenu : displayOptions();
-                while (!inputDetected) {
+            case OptionsMenu : displayOptions();  //This is to show Options
+                while (!inputDetected) { //detect user input
                     userInput();
                     processInputOptions(s);
                 }
-                inputDetected = false;
+                inputDetected = false;  //while loop still run
                 break;
             case Sound : displaySound();
                 ElapsedTime = 0.0;
