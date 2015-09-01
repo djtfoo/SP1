@@ -496,9 +496,6 @@ void renderSplashScreen()  // renders the splash screen
 	c.Y += 1;
 	c.X = g_Console.getConsoleSize().X / 2 - 20;
 	//g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);
-	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 10;
-	g_Console.writeToBuffer(c, "Press 'Esc' to pause", 0x0B);
 
 }
 
@@ -627,6 +624,7 @@ void renderText() {
     c.Y += 4;
 }
 
+//JingTing
 void renderNameInput(char * name) {
     COORD c = g_Console.getConsoleSize();
     c.X = c.X / 2 - 5;
@@ -636,6 +634,7 @@ void renderNameInput(char * name) {
     g_Console.writeToBuffer(c, name, 0x1A);
 }
 
+//JingTing
 void processNameInput(char * name) {
 
     bool keySomething = false;
@@ -1436,6 +1435,8 @@ void renderFramerate()
     g_Console.writeToBuffer(c, ss.str());
 }
 
+//Render in game counters
+//WeiMin
 void renderCounters() {
 
     COORD c;    
@@ -1481,6 +1482,8 @@ void renderCounters() {
         c.Y = 12;
         g_Console.writeToBuffer(c,"Exit is unlocked");
     }
+    c.Y+=2;
+    g_Console.writeToBuffer(c,"Press ESC to pause");
 }
 
 void renderToScreen()

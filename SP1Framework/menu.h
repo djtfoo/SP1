@@ -1,6 +1,7 @@
 #include "Framework\timer.h"
 #include "Framework\console.h"
 
+//WeiMin
 enum Sequence 
 {
     Menu,
@@ -31,6 +32,7 @@ enum SequenceOPT{
 	MAX_SEQUENCEOPT,
 };
 
+//WeiMin
 void gameLoop();
 void displayMenu();
 void displayGame();

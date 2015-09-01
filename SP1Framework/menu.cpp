@@ -205,6 +205,7 @@ void processInputSound(SequenceOPT &s) {
 
 //User interface for main menu
 //Writetobuffer to buffer the text and after wards flush to show the text in the screen
+//Wei Min
 void displayMenu()
 {
 	if(playmusic && menuplaymusic)

@@ -70,6 +70,7 @@ enum EGAMESTATES
     S_COUNT
 };
 
+//JingTing
 enum GAMELEVELS
 {
 	M1 = 1,
@@ -142,7 +143,7 @@ void renderToScreen();      // dump the contents of the buffer to the screen, on
 void moveEnemy(Enemy& g_Enemy); //shania
 void enemyCollisionWithPlayer(Enemy g_Enemy); //wei min
 
-//generating map - Jing Ting
+//generating map - JingTing
 void levelInit();
 void maze1(int& rows, int& cols);
 void maze2(int& rows, int& cols);
@@ -158,7 +159,7 @@ void checkTrap();
 void PickUpItems();
 void exitLevel();
 
-//finish the game - Jing Ting
+//finish the game - JingTing
 void clearGame();
 void processNameInput(char * name);
 void renderClearGame();
