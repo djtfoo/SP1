@@ -392,22 +392,22 @@ void processPauseInput()
     }
 
 	if (g_abKeyPressed[K_ONE]) {
-        g_dBounceTime = g_dElapsedTime + 0.1;
+        g_dBounceTime = g_dElapsedTime + 0.2;
 		g_eGameState = S_GAME;
 	}// returns back to game
 
 	if (g_abKeyPressed[K_TWO]) {
-        g_dBounceTime = g_dElapsedTime + 0.1;
+        g_dBounceTime = g_dElapsedTime + 0.2;
 		g_eGameState = S_PAUSEONE;
 	}// toggling game sounds
 
     if (g_abKeyPressed[K_THREE]) {
-        g_dBounceTime = g_dElapsedTime + 0.1;
+        g_dBounceTime = g_dElapsedTime + 0.2;
         g_eGameState = S_PAUSETWO;
     }// character icon change
 
     if (g_abKeyPressed[K_FOUR]) {
-        g_dBounceTime = g_dElapsedTime + 0.1;
+        g_dBounceTime = g_dElapsedTime + 0.2;
         g_bQuitGame = true;
     }// exit game, return to Main Menu
     
