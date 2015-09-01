@@ -70,7 +70,7 @@ void init( void )
 	BufferTime = 3.0;
 
 	// sets the initial state for the game
-	levelCount = 6;
+	levelCount = 1;
     levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
 
@@ -912,8 +912,8 @@ void maze1(int& rows, int& cols) {
 
     //Enemy 1
     Enemy g_Enemy1;
-	g_Enemy1.m_Enemy.X = 5;   //g_Enemy1's X coordinate
-    g_Enemy1.m_Enemy.Y = 2;   //g_Enemy1's Y coordinate
+	g_Enemy1.m_Enemy.X = 18;   //g_Enemy1's X coordinate
+    g_Enemy1.m_Enemy.Y = 8;   //g_Enemy1's Y coordinate
     g_Enemy1.d = right;       //g_Enemy1's direction
     enemyvec.push_back(g_Enemy1);  //Store the X & Y coordinates and direction of g_Enemy1 into enemyvec
 
