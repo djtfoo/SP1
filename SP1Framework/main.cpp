@@ -21,7 +21,7 @@ void mainLoop( void );
 void storyline();
 
 //defining the game state
-Sequence seq = Menu;
+Sequence seq = Exit;
 bool exitGame = false;
 
 //Console object

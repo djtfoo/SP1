@@ -495,15 +495,65 @@ void displaySound( void ) {
 void displayExit( void )
 {
     clearScreen();
+    
+	/*Beep (1480,200);  
+    Beep (1568,200);      
+    Beep (1568,200);     
+    Beep (1568,200);
+	Beep (739.99,200);
+    Beep (783.99,200);
+    Beep (783.99,200);
+    Beep (783.99,200);*/
 
     COORD c = g_Console.getConsoleSize();
-    c.Y /= 3;
-    c.X = c.X / 3;
-    g_Console.writeToBuffer(c, "HAVE A NICE DAY, BYE~~", 0x0B);
-    g_Console.flushBufferToConsole();
 
-    exitGame = true;
-    Sleep(1500);
+	//Display exit text
+	c.X = 12;
+	c.Y = 2;
+
+	g_Console.writeToBuffer(c,"~~YOU RIDE ON YOUR CAMEL ALL THE WAY HOME, GOOD BYE!~~", 0x0B);
+
+	//Display ascii camel
+	c.X = 3;
+	c.Y = 5;
+
+	g_Console.writeToBuffer(c,"                                                  =--_                ", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"                                   .-\"\"\"\"\"\"-.     |* _)               ", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"                                  /          \\   /  /                 ", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"                                 /            \\_/  /                  ", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"     _                          /|                /                   ", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c," _-'\"/\\                        / |    ____    _.-\"            _       ", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"'   (  '-_            _       (   \\  |\\  /\\  ||           .-'\".\".     ", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"     '.   `'-._   .-'\"/'.      \"   | |/ /  | |/        _-\"   (   '-_  ", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"       '.      _-\"   (   '-_       \\ | /   \\ |     _.-'       )     \"-", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"     _.'   _.-'       )     \"-._    ||\\\\   |\\\\  '\"'        .-'        ", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"   '               .-'          `'  || \\\\  ||))                       ", 0x0B);
+	c.Y += 1;
+    g_Console.writeToBuffer(c," _  ___  _ ____________ _____  ___ _|\\ _|\\_|\\\\/ _______________  ___  ", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"                 c  c  \" c C \"\"C  \" \"\"  \"\" \"\"                         ", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"             c       C                                                ", 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"        C        C                                                    " , 0x0B);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"             C                                                        ", 0x0B);
+
+    
+	g_Console.flushBufferToConsole();
+    
+	exitGame = true;
+    Sleep(5000);
 }
 
 //--------------------------------------------------------------
