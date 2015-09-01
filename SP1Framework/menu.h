@@ -15,17 +15,13 @@ enum Sequence
 
 enum MENUKEYS
 {
-    //for gameplay
-    K_1,
-    K_2,
-    K_3,
-    K_4,
-    K_ENT,
-    K_ESC,
+    MK_UP,
+    MK_DOWN,
+    MK_ENT,
     K_MAX,
 };
 
-enum SequenceOPT{
+enum SequenceOPT {
 	OptionsMenu,
 	Sound,			//1
 	Back,			//2

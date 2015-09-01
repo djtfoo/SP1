@@ -50,11 +50,27 @@ int i = 0;
 //PlaySound - victory screen
 bool victoryplaymusic = true;
 
-bool prevKeyPressed = g_abKeyPressed[K_ESCAPE];
+EKEYS prevKeyPressed = K_ESCAPE;
 double bouncePrevKey = 0.0;
 
+//pause menu
+EGAMESTATES gamestate[] = {
+    S_GAME,
+    S_PAUSEONE,
+    S_PAUSETWO,
+};
+
+//pause menu colours
+WORD HighlightP = 0x1B;
+WORD nonHighlightP = 0x0B;
+WORD coloursPause[] = {HighlightP, nonHighlightP, nonHighlightP, nonHighlightP};
+WORD *ptrPause = coloursPause;
+
+WORD coloursPSound[] = {HighlightP, nonHighlightP};
+WORD *ptrPSound = coloursPSound;
+
+//changing character icon
 CHAR charIcon = (char)1;
-// TEST
 char arr[7] = {(char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7};
 char *ptr = arr;
 //--------------------------------------------------------------
@@ -71,7 +87,12 @@ void init( void )
 	g_dBounceTime = 0.0;
 	g_dBounceTimeEnemy = 0.0;
 	playTime = 0.0;
-	BufferTime = 3.0;
+	BufferTime = 1.0;
+
+    //reset the pause screen pointer selection to default
+    *ptrPause = nonHighlightP;
+    ptrPause = coloursPause;
+    *ptrPause = HighlightP;
 
 	// sets the initial state for the game
 	levelCount = static_cast<GAMELEVELS>(1);
@@ -163,14 +184,7 @@ void getInput( void )
     g_abKeyPressed[K_DOWN]   = isKeyPressed(VK_DOWN);
     g_abKeyPressed[K_LEFT]   = isKeyPressed(VK_LEFT);
     g_abKeyPressed[K_RIGHT]  = isKeyPressed(VK_RIGHT);
-    g_abKeyPressed[K_SPACE]  = isKeyPressed(VK_SPACE);
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
-
-	//for pause screen
-	g_abKeyPressed[K_ONE] = isKeyPressed(49);
-	g_abKeyPressed[K_TWO] = isKeyPressed(50);
-    g_abKeyPressed[K_THREE] = isKeyPressed(51);
-    g_abKeyPressed[K_FOUR] = isKeyPressed(52);
 
     //for keying in name for high score
     g_abKeyPressed[K_A] = isKeyPressed(65);
@@ -371,19 +385,42 @@ void moveCharacter( void )
 
 void processUserInput( void )
 {
+    bool bSomethingHappened = false;
+    if (g_dBounceTime > g_dElapsedTime) {
+        return;
+    }
+
     // pauses the game if player hits the escape key
 	if (g_abKeyPressed[K_ESCAPE]) {
+        bSomethingHappened = true;
 		g_eGameState = S_PAUSE;
 	}
+
     if (g_abKeyPressed[K_SKIP]) {
-        levelClear = true;
-        levelCount = static_cast<GAMELEVELS>(levelCount + 1);
-        g_eGameState = S_SPLASHSCREEN;
-        BufferTime = g_dElapsedTime + 3.0;
-        developerMode = false;
+        bSomethingHappened = true;
+
+        if (levelCount == MAX_LEVEL-1) {
+            g_eGameState = S_WIN;
+		}
+		else {
+            levelClear = true;
+            levelCount = static_cast<GAMELEVELS>(levelCount + 1);
+        }
     }
+
     if (g_abKeyPressed[K_SHOWTELEPORTER]) {
-        developerMode = true;
+        bSomethingHappened = true;
+
+        if (!developerMode) {
+            developerMode = true;
+        }
+        else if (developerMode) {
+            developerMode = false;
+        }
+    }
+
+    if (bSomethingHappened) {
+        g_dBounceTime = g_dElapsedTime + 0.5;
     }
 }
 
@@ -394,25 +431,32 @@ void processPauseInput( void )
         return;
     }
 
-	if (g_abKeyPressed[K_ONE]) {
-        g_dBounceTime = g_dElapsedTime + 0.2;
-		g_eGameState = S_GAME;
-	}// returns back to game
-
-	if (g_abKeyPressed[K_TWO]) {
-        g_dBounceTime = g_dElapsedTime + 0.2;
-		g_eGameState = S_PAUSEONE;
-	}// toggling game sounds
-
-    if (g_abKeyPressed[K_THREE]) {
-        g_dBounceTime = g_dElapsedTime + 0.2;
-        g_eGameState = S_PAUSETWO;
-    }// character icon change
-
-    if (g_abKeyPressed[K_FOUR]) {
-        g_dBounceTime = g_dElapsedTime + 0.2;
-        g_bQuitGame = true;
-    }// exit game, return to Main Menu
+    if (g_abKeyPressed[K_UP]) {
+        if (ptrPause != coloursPause) {
+            *ptrPause = nonHighlightP;
+            --ptrPause;
+            *ptrPause = HighlightP;
+            g_dBounceTime = g_dElapsedTime + 0.2;
+        }
+    }
+    else if (g_abKeyPressed[K_DOWN]) {
+        if (ptrPause != coloursPause + 3) {
+            *ptrPause = nonHighlightP;
+            ++ptrPause;
+            *ptrPause = HighlightP;
+            g_dBounceTime = g_dElapsedTime + 0.2;
+        }
+    }
+    else if (g_abKeyPressed[K_ENTER]) {
+        int offset = ptrPause - coloursPause;
+        if (offset < 3) {
+            g_eGameState = gamestate[offset];
+        }
+        else {  //offset == 3 is to quit game
+            g_bQuitGame = true;     // exit game, return to Main Menu
+        }
+        g_dBounceTime = g_dElapsedTime + 0.3;
+    }
     
 }
 
@@ -421,21 +465,41 @@ void processPauseSound( void )
     if (g_dElapsedTime <= g_dBounceTime) {
         return;
     }
-
-    if (g_abKeyPressed[K_ONE]) {
-        g_dBounceTime = g_dElapsedTime + 0.1;
-        if (!playmusic) {
-            PlaySound(TEXT("gamemusic.wav"), NULL, SND_LOOP | SND_ASYNC);
-            playmusic = true;
+    
+    if (g_abKeyPressed[K_UP]) {
+        if (ptrPSound != coloursPSound) {
+            *ptrPSound = nonHighlightP;
+            --ptrPSound;
+            *ptrPSound = HighlightP;
+            g_dBounceTime = g_dElapsedTime + 0.2;
         }
-        g_eGameState = S_PAUSE;
     }
-    else if (g_abKeyPressed[K_TWO]) {
-        g_dBounceTime = g_dElapsedTime + 0.1;
-        PlaySound(NULL,NULL,0);
+    else if (g_abKeyPressed[K_DOWN]) {
+        if (ptrPSound == coloursPSound) {
+            *ptrPSound = nonHighlightP;
+            ++ptrPSound;
+            *ptrPSound = HighlightP;
+            g_dBounceTime = g_dElapsedTime + 0.2;
+        }
+    }
+    else if (g_abKeyPressed[K_ENTER]) {
         g_eGameState = S_PAUSE;
-		playmusic = false;
-	}
+        if (ptrPSound == coloursPSound) { //player wants sound to be on
+            if (!playmusic) {
+			    PlaySound(TEXT("gamemusic.wav"), NULL, SND_LOOP | SND_ASYNC);
+		    }
+		    playmusic = true;   //boolean to keep playing the music
+        }
+        else {  //player wants sound to be off
+            PlaySound(NULL,NULL,0);
+		    playmusic = false;  //boolean to stop playing music even after going back to main page and in game
+            *ptrPSound = nonHighlightP;
+            ptrPSound = coloursPSound;
+            *ptrPSound = HighlightP;
+        }
+        g_dBounceTime = g_dElapsedTime + 0.3;
+    }
+
 }
 
 void processPauseChar(char * arr)
@@ -491,16 +555,13 @@ void renderPauseGame( void ) {
 	c.Y /= 4;
     c.Y += 2;
 	c.X = g_Console.getConsoleSize().X / 2 - 23;
-	g_Console.writeToBuffer(c, "Press '1' to return", 0x0B);
-	c.Y += 2;
-	c.X = g_Console.getConsoleSize().X / 2 - 23;
-	g_Console.writeToBuffer(c, "Press '2' for sound", 0x0B);
-    c.Y += 2;
-	c.X = g_Console.getConsoleSize().X / 2 - 23;
-	g_Console.writeToBuffer(c, "Press '3' for Character Icon change", 0x0B);
-    c.Y += 2;
-	c.X = g_Console.getConsoleSize().X / 2 - 23;
-	g_Console.writeToBuffer(c, "Press '4' to quit game", 0x0B);
+	g_Console.writeToBuffer(c, "RETURN TO GAME", coloursPause[0]);
+	++c.Y;
+	g_Console.writeToBuffer(c, "SOUND", coloursPause[1]);
+    ++c.Y;
+	g_Console.writeToBuffer(c, "CHANGE CHARACTER ICON", coloursPause[2]);
+    ++c.Y;
+	g_Console.writeToBuffer(c, "RETURN TO MAIN MENU", coloursPause[3]);
 }
 
 void renderPauseSound( void ) {
@@ -509,10 +570,9 @@ void renderPauseSound( void ) {
 	c.Y /= 4;
     c.Y += 2;
 	c.X = g_Console.getConsoleSize().X / 2 - 23;
-    g_Console.writeToBuffer(c, "Press '1' to switch on sound", 0x0B);
-    c.Y += 2;
-	c.X = g_Console.getConsoleSize().X / 2 - 23;
-	g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x0B);
+    g_Console.writeToBuffer(c, "ON", coloursPSound[0]);
+    ++c.Y;
+	g_Console.writeToBuffer(c, "OFF", coloursPSound[1]);
 }
 
 void renderPauseChar( void ) {
@@ -658,144 +718,140 @@ void processNameInput(char * name) {
 
     bool keySomething = false;
     bool backspace = false;
-    if (g_dBounceTime > g_dElapsedTime)
+    if (g_dBounceTime > g_dElapsedTime) {
         return;
+    }
 
     if (pointer != name+9) {
-        if (g_abKeyPressed[K_A] && !prevKeyPressed) {
+        if (g_abKeyPressed[K_A] && prevKeyPressed != K_A) {
             *(pointer+1) = 'A';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_A];
+            prevKeyPressed = K_A;
         }
-        if (g_abKeyPressed[K_B] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_B] && prevKeyPressed != K_B) {
             *(pointer+1) = 'B';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_B];
+            prevKeyPressed = K_B;
         }
-        if (g_abKeyPressed[K_C] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_C] && prevKeyPressed != K_C) {
             *(pointer+1) = 'C';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_C];
+            prevKeyPressed = K_C;
         }
-        if (g_abKeyPressed[K_D] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_D] && prevKeyPressed != K_D) {
             *(pointer+1) = 'D';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_D];
+            prevKeyPressed = K_D;
         }
-        if (g_abKeyPressed[K_E] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_E] && prevKeyPressed != K_E) {
             *(pointer+1) = 'E';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_E];
+            prevKeyPressed = K_E;
         }
-        if (g_abKeyPressed[K_F] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_F] && prevKeyPressed != K_F) {
             *(pointer+1) = 'F';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_F];
+            prevKeyPressed = K_F;
         }
-        if (g_abKeyPressed[K_G] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_G] && prevKeyPressed != K_G) {
             *(pointer+1) = 'G';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_G];
+            prevKeyPressed = K_G;
         }
-        if (g_abKeyPressed[K_H] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_H] && prevKeyPressed != K_H) {
             *(pointer+1) = 'H';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_H];
+            prevKeyPressed = K_H;
         }
-        if (g_abKeyPressed[K_I] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_I] && prevKeyPressed != K_I) {
             *(pointer+1) = 'I';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_I];
+            prevKeyPressed = K_I;
         }
-        if (g_abKeyPressed[K_J] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_J] && prevKeyPressed != K_J) {
             *(pointer+1) = 'J';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_J];
+            prevKeyPressed = K_J;
         }
-        if (g_abKeyPressed[K_K] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_K] && prevKeyPressed != K_K) {
             *(pointer+1) = 'K';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_K];
+            prevKeyPressed = K_K;
         }
-        if (g_abKeyPressed[K_L] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_L] && prevKeyPressed != K_L) {
             *(pointer+1) = 'L';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_L];
+            prevKeyPressed = K_L;
         }
-        if (g_abKeyPressed[K_M] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_M] && prevKeyPressed != K_M) {
             *(pointer+1) = 'M';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_M];
+            prevKeyPressed = K_M;
         }
-        if (g_abKeyPressed[K_N] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_N] && prevKeyPressed != K_N) {
             *(pointer+1) = 'N';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_N];
+            prevKeyPressed = K_N;
         }
-        if (g_abKeyPressed[K_O] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_O] && prevKeyPressed != K_O) {
             *(pointer+1) = 'O';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_O];
+            prevKeyPressed = K_O;
         }
-        if (g_abKeyPressed[K_P] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_P] && prevKeyPressed != K_P) {
             *(pointer+1) = 'P';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_P];
+            prevKeyPressed = K_P;
         }
-        if (g_abKeyPressed[K_Q] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_Q] && prevKeyPressed != K_Q) {
             *(pointer+1) = 'Q';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_Q];
+            prevKeyPressed = K_Q;
         }
-        if (g_abKeyPressed[K_R] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_R] && prevKeyPressed != K_R) {
             *(pointer+1) = 'R';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_R];
+            prevKeyPressed = K_R;
         }
-        if (g_abKeyPressed[K_S] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_S] && prevKeyPressed != K_S) {
             *(pointer+1) = 'S';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_S];
+            prevKeyPressed = K_S;
         }
-        if (g_abKeyPressed[K_T] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_T] && prevKeyPressed != K_T) {
             *(pointer+1) = 'T';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_T];
+            prevKeyPressed = K_T;
         }
-        if (g_abKeyPressed[K_U] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_U] && prevKeyPressed != K_U) {
             *(pointer+1) = 'U';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_U];
+            prevKeyPressed = K_U;
         }
-        if (g_abKeyPressed[K_V] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_V] && prevKeyPressed != K_V) {
             *(pointer+1) = 'V';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_V];
+            prevKeyPressed = K_V;
         }
-        if (g_abKeyPressed[K_W] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_W] && prevKeyPressed != K_W) {
             *(pointer+1) = 'W';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_W];
+            prevKeyPressed = K_W;
         }
-        if (g_abKeyPressed[K_X] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_X] && prevKeyPressed != K_X) {
             *(pointer+1) = 'X';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_X];
+            prevKeyPressed = K_X;
         }
-        if (g_abKeyPressed[K_Y] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_Y] && prevKeyPressed != K_Y) {
             *(pointer+1) = 'Y';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_Y];
+            prevKeyPressed = K_Y;
         }
-        if (g_abKeyPressed[K_Z] && !prevKeyPressed) {
+        else if (g_abKeyPressed[K_Z] && prevKeyPressed != K_Z) {
             *(pointer+1) = 'Z';
             keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_Z];
-        }
-        if (g_abKeyPressed[K_SPACE] && !prevKeyPressed) {
-            *(pointer+1) = ' ';
-            keySomething = true;
-            prevKeyPressed = g_abKeyPressed[K_SPACE];
+            prevKeyPressed = K_Z;
         }
 
     }
@@ -821,17 +877,18 @@ void processNameInput(char * name) {
 
     if (keySomething)
     {
+        g_dBounceTime = g_dElapsedTime + 0.05;
         if (!backspace && pointer < name+9) {
             ++pointer;
-            bouncePrevKey = g_dElapsedTime + 0.08;
+            bouncePrevKey = g_dElapsedTime + 0.2;
         }
         if (backspace && pointer >= name) {
-            pointer--;
-            g_dBounceTime = g_dElapsedTime + 0.1; // set the bounce time to some time in the future to prevent backspacing too much
+            --pointer;
+            g_dBounceTime = g_dElapsedTime + 0.125; // set the bounce time to some time in the future to prevent backspacing too much
         }
     }
     if (bouncePrevKey < g_dElapsedTime) {
-        prevKeyPressed = g_abKeyPressed[K_ESCAPE];
+        prevKeyPressed = K_ESCAPE;  //set the prevKeyPressed to a key value that will not be processed by this function
     }
 
 }
@@ -1566,7 +1623,7 @@ void exitLevel( void ) {
 			levelCount = static_cast<GAMELEVELS>(levelCount + 1);
             levelClear = true;
 		    g_eGameState = S_SPLASHSCREEN;
-            BufferTime = g_dElapsedTime + 3.0;
+            BufferTime = g_dElapsedTime + 1.0;
         }
         for (int i = 0; i < rows; ++i) {
             delete[] maze[i];

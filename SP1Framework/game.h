@@ -7,7 +7,6 @@
 extern CStopWatch g_swTimer;
 extern bool g_bQuitGame;
 
-
 // Enumeration to store the control keys that your game will have
 enum EKEYS
 {
@@ -79,7 +78,7 @@ enum GAMELEVELS
 	M4,
 	M5,
 	M6,
-	MAX_LEVEL
+    MAX_LEVEL
 };
 
 // struct for the game character

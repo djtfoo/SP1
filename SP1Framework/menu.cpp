@@ -30,6 +30,35 @@ bool menuplaymusic = true;  //while user remains in the menus, don't refresh the
 //Storyline boolean
 bool storyLine = true;
 
+//menu colours
+WORD Highlight = 0x1A;      //the selected option in the menu
+WORD nonHighlight = 0x0A;   //non-selected options
+
+//main menu
+WORD coloursMenu[] = {Highlight, nonHighlight, nonHighlight, nonHighlight, nonHighlight};   //start with the first option highlighted
+WORD *ptrMenu = coloursMenu;    //to point at the coloursMenu[] array
+
+Sequence menu[] = {
+    Play,
+    Instructions,
+    HighScore,
+    Options,
+    Exit
+};
+
+//options menu
+WORD coloursOptions[] = {Highlight, nonHighlight};  //start with the first option highlighted
+WORD *ptrOPT = coloursOptions;  //to point at the coloursOptions[] array
+
+SequenceOPT option[] = {
+    Sound,
+    Back,
+};
+
+//options sub-menu: Sound
+WORD coloursSound[] = {Highlight, nonHighlight};    //start with the first option highlighted
+WORD *ptrSound = coloursSound;  //to point at the coloursSound[] array
+
 //Shania
 void storyline( void )
 {
@@ -65,26 +94,24 @@ void storyline( void )
 
 	g_Console.writeToBuffer(c, "You are a greedy treasure hunter." , 0x0A); //use writetobuffer to print out the storyline
 	c.Y += 2;
-	c.X -= 6;
-	g_Console.writeToBuffer(c, "One day, you heard about a Pyramid which has" , 0x0A);
+	c.X -= 15;
+	g_Console.writeToBuffer(c, "Through your adventures, you heard rumours of a pyramid" , 0x0A);
 	c.Y += 2;
-	c.X -= 4;
-	g_Console.writeToBuffer(c, "a lot of hidden treasures from the previous pharaoh." , 0x0A);
+	c.X += 4;
+	g_Console.writeToBuffer(c, "which houses a lot of hidden treasures." , 0x0A);
 	c.Y += 2;
-	c.X += 6;
-    g_Console.writeToBuffer(c, "However, it is said to be well-guarded," , 0x0A);
+	c.X += 4;
+	g_Console.writeToBuffer(c, "However, no one has ever been known", 0x0A);
 	c.Y += 2;
-	c.X -= 3;
-	g_Console.writeToBuffer(c, "and no one has ever returned from the pyramid.", 0x0A);
-	c.Y += 2;
-	c.X += 1;
-	g_Console.writeToBuffer(c, "Yet, you are unfazed, venturing towards the it.", 0x0A);
+    g_Console.writeToBuffer(c, "to return from exploring it.", 0x0A);
+    c.Y += 2;
+	g_Console.writeToBuffer(c, "Yet, you are unfazed, and ventured to the pyramid.", 0x0A);
 	c.Y += 2;
 	c.X += 3;
-	g_Console.writeToBuffer(c, "As you attempted to climb the pyramid,", 0x0A);
+	g_Console.writeToBuffer(c, "As you explored the pyramid,", 0x0A);
 	c.Y += 2;
-	c.X += 8;
-	g_Console.writeToBuffer(c, "you fell into a maze.", 0x0A);
+	c.X -= 8;
+	g_Console.writeToBuffer(c, "you activated a trap door and fell into a maze.", 0x0A);
 	c.Y += 4;
 	c.X -= 9;
 	g_Console.writeToBuffer(c, "Press ENTER to continue", 0x0B);
@@ -94,21 +121,19 @@ void storyline( void )
 
 		userInput();   //get the player input
 
-		if(menu_KeyPressed[K_ENT])
+		if(menu_KeyPressed[MK_ENT])
 		{
 			storyLine = false;  //go to the menu page
+            ElapsedTime = 0.0;  //reset the time elapsed since the program starts to detect key input
 		}
 	}
 }
 
-void userInput( void )
+void userInput() //If s is modified, seq is modified as well
 {
-    menu_KeyPressed[K_1] = isKeyPressed(49);
-    menu_KeyPressed[K_2] = isKeyPressed(50);
-    menu_KeyPressed[K_3] = isKeyPressed(51);
-    menu_KeyPressed[K_4] = isKeyPressed(52);
-    menu_KeyPressed[K_ENT] = isKeyPressed(VK_RETURN);
-    menu_KeyPressed[K_ESC] = isKeyPressed(VK_ESCAPE);
+    menu_KeyPressed[MK_UP] = isKeyPressed(VK_UP);
+    menu_KeyPressed[MK_DOWN] = isKeyPressed(VK_DOWN);
+    menu_KeyPressed[MK_ENT] = isKeyPressed(VK_RETURN);
     
     addTime();
 }
@@ -119,39 +144,46 @@ void addTime( void ) {
 
 }
 
-//for the switch sequence, 1 = player, 2 = instructions, 3 = highscore, 4 = options and 5 for exit
 void processInputMenu(Sequence &s) {
 
     if (ElapsedTime <= BounceTime) {
         return;
     }
-    if (menu_KeyPressed[K_1]) {
-        s = Play;
+
+    if (menu_KeyPressed[MK_UP]) {
+        if (ptrMenu != coloursMenu) {
+            *ptrMenu = nonHighlight;
+            --ptrMenu;
+            *ptrMenu = Highlight;
+            BounceTime = 0.2;
+        }
         inputDetected = true;
     }
-    else if (menu_KeyPressed[K_2]) {
-        s = Instructions;
+    else if (menu_KeyPressed[MK_DOWN]) {
+        if (ptrMenu != coloursMenu+static_cast<int>(MAX_SEQUENCE)-2) {
+            *ptrMenu = nonHighlight;
+            ++ptrMenu;
+            *ptrMenu = Highlight;
+            BounceTime = 0.2;
+        }
         inputDetected = true;
     }
-    else if (menu_KeyPressed[K_3]) {
-        s = HighScore;
+    else if (menu_KeyPressed[MK_ENT]) {
+        int offset = ptrMenu - coloursMenu;
+        s = menu[offset];
         inputDetected = true;
-    }
-    else if (menu_KeyPressed[K_4]) {
-        s = Options;
-        inputDetected = true;
-    }
-    else if (menu_KeyPressed[K_ESC]) {
-        s = Exit;
-        inputDetected = true;
+        BounceTime = 0.3;
     }
 
 }
 
-//Go back to main menu
 void processInputBack(Sequence &s) {
 
-    if (menu_KeyPressed[K_ENT]) {
+    if (ElapsedTime <= BounceTime) {
+        return;
+    }
+
+    if (menu_KeyPressed[MK_ENT]) {
         s = Menu;
         inputDetected = true;
     }
@@ -164,42 +196,80 @@ void processInputOptions(SequenceOPT &s) {
         return;
     }
 
-    if(menu_KeyPressed[K_1])
-	{
-		s = Sound;
+    if (menu_KeyPressed[MK_UP]) {
+        if (ptrOPT != coloursOptions) {
+            *ptrOPT = nonHighlight;
+            --ptrOPT;
+            *ptrOPT = Highlight;
+            BounceTime = 0.2;
+        }
         inputDetected = true;
-	}
-	else if (menu_KeyPressed[K_ENT])
-	{
-		s = Back;
+    }
+    else if (menu_KeyPressed[MK_DOWN]) {
+        if (ptrOPT != coloursOptions+static_cast<int>(MAX_SEQUENCEOPT)-2) {
+            *ptrOPT = nonHighlight;
+            ++ptrOPT;
+            *ptrOPT = Highlight;
+            BounceTime = 0.2;
+        }
         inputDetected = true;
-	}
+    }
+    else if (menu_KeyPressed[MK_ENT]) {
+        int offset = ptrOPT - coloursOptions;
+        s = option[offset];
+        inputDetected = true;
+        *ptrOPT = nonHighlight;
+        ptrOPT = coloursOptions;
+        *ptrOPT = Highlight;
+        BounceTime = 0.3;
+    }
     
 }
 
 //Detect the player's input to on and off the sounds in the game
+
 void processInputSound(SequenceOPT &s) {
 
     if (ElapsedTime <= BounceTime) {
         return;
     }
 
-    if(menu_KeyPressed[K_1])
-	{
-		if (!playmusic) {
-			PlaySound(TEXT("menumusic.wav"), NULL, SND_LOOP | SND_ASYNC);
-		}
-        s = OptionsMenu;
+    if (menu_KeyPressed[MK_UP]) {
+        if (ptrSound != coloursSound) {
+            *ptrSound = nonHighlight;
+            --ptrSound;
+            *ptrSound = Highlight;
+            BounceTime = 0.2;
+        }
         inputDetected = true;
-		playmusic = true;  //boolean to keep playing the music
-	}
-	else if (menu_KeyPressed[K_2])
-	{
-		PlaySound(NULL,NULL,0);
-        s = OptionsMenu;
+    }
+    else if (menu_KeyPressed[MK_DOWN]) {
+        if (ptrSound == coloursSound) {
+            *ptrSound = nonHighlight;
+            ++ptrSound;
+            *ptrSound = Highlight;
+            BounceTime = 0.2;
+        }
         inputDetected = true;
-		playmusic = false;  //boolean to stop playing music even after going back to main page and in game
-	}
+    }
+    else if (menu_KeyPressed[MK_ENT]) {
+        inputDetected = true;
+        s = OptionsMenu;
+        BounceTime = 0.3;
+        if (ptrSound == coloursSound) { //player wants sound to be on
+            if (!playmusic) {
+			    PlaySound(TEXT("menumusic.wav"), NULL, SND_LOOP | SND_ASYNC);
+		    }
+		    playmusic = true;   //boolean to keep playing the music
+        }
+        else {  //player wants sound to be off
+            PlaySound(NULL,NULL,0);
+		    playmusic = false;  //boolean to stop playing music even after going back to main page and in game
+            *ptrSound = nonHighlight;
+            ptrSound = coloursSound;
+            *ptrSound = Highlight;
+        }
+    }
 
 }
 
@@ -272,23 +342,23 @@ void displayMenu( void )
   
     c.Y += 2;
     c.X = g_Console.getConsoleSize().X / 2 - 13;
-    g_Console.writeToBuffer(c, "Press '1' to play Game", 0x0A);
+    g_Console.writeToBuffer(c, "PLAY", coloursMenu[0]);
     c.Y += 1;
 
 	c.X = g_Console.getConsoleSize().X / 2 - 13;
-    g_Console.writeToBuffer(c, "Press '2' for Instructions", 0x0A);
+    g_Console.writeToBuffer(c, "INSTRUCTIONS", coloursMenu[1]);
     c.Y += 1;
 
 	c.X = g_Console.getConsoleSize().X / 2 - 13;
-    g_Console.writeToBuffer(c, "Press '3' for High Score", 0x0A);
+    g_Console.writeToBuffer(c, "HIGH SCORE", coloursMenu[2]);
 	c.Y += 1;
 
     c.X = g_Console.getConsoleSize().X / 2 - 13;
-    g_Console.writeToBuffer(c, "Press '4' to go Options", 0x0A);
+    g_Console.writeToBuffer(c, "OPTIONS", coloursMenu[3]);
     c.Y += 1;
 
     c.X = g_Console.getConsoleSize().X / 2 - 13;
-    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x0A);
+    g_Console.writeToBuffer(c, "QUIT", coloursMenu[4]);
 	g_Console.flushBufferToConsole();
 	
 }
@@ -306,22 +376,20 @@ void displayInstructions( void )
 	c.X = g_Console.getConsoleSize().X / 2 - 23;
 	g_Console.writeToBuffer(c, "Players' main objective is to escape the maze.", 0x0A);
 	c.Y += 2;
-	c.X = g_Console.getConsoleSize().X / 2 - 22;
+	c.X = g_Console.getConsoleSize().X / 2 - 26;
 	g_Console.writeToBuffer(c, "Arrow keys are for movement.", 0x0D);
 	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 22;
 	g_Console.writeToBuffer(c, "Step over the objects in the maze to collect them.", 0x0D);
 	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 22;
 	g_Console.writeToBuffer(c, "Collecting objects along the way adds on to the Item Counter.", 0x0D);
     c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 22;
 	g_Console.writeToBuffer(c, "Once all objects are collected, the exit is unlocked.", 0x0D);
     c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 22;
 	g_Console.writeToBuffer(c, "Find the correct portal that leads to the exit.", 0x0D);
+    c.Y += 1;
+	g_Console.writeToBuffer(c, "Careful, for fake portals will stun you for 1 second!", 0x0D);
 	c.Y += 4;
-	c.X = g_Console.getConsoleSize().X / 3+4;
+	c.X = g_Console.getConsoleSize().X / 3 + 4;
 	g_Console.writeToBuffer(c, "Press ENTER to return", 0x0B);
 	g_Console.flushBufferToConsole();
 
@@ -358,7 +426,7 @@ void displayHighscore( void )
 		std::ostringstream ss;
 		ss.str("");
 		ss << i;
-		g_Console.writeToBuffer(c, ss.str(), 0x08);
+		g_Console.writeToBuffer(c, ss.str(), 0x0F);
 	}
 
 	c.Y += 4;
@@ -413,7 +481,7 @@ void toCpp( void )
 		highScore temp = highS[i];
 		ss.str("");
 		ss << temp.name << " " << temp.time;
-		g_Console.writeToBuffer(c, ss.str(), 0xA1);
+		g_Console.writeToBuffer(c, ss.str(), 0x07);
 		if (i == 9) {
 			break;
 		}
@@ -439,9 +507,9 @@ void options( void ) {
                     processInputOptions(s); 
                 }
                 inputDetected = false;  //while loop still run
+                ElapsedTime = 0.0;
                 break;
             case Sound : displaySound();
-                ElapsedTime = 0.0;
                 while (!inputDetected) {
                     userInput();
                     processInputSound(s);
@@ -449,7 +517,8 @@ void options( void ) {
                 inputDetected = false;
                 ElapsedTime = 0.0;
                 break;
-            case Back : seq = Menu; break;
+            case Back : seq = Menu;
+                break;
         }
     }
 
@@ -467,10 +536,9 @@ void displayOptions( void ) {
     g_Console.writeToBuffer(c, "OPTIONS", 0x0B);
     c.Y += 3;
     c.X = g_Console.getConsoleSize().X / 2 - 12;
-    g_Console.writeToBuffer(c, "Press '1' for Sound", 0x0D);
-    c.Y += 3;
-    c.X = g_Console.getConsoleSize().X / 2 -11;    
-    g_Console.writeToBuffer(c, "Press ENTER to Return", 0x0B);
+    g_Console.writeToBuffer(c, "SOUND", coloursOptions[0]);
+    ++c.Y;
+    g_Console.writeToBuffer(c, "BACK", coloursOptions[1]);
     g_Console.flushBufferToConsole();
 
 }
@@ -487,9 +555,9 @@ void displaySound( void ) {
     g_Console.writeToBuffer(c, "EDIT SOUND HERE", 0x0B);
     c.Y += 3;
     c.X = g_Console.getConsoleSize().X / 2 - 15;
-    g_Console.writeToBuffer(c, "Press '1' to switch on sound", 0x0D);
-    c.Y += 2;
-    g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x0D);
+    g_Console.writeToBuffer(c, "ON", coloursSound[0]);
+    ++c.Y;
+    g_Console.writeToBuffer(c, "OFF", coloursSound[1]);
     g_Console.flushBufferToConsole();
 
 }

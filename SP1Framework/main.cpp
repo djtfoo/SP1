@@ -65,9 +65,10 @@ void gameLoop()
                 inputDetected = false;
                 ElapsedTime = 0.0;
                 break;
-            //Display the game once player presses 1
-            case Play : displayGame(); seq = Menu; ElapsedTime = 0.0; break;
-            //Display instructions page once player presses 2
+            case Play : displayGame();
+                seq = Menu;
+                ElapsedTime = 0.0;
+                break;
 			case Instructions : displayInstructions();
                 while (!inputDetected) {
                     userInput();
@@ -76,7 +77,6 @@ void gameLoop()
                 inputDetected = false;
                 ElapsedTime = 0.0;
                 break;
-            //Display high score page once player presses 3
 			case HighScore : displayHighscore();
                 while (!inputDetected) {
                     userInput();
@@ -85,10 +85,11 @@ void gameLoop()
                 inputDetected = false;
                 ElapsedTime = 0.0;
                 break;
-            //Display options page once player presses 4
-            case Options : options(); break;
-            //Exit when player presses 5
-            case Exit : displayExit(); break;
+            case Options : options();
+                ElapsedTime = 0.0;
+                break;
+            case Exit : displayExit();
+                break;
         }
     }
 }
