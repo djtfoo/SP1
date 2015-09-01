@@ -52,6 +52,9 @@ enum EKEYS
     K_Z,
     K_ENTER,
     K_BACKSPACE,
+    //developer keys (debugging purposes)
+    K_SKIP,
+    K_SHOWTELEPORTER,
     K_COUNT
 };
 

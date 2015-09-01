@@ -33,7 +33,7 @@ bool storyLine = true;
 void storyline()
 {
 	clearScreen();
-    PlaySound( "egypt.wav", NULL, SND_LOOP | SND_ASYNC);
+    PlaySound(TEXT("egypt.wav"), NULL, SND_LOOP | SND_ASYNC);
 	COORD c = g_Console.getConsoleSize();
 
 	c.X = g_Console.getConsoleSize().X / 16-6;
@@ -187,7 +187,7 @@ void processInputSound(SequenceOPT &s) {
     if(menu_KeyPressed[K_1])
 	{
 		if (!playmusic) {
-			PlaySound( "menumusic.wav", NULL, SND_LOOP | SND_ASYNC);
+			PlaySound(TEXT("menumusic.wav"), NULL, SND_LOOP | SND_ASYNC);
 		}
         s = OptionsMenu;
         inputDetected = true;
@@ -209,7 +209,7 @@ void displayMenu()
 {
 	if(playmusic && menuplaymusic)
 	{
-		PlaySound( "menumusic.wav", NULL, SND_LOOP | SND_ASYNC);
+		PlaySound(TEXT("menumusic.wav"), NULL, SND_LOOP | SND_ASYNC);
         menuplaymusic = false;
 	}
     clearScreen();
@@ -507,7 +507,7 @@ void displayGame( void )
 {
 	if(playmusic)
 	{
-		PlaySound( "gamemusic.wav", NULL, SND_LOOP | SND_ASYNC);
+		PlaySound(TEXT("gamemusic.wav"), NULL, SND_LOOP | SND_ASYNC);
         menuplaymusic = true;
 	}
     g_Timer.startTimer();    // Start timer to calculate how long it takes to render this frame

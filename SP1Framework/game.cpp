@@ -19,6 +19,8 @@ double  g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
 
+bool developerMode = false;
+
 // Game specific variables here
 SGameChar   g_sChar;
 vector<Enemy> enemyvec;
@@ -197,6 +199,10 @@ void getInput( void )
     g_abKeyPressed[K_Z] = isKeyPressed(90);
     g_abKeyPressed[K_ENTER] = isKeyPressed(VK_RETURN);
     g_abKeyPressed[K_BACKSPACE] = isKeyPressed(VK_BACK);
+    
+    //developer options (for debugging and demonstration)
+    g_abKeyPressed[K_SKIP] = isKeyPressed(83);  //'S' key
+    g_abKeyPressed[K_SHOWTELEPORTER] = isKeyPressed(84);    //'T' key
 }
 
 //--------------------------------------------------------------
@@ -367,6 +373,16 @@ void processUserInput()
 	if (g_abKeyPressed[K_ESCAPE]) {
 		g_eGameState = S_PAUSE;
 	}
+    if (g_abKeyPressed[K_SKIP]) {
+        levelClear = true;
+        levelCount = static_cast<GAMELEVELS>(levelCount + 1);
+        g_eGameState = S_SPLASHSCREEN;
+        BufferTime = g_dElapsedTime + 3.0;
+        developerMode = false;
+    }
+    if (g_abKeyPressed[K_SHOWTELEPORTER]) {
+        developerMode = true;
+    }
 }
 
 void processPauseInput()
@@ -416,7 +432,7 @@ void processPauseSound()
     if (g_abKeyPressed[K_ONE]) {
         g_dBounceTime = g_dElapsedTime + 0.1;
         if (!playmusic) {
-            PlaySound( "gamemusic.wav", NULL, SND_LOOP | SND_ASYNC);
+            PlaySound(TEXT("gamemusic.wav"), NULL, SND_LOOP | SND_ASYNC);
             playmusic = true;
         }
         g_eGameState = S_PAUSE;
@@ -489,7 +505,7 @@ void renderSplashScreen()  // renders the splash screen
 void clearGame() {
 
     if (playmusic && victoryplaymusic) {
-        PlaySound("victory.wav", NULL, SND_ASYNC);
+        PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC);
         victoryplaymusic = false;
     }
 
@@ -820,6 +836,10 @@ void mapgenerator(int rows, int cols) {
 			}
 		}
 	}
+    if (developerMode) {
+        g_Console.writeToBuffer(Tel.own_Loc, '@', 0x0C);
+        g_Console.writeToBuffer(Tel.warp_Loc, '@', 0x0C);
+    }
 }
 
 void randomiseTeleporters(int rows, int cols) {
@@ -843,7 +863,7 @@ void randomiseTeleporters(int rows, int cols) {
 
 	//assigning a random trap to be the teleporter
 	int size = trapvec.size();
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	int teleport = rand() % size;
 	Traps tempTel = trapvec.at(teleport);
 	
@@ -1310,7 +1330,7 @@ void renderEnemy()
     for (unsigned int i = 0; i < enemyvec.size(); ++i) {  // Use for loop is to check through the enemyvec for each level.
         Enemy tempEnemy = enemyvec[i];
         COORD tempE = tempEnemy.m_Enemy;            
-        g_Console.writeToBuffer(tempE, (char)7, 0x0C);   
+        g_Console.writeToBuffer(tempE, 'X', 0x0C);   
     }
 }
 
@@ -1390,7 +1410,7 @@ void renderFramerate()
 
 void renderCounters() {
 
-    COORD c;
+    COORD c;    
     c.X = 0;
     c.Y = 0;
     g_Console.writeToBuffer(c,"ESCAPEE");
@@ -1501,6 +1521,7 @@ void exitLevel() {
         for (int i = 0; i < rows; ++i) {
             delete[] maze[i];
         }
+        developerMode = false;
 	}
 
 }
