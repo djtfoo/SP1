@@ -36,8 +36,34 @@ void storyline()
 
 	COORD c = g_Console.getConsoleSize();
 
-	c.X = g_Console.getConsoleSize().X / 3-1;
-	c.Y = g_Console.getConsoleSize().Y / 5-1;
+	c.X = g_Console.getConsoleSize().X / 16-6;
+	c.Y = g_Console.getConsoleSize().Y / 5;
+
+	g_Console.writeToBuffer(c,"          _....._", 0x0F);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"         .\\:\\:/:/.", 0x0F);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"        /=\\_.@._/=\\", 0x0F);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"       /==/ _ _ \\==\\", 0x0F);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"      /==(   -   )==\\", 0x0F);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"      |===\\  =  /===|", 0x0F);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"      \====|-V-|====/", 0x0F);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"       \===|   |===/", 0x0F);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"        |==|   |==|", 0x0F);
+	c.Y += 1;
+	g_Console.writeToBuffer(c,"        '=.|   |.='", 0x0F);
+	c.Y += 1;
+
+
+	c.X = 33;
+	c.Y = 3;
+
 	g_Console.writeToBuffer(c, "You are a greedy treasure hunter." , 0x0A);
 	c.Y += 2;
 	c.X -= 6;
@@ -60,9 +86,9 @@ void storyline()
 	c.Y += 2;
 	c.X += 8;
 	g_Console.writeToBuffer(c, "you fell into a maze.", 0x0A);
-	c.Y += 3;
-	c.X -= 1;
-	g_Console.writeToBuffer(c, "Press ENTER to continue", 0x0A);
+	c.Y += 4;
+	c.X -= 9;
+	g_Console.writeToBuffer(c, "Press ENTER to continue", 0x0B);
 	g_Console.flushBufferToConsole();
 	while(storyLine){
 
