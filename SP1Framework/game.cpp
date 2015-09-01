@@ -564,55 +564,76 @@ void renderPauseChar() {
     g_Console.writeToBuffer(c, "Press 'Z', 'X', or 'C' to switch to Player Icon", 0x03);
 }
 
-//Render the text for the win page
+//Shania
 void renderText() {
 
     COORD c = g_Console.getConsoleSize();
 
-    c.X /= 2;
-    c.X -= 15;
-    c.Y /= 3;
-    c.Y -= 2;
+	string victory[21] = { //string array
+		".____________________________________________________________________.",
+		"|  _    _         _    _        _    _         _    _        _    _  |",
+		"|   \\/}/     /}    \\/}/     /}   \\/}/     /}    \\/}/     /}   \\/}/   |",
+		"|    |_    _/|\\_    |_    _/|\\_   |_    _/|\\_    |_    _/|\\_   |_    |",
+		"|    | \\    / \\     | \\    / \\    | \\    / \\     | \\    / \\    | \\   |",
+		"|vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv|",
+		"|                                                                    |",
+		"|                                                                    |",
+		"|                                                                    |",
+		"|                                                                    |",
+		"|     _                                                        _     |",
+		"|    /_\\                                                      /_\\    |",
+		"|    =|=                                                      =|=    |",
+		"|          .*.                                          .*.          |",
+		"|         ;(;);________________________________________;(;);         |",
+		"|         |;;;    _    _         _    _        _    _   ;;;|         |",
+		"|         | ;/}    \\/}/     /}    \\/}/     /}   \\/}/    /; |         |",
+		"|         |_/|\\_    |_    _/|\\_    |_    _/|\\_   |_   _/|\\_|         |",
+		"|         | / \\     | \\    / \\     | \\    / \\    | \\   / \\ |         |",
+		"|       __|vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv|__       |",
+		"|______|______________________________________________________|______|"
+	};
 
-    for (int i = 0; i < 30; ++i) {
-		++c.X;
-		g_Console.writeToBuffer(c, "=", 0x06);
-    }
+	c.X = 5;  //x and y coordinates to start the box
+	c.Y = 1;
+	for (int i = 0; i < 21; ++i, ++c.Y) {  //check through the string array and writeToBuffer to print out
+		std::ostringstream ss;
+		ss.str("");
+		ss << victory[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+	}
 
-    c.X = g_Console.getConsoleSize().X / 2 - 3;
-    c.Y = g_Console.getConsoleSize().Y / 3;
-    g_Console.writeToBuffer(c, "YOU WIN!", 0x03);
+	//display "YOU ESCAPED!"
+	std::ostringstream ss;
+    c.X = g_Console.getConsoleSize().X /2 - 5;
+	c.Y = 9;
 
-    // displays the playtime
-    std::ostringstream ss;
+	g_Console.writeToBuffer(c, "YOU ESCAPED!", 0x0F);
+
+   // displays the playtime
+	
     ss.str("");
     ss << "Time: " << playTime << "secs";
-    c.X = g_Console.getConsoleSize().X / 2 - 8;
+    c.X = g_Console.getConsoleSize().X / 2 - 5;
     ++c.Y;
     g_Console.writeToBuffer(c, ss.str());
 
-    c.X = g_Console.getConsoleSize().X / 2 - 7;
+   // text to ask user to input name
+	c.X = g_Console.getConsoleSize().X / 2 - 7;
     c.Y += 2;
-	g_Console.writeToBuffer(c, "INPUT YOUR NAME: ", 0x03);
+	g_Console.writeToBuffer(c, "INPUT YOUR NAME: ", 0x0F);
 
     c.X = g_Console.getConsoleSize().X / 2;
-    c.X -= 15;
-    c.Y += 3;
-
-    for (int i = 0; i < 30; ++i) {
-		++c.X;
-		g_Console.writeToBuffer(c, "=", 0x06);
-    }
-
+    c.X -= 14;
+    c.Y += 4;
 }
 
 void renderNameInput(char * name) {
     COORD c = g_Console.getConsoleSize();
     c.X = c.X / 2 - 5;
     c.Y /= 3;
-    c.Y += 4;
+    c.Y += 5;
     g_Console.writeToBuffer(c, "          ", 0x13);
-    g_Console.writeToBuffer(c, name, 0x13);
+    g_Console.writeToBuffer(c, name, 0x1A);
 }
 
 void processNameInput(char * name) {
@@ -911,6 +932,7 @@ void maze1(int& rows, int& cols) {
 	Tel.own_Loc.X = 8;
 	Tel.own_Loc.Y = 13;
 
+	//Shania
     //Enemy 1
     Enemy g_Enemy1;
 	g_Enemy1.m_Enemy.X = 18;   //g_Enemy1's X coordinate
@@ -967,6 +989,7 @@ void maze2(int& rows, int& cols) {
 	Tel.own_Loc.Y = 13;
 
     
+	//Shania
     //Enemy 1
     Enemy g_Enemy1;
     g_Enemy1.m_Enemy.X = 9;
@@ -1031,6 +1054,8 @@ void maze3(int& rows, int& cols) {
 	Tel.own_Loc.X = 15;
 	Tel.own_Loc.Y = 12;
 
+
+	//Shania
     //Enemy 1
     Enemy g_Enemy1;
     g_Enemy1.m_Enemy.X = 13;
@@ -1096,6 +1121,7 @@ void maze4(int& rows, int& cols) {
 	Tel.own_Loc.X = 11;
 	Tel.own_Loc.Y = 17;
 
+	//Shania
     //Enemy 1
     Enemy g_Enemy1;
     g_Enemy1.m_Enemy.X = 18;
@@ -1169,6 +1195,7 @@ void maze5(int& rows, int& cols) {
 	Tel.own_Loc.X = 16;
 	Tel.own_Loc.Y = 15;
 
+	//Shania
     //Enemy 1
     Enemy g_Enemy1;
     g_Enemy1.m_Enemy.X = 25;
@@ -1247,6 +1274,7 @@ void maze6(int& rows, int& cols) {
 	Tel.own_Loc.X = 16;
 	Tel.own_Loc.Y = 10;
 
+	//Shania
     //Enemy1
     Enemy g_Enemy1;
 	g_Enemy1.m_Enemy.X = 25;
@@ -1324,7 +1352,7 @@ void renderCharacter()
     // Draw the location of the character
     g_Console.writeToBuffer(g_sChar.m_cLocation, charIcon, 0x0A);
 }
-
+//JingTing + Shania
 void renderEnemy()
 {
     for (unsigned int i = 0; i < enemyvec.size(); ++i) {  // Use for loop is to check through the enemyvec for each level.
@@ -1333,7 +1361,7 @@ void renderEnemy()
         g_Console.writeToBuffer(tempE, 'X', 0x0C);   
     }
 }
-
+//Shania
 void moveEnemy(Enemy& g_Enemy)
 {
 
@@ -1384,7 +1412,7 @@ void moveEnemy(Enemy& g_Enemy)
 	}
 
 }
-
+//WeiMin
 void enemyCollisionWithPlayer(Enemy g_Enemy) {
 
 	//If character touches the enemy, spawn the character back to starting location
@@ -1486,7 +1514,7 @@ void checkTrap() {
 	 }
 
 }
-
+//Shania
 void PickUpItems()
 {
 	int charY = g_sChar.m_cLocation.Y - 1; //call the coordinates of the player

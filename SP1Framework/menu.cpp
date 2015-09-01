@@ -27,44 +27,43 @@ const unsigned int gc_uFrameTime = 1000 / gc_ucFPS;    // time for each frame
 bool playmusic = true;      //check if user wants music or not
 bool menuplaymusic = true;  //while user remains in the menus, don't refresh the main menu music
 
-//Storyline
+//Storyline boolean
 bool storyLine = true;
 
+//Shania
 void storyline()
 {
 	clearScreen();
-    PlaySound(TEXT("egypt.wav"), NULL, SND_LOOP | SND_ASYNC);
+    PlaySound(TEXT("egypt.wav"), NULL, SND_LOOP | SND_ASYNC); //Play the music
 	COORD c = g_Console.getConsoleSize();
 
-	c.X = g_Console.getConsoleSize().X / 16-6;
+	c.X = g_Console.getConsoleSize().X / 16-6; //the x and y coords where the pharoah ascii art starts
 	c.Y = g_Console.getConsoleSize().Y / 5;
 
-	g_Console.writeToBuffer(c,"          _....._", 0x0F);
-	c.Y += 1;
-	g_Console.writeToBuffer(c,"         .\\:\\:/:/.", 0x0F);
-	c.Y += 1;
-	g_Console.writeToBuffer(c,"        /=\\_.@._/=\\", 0x0F);
-	c.Y += 1;
-	g_Console.writeToBuffer(c,"       /==/ _ _ \\==\\", 0x0F);
-	c.Y += 1;
-	g_Console.writeToBuffer(c,"      /==(   -   )==\\", 0x0F);
-	c.Y += 1;
-	g_Console.writeToBuffer(c,"      |===\\  =  /===|", 0x0F);
-	c.Y += 1;
-	g_Console.writeToBuffer(c,"      \\====|-V-|====/", 0x0F);
-	c.Y += 1;
-	g_Console.writeToBuffer(c,"       \\===|   |===/", 0x0F);
-	c.Y += 1;
-	g_Console.writeToBuffer(c,"        |==|   |==|", 0x0F);
-	c.Y += 1;
-	g_Console.writeToBuffer(c,"        '=.|   |.='", 0x0F);
-	c.Y += 1;
+	string pharaoh[10] = {   //string array
+        "          .....",
+        "         .\\:\\:/:/.",
+        "        /=\\_.@._/=\\",
+        "       /==/ _ _ \\==\\",
+        "      /==(   -   )==\\",
+        "      |===\\  =  /===|",
+        "      \\====|-V-|====/",
+        "       \\===|   |===/",
+        "        |==|   |==|",
+        "        '=.|   |.='"
+    };
+	
+	for (int i = 0; i < 10; ++i, ++c.Y) {  //check through the string array and print out using writeToBuffer
+        std::ostringstream ss;
+        ss.str("");
+        ss << pharaoh[i];
+        g_Console.writeToBuffer(c, ss.str(), 0x0F);
+    }
 
-
-	c.X = 33;
+	c.X = 33; //the x and y coords where the storyline starts
 	c.Y = 3;
 
-	g_Console.writeToBuffer(c, "You are a greedy treasure hunter." , 0x0A);
+	g_Console.writeToBuffer(c, "You are a greedy treasure hunter." , 0x0A); //use writetobuffer to print out the storyline
 	c.Y += 2;
 	c.X -= 6;
 	g_Console.writeToBuffer(c, "One day, you heard about a Pyramid which has" , 0x0A);
@@ -90,13 +89,14 @@ void storyline()
 	c.X -= 9;
 	g_Console.writeToBuffer(c, "Press ENTER to continue", 0x0B);
 	g_Console.flushBufferToConsole();
-	while(storyLine){
 
-		userInput();
+	while(storyLine){   //boolean to make the screen stay til the player press enter
+
+		userInput();   //get the player input
 
 		if(menu_KeyPressed[K_ENT])
 		{
-			storyLine = false;
+			storyLine = false;  //go to the menu page
 		}
 	}
 }
@@ -412,6 +412,7 @@ void toCpp()
 
 }
 
+//Shania
 //To get the user input and use switch sequence to check which one they inputed
 void options() {
 
@@ -424,9 +425,9 @@ void options() {
         switch(s)
         {
             case OptionsMenu : displayOptions();  //This is to show Options
-                while (!inputDetected) { //detect user input
+                while (!inputDetected) { //detect player input
                     userInput();
-                    processInputOptions(s);
+                    processInputOptions(s); 
                 }
                 inputDetected = false;  //while loop still run
                 break;
@@ -445,6 +446,7 @@ void options() {
 
 }
 
+//Shania
 //Display the options to adjust sound or go back inside Options
 void displayOptions() {
 
@@ -464,6 +466,7 @@ void displayOptions() {
 
 }
 
+//Shania
 //Display the options to on or off the sound in the game
 void displaySound() {
     
