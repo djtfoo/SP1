@@ -446,18 +446,18 @@ void processPauseChar(char * arr)
 
     if (g_abKeyPressed[K_RIGHT]) {
         g_dBounceTime = g_dElapsedTime + 0.2;
-        if (ptr < arr+6) {
-            ++ptr;
+        if (ptr < arr+6) {      // ptr not at position 6
+            ++ptr;      // right shift of pointer
         }
         charIcon = *ptr;
     }
 
     if (g_abKeyPressed[K_LEFT]) {
         g_dBounceTime = g_dElapsedTime + 0.2;
-        if (ptr > arr) {
-            --ptr;
+        if (ptr > arr) {       // ptr not pointing at position 0 of arr
+            --ptr;      // left shift of pointer
         }
-        charIcon = *ptr;
+        charIcon = *ptr; // Selected Icon is where pointer is pointing at
     }
 
     else if (g_abKeyPressed[K_ENTER]) {

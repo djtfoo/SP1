@@ -78,7 +78,7 @@ void storyline( void )
 	g_Console.writeToBuffer(c, "and no one has ever returned from the pyramid.", 0x0A);
 	c.Y += 2;
 	c.X += 1;
-	g_Console.writeToBuffer(c, "Yet, you are unfazed, and visits the pyramid. ", 0x0A);
+	g_Console.writeToBuffer(c, "Yet, you are unfazed, venturing towards the it.", 0x0A);
 	c.Y += 2;
 	c.X += 3;
 	g_Console.writeToBuffer(c, "As you attempted to climb the pyramid,", 0x0A);
@@ -293,6 +293,8 @@ void displayMenu( void )
 	
 }
 
+//displaying the hows and what to do
+//Glennda
 void displayInstructions( void )
 {
 	clearScreen();
