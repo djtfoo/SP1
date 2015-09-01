@@ -54,7 +54,8 @@ bool prevKeyPressed = g_abKeyPressed[K_ESCAPE];
 double bouncePrevKey = 0.0;
 
 CHAR charIcon = (char)1;
-
+// TEST
+char arr;
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
 //            Initialize variables, allocate memory, load data from file, etc. 
@@ -413,16 +414,6 @@ void processPauseInput()
     
 }
 
-void pauseOne()
-{
-    processPauseSound();
-}
-
-void pauseTwo()
-{
-    processPauseChar();
-}
-
 void processPauseSound()
 {
     if (g_dElapsedTime <= g_dBounceTime) {
@@ -451,76 +442,41 @@ void processPauseChar()
         return;
     }
 
-    if (g_abKeyPressed[K_Z]) {
+    if (g_abKeyPressed[K_RIGHT]) {
         g_dBounceTime = g_dElapsedTime + 0.1;
-        charIcon = (char)2;
+        ++ arr;
+        charIcon = arr;
+    }
+
+    if (g_abKeyPressed[K_LEFT]) {
+        g_dBounceTime = g_dElapsedTime + 0.1;
+        -- arr;
+        charIcon = arr;
+    }
+
+    else if (g_abKeyPressed[K_ENTER]) {
+        g_dBounceTime = g_dElapsedTime + 0.1;
         g_eGameState = S_PAUSE;
     }
-    else if (g_abKeyPressed[K_X]) {
-        g_dBounceTime = g_dElapsedTime + 0.1;
-        charIcon = (char)3;
-        g_eGameState = S_PAUSE;
-    }
-    else if (g_abKeyPressed[K_C]) {
-        g_dBounceTime = g_dElapsedTime + 0.1;
-        charIcon = (char)4;
-        g_eGameState = S_PAUSE;     // automatically returns back to the main pause page after selection
-    }
 }
 
-void clearScreen()
-{
-    // Clears the buffer with this colour attribute
-    g_Console.clearBuffer(0x0F);
-}
-
-void splashScreenWait() {
-
-	if (g_dElapsedTime > BufferTime) {
-		g_eGameState = S_GAME;
-	}
-
-}
-
-void renderSplashScreen()  // renders the splash screen
-{
-
-	COORD c = g_Console.getConsoleSize();
-	c.Y /= 3;
-	c.X = c.X / 2 - 3;
-	std::ostringstream ss;
-	ss << std::fixed << std::setprecision(3);
-	ss.str("");
-	ss << "Level " << levelCount;
-	g_Console.writeToBuffer(c, ss.str(), 0x0B);
-	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 20;
-	//g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);
-
-}
-
-void clearGame() {
-
-    if (playmusic && victoryplaymusic) {
-        PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC);
-        victoryplaymusic = false;
-    }
-
-    processNameInput(name);
-
-}
-
-//Render text for winning and get name for highscore
-void renderClearGame() {
-    clearScreen();
-    renderText();
-    renderNameInput(name);
-}
-
+//Pause Gamestate_Main
 void pauseGame() {
 	processPauseInput();
 }
 
+//Pause Gamestate_Sub
+void pauseOne()
+{
+    processPauseSound();
+}
+
+void pauseTwo()
+{
+    processPauseChar();
+}
+
+//Render text for main pause page and sub pause pages
 void renderPauseGame() {
 
 	clearScreen();
@@ -559,9 +515,65 @@ void renderPauseChar() {
     c.Y += 2;
 	c.X = g_Console.getConsoleSize().X / 2 - 23;
     g_Console.writeToBuffer(c, "Press 'Z', 'X', or 'C' to switch to Player Icon", 0x03);
+    c.Y += 2;
+	c.X = g_Console.getConsoleSize().X / 2 - 23;
+    g_Console.writeToBuffer(c, charIcon, 0x03);
+    c.Y += 2;
+	c.X = g_Console.getConsoleSize().X / 2 - 23;
+    g_Console.writeToBuffer(c, "Press 'Enter' to return", 0x03);
+}
+
+void clearScreen()
+{
+    // Clears the buffer with this colour attribute
+    g_Console.clearBuffer(0x0F);
+}
+
+void splashScreenWait() {
+
+	if (g_dElapsedTime > BufferTime) {
+		g_eGameState = S_GAME;
+	}
+
+}
+
+void renderSplashScreen()  // renders the splash screen
+{
+
+	COORD c = g_Console.getConsoleSize();
+	c.Y /= 3;
+	c.X = c.X / 2 - 3;
+	std::ostringstream ss;
+	ss << std::fixed << std::setprecision(3);
+	ss.str("");
+	ss << "Level " << levelCount;
+	g_Console.writeToBuffer(c, ss.str(), 0x0B);
+	c.Y += 1;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
+
+}
+
+void clearGame() {
+
+    if (playmusic && victoryplaymusic) {
+        PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC);
+        victoryplaymusic = false;
+    }
+
+    processNameInput(name);
+
+}
+
+//Render text for winning and get name for highscore
+void renderClearGame() {
+    clearScreen();
+    renderText();
+    renderNameInput(name);
 }
 
 //Shania
+//=======
+//Render the text for the win page
 void renderText() {
 
     COORD c = g_Console.getConsoleSize();
