@@ -55,7 +55,7 @@ double bouncePrevKey = 0.0;
 
 CHAR charIcon = (char)1;
 // TEST
-char arr[10] = {(char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7, (char)8, (char)9, (char)10};
+char arr[7] = {(char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7};
 char *ptr = arr;
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
@@ -445,15 +445,15 @@ void processPauseChar(char * arr)
     }
 
     if (g_abKeyPressed[K_RIGHT]) {
-        g_dBounceTime = g_dElapsedTime + 0.1;
-        if (ptr < arr+9) {
+        g_dBounceTime = g_dElapsedTime + 0.2;
+        if (ptr < arr+6) {
             ++ptr;
         }
         charIcon = *ptr;
     }
 
     if (g_abKeyPressed[K_LEFT]) {
-        g_dBounceTime = g_dElapsedTime + 0.1;
+        g_dBounceTime = g_dElapsedTime + 0.2;
         if (ptr > arr) {
             --ptr;
         }
