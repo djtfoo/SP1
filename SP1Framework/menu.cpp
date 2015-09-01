@@ -33,7 +33,7 @@ bool storyLine = true;
 void storyline()
 {
 	clearScreen();
-
+    PlaySound( "egypt.wav", NULL, SND_LOOP | SND_ASYNC);
 	COORD c = g_Console.getConsoleSize();
 
 	c.X = g_Console.getConsoleSize().X / 16-6;
@@ -51,9 +51,9 @@ void storyline()
 	c.Y += 1;
 	g_Console.writeToBuffer(c,"      |===\\  =  /===|", 0x0F);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"      \====|-V-|====/", 0x0F);
+	g_Console.writeToBuffer(c,"      \\====|-V-|====/", 0x0F);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"       \===|   |===/", 0x0F);
+	g_Console.writeToBuffer(c,"       \\===|   |===/", 0x0F);
 	c.Y += 1;
 	g_Console.writeToBuffer(c,"        |==|   |==|", 0x0F);
 	c.Y += 1;
