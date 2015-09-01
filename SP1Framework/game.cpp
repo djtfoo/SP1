@@ -55,7 +55,8 @@ double bouncePrevKey = 0.0;
 
 CHAR charIcon = (char)1;
 // TEST
-char arr;
+char arr[10] = {(char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7, (char)8, (char)9, (char)10};
+char *ptr = arr;
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
 //            Initialize variables, allocate memory, load data from file, etc. 
@@ -386,6 +387,7 @@ void processUserInput()
     }
 }
 
+//Glennda
 void processPauseInput()
 {
     if (g_dElapsedTime <= g_dBounceTime) {
@@ -436,7 +438,7 @@ void processPauseSound()
 	}
 }
 
-void processPauseChar()
+void processPauseChar(char * arr)
 {
     if (g_dElapsedTime <= g_dBounceTime) {
         return;
@@ -444,14 +446,18 @@ void processPauseChar()
 
     if (g_abKeyPressed[K_RIGHT]) {
         g_dBounceTime = g_dElapsedTime + 0.1;
-        ++ arr;
-        charIcon = arr;
+        if (ptr < arr+9) {
+            ++ptr;
+        }
+        charIcon = *ptr;
     }
 
     if (g_abKeyPressed[K_LEFT]) {
         g_dBounceTime = g_dElapsedTime + 0.1;
-        -- arr;
-        charIcon = arr;
+        if (ptr > arr) {
+            --ptr;
+        }
+        charIcon = *ptr;
     }
 
     else if (g_abKeyPressed[K_ENTER]) {
@@ -473,8 +479,9 @@ void pauseOne()
 
 void pauseTwo()
 {
-    processPauseChar();
+    processPauseChar(arr);
 }
+
 
 //Render text for main pause page and sub pause pages
 void renderPauseGame() {
@@ -484,16 +491,16 @@ void renderPauseGame() {
 	c.Y /= 4;
     c.Y += 2;
 	c.X = g_Console.getConsoleSize().X / 2 - 23;
-	g_Console.writeToBuffer(c, "Press '1' to return", 0x03);
+	g_Console.writeToBuffer(c, "Press '1' to return", 0x0B);
 	c.Y += 2;
 	c.X = g_Console.getConsoleSize().X / 2 - 23;
-	g_Console.writeToBuffer(c, "Press '2' for sound", 0x03);
+	g_Console.writeToBuffer(c, "Press '2' for sound", 0x0B);
     c.Y += 2;
 	c.X = g_Console.getConsoleSize().X / 2 - 23;
-	g_Console.writeToBuffer(c, "Press '3' for Character Icon change", 0x03);
+	g_Console.writeToBuffer(c, "Press '3' for Character Icon change", 0x0B);
     c.Y += 2;
 	c.X = g_Console.getConsoleSize().X / 2 - 23;
-	g_Console.writeToBuffer(c, "Press '4' to quit game", 0x03);
+	g_Console.writeToBuffer(c, "Press '4' to quit game", 0x0B);
 }
 
 void renderPauseSound() {
@@ -502,10 +509,10 @@ void renderPauseSound() {
 	c.Y /= 4;
     c.Y += 2;
 	c.X = g_Console.getConsoleSize().X / 2 - 23;
-    g_Console.writeToBuffer(c, "Press '1' to switch on sound", 0x03);
+    g_Console.writeToBuffer(c, "Press '1' to switch on sound", 0x0B);
     c.Y += 2;
 	c.X = g_Console.getConsoleSize().X / 2 - 23;
-	g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x03);
+	g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x0B);
 }
 
 void renderPauseChar() {
@@ -513,14 +520,14 @@ void renderPauseChar() {
 	COORD c = g_Console.getConsoleSize();
 	c.Y /= 4;
     c.Y += 2;
-	c.X = g_Console.getConsoleSize().X / 2 - 23;
-    g_Console.writeToBuffer(c, "Press 'Z', 'X', or 'C' to switch to Player Icon", 0x03);
+	c.X = g_Console.getConsoleSize().X / 2 - 30;
+    g_Console.writeToBuffer(c, "Press Right arrow key or Left arrow key to switch Player Icon", 0x0B);
     c.Y += 2;
-	c.X = g_Console.getConsoleSize().X / 2 - 23;
-    g_Console.writeToBuffer(c, charIcon, 0x03);
-    c.Y += 2;
-	c.X = g_Console.getConsoleSize().X / 2 - 23;
-    g_Console.writeToBuffer(c, "Press 'Enter' to return", 0x03);
+	c.X = g_Console.getConsoleSize().X / 2;
+    g_Console.writeToBuffer(c, charIcon, 0x0A);
+    c.Y += 5;
+	c.X = g_Console.getConsoleSize().X / 2 - 12;
+    g_Console.writeToBuffer(c, "Press 'Enter' to return", 0x0B);
 }
 
 void clearScreen()

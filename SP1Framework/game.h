@@ -175,6 +175,6 @@ void renderPauseSound();
 void renderPauseChar();
 void processPauseInput();
 void processPauseSound();
-void processPauseChar();
+void processPauseChar(char * arr);
 
 #endif // _GAME_H
