@@ -32,7 +32,7 @@ double	BufferTime;		//for splashscreen
 char ** maze = 0;
 int rows = 0;
 int cols = 0;
-int levelCount;
+GAMELEVELS levelCount;
 bool levelClear;
 int ItemCounter = 0;
 int MaxItemCount = 0;
@@ -70,7 +70,7 @@ void init( void )
 	BufferTime = 3.0;
 
 	// sets the initial state for the game
-	levelCount = 1;
+	levelCount = static_cast<GAMELEVELS>(1);
     levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
 
@@ -97,7 +97,7 @@ void shutdown( void )
 
 void levelInit() {
 
-	if (levelClear && levelCount <= 6) {
+	if (levelClear && levelCount < MAX_LEVEL) {
 
         //resetting the player's coordinates to the default starting point (the top left corner)
 		g_sChar.m_cLocation.X = 1;
@@ -111,46 +111,27 @@ void levelInit() {
 		ItemCounter = 0;
         enemyvec.clear();
 
-		/*switch (static_cast<GAMELEVELS>(levelCount)) {
-		case M1 : maze1(rows, cols); break;
-		case M2 : maze2(rows, cols); break;
-		case M3 : maze3(rows, cols); break;
-		case M4 : maze4(rows, cols); break;
-		case M5 : maze5(rows, cols); break;
-		case M6 : maze6(rows, cols); break;
-		case MAX_LEVEL : g_bQuitGame = true; levelClear = false; break;
-		}
-		*/
-
-		//Render map based on the levels
-		if (levelCount == 1) {
-			maze1(rows, cols);
-		}
-
-		else if (levelCount == 2) {
-			maze2(rows, cols);
-		}
-		else if (levelCount == 3) {
-			maze3(rows, cols);
-		}
-
-		else if (levelCount == 4) {
-			maze4(rows, cols);
-		}
-
-		else if (levelCount == 5) {
-			maze5(rows, cols);
-		}
-
-		else if (levelCount == 6) {
-			maze6(rows, cols);
+        //Render map based on the levels
+		switch (static_cast<GAMELEVELS>(levelCount)) {
+		case M1 : maze1(rows, cols);
+            break;
+		case M2 : maze2(rows, cols);
+            break;
+		case M3 : maze3(rows, cols);
+            break;
+		case M4 : maze4(rows, cols);
+            break;
+		case M5 : maze5(rows, cols);
+            break;
+		case M6 : maze6(rows, cols);
+            break;
 		}
 
 		//Checking for max item count for each map 
 		for (int i = 0; i < rows; ++i) {
 			for (int j = 0; j < cols; ++j) {
-				if (maze[i][j] == '$') {
-					++MaxItemCount;
+				if (maze[i][j] == '$') {    //go through the entire array, each time a '$' is found
+					++MaxItemCount;     //increase the max item count by 1
 				}
 			}
 		}
@@ -256,7 +237,7 @@ void update(double dt)
         case S_PAUSETWO : pauseTwo();       // sub stage of pause; character icon change
             break;
 
-        case S_WIN : clearGame();
+        case S_WIN : clearGame();           //the victory screen after the player completes the game
             break;
 	}
 
@@ -276,15 +257,15 @@ void render()
     {
         case S_SPLASHSCREEN: renderSplashScreen(); //Splashscreen shows for a few seconds with the level counter
             break;
-        case S_GAME: renderGame();
+        case S_GAME: renderGame();  //show out the game
             break;
-		case S_PAUSE : renderPauseGame();
+		case S_PAUSE : renderPauseGame();   //show out the pause screen
 			break;
-        case S_PAUSEONE : renderPauseSound();
+        case S_PAUSEONE : renderPauseSound();   //show out the sub-menu of pause: sound selection
 			break;
-        case S_PAUSETWO : renderPauseChar();
+        case S_PAUSETWO : renderPauseChar();    //show out the sub-menu of pause: changing of character appearance
             break;
-        case S_WIN : renderClearGame();
+        case S_WIN : renderClearGame();     //show out the victory screen
             break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
@@ -436,9 +417,9 @@ void processPauseSound()
         g_dBounceTime = g_dElapsedTime + 0.1;
         if (!playmusic) {
             PlaySound( "gamemusic.wav", NULL, SND_LOOP | SND_ASYNC);
+            playmusic = true;
         }
         g_eGameState = S_PAUSE;
-	    playmusic = true;
     }
     else if (g_abKeyPressed[K_TWO]) {
         g_dBounceTime = g_dElapsedTime + 0.1;
@@ -1329,7 +1310,7 @@ void renderEnemy()
     for (unsigned int i = 0; i < enemyvec.size(); ++i) {  // Use for loop is to check through the enemyvec for each level.
         Enemy tempEnemy = enemyvec[i];
         COORD tempE = tempEnemy.m_Enemy;            
-        g_Console.writeToBuffer(tempE, 'X', 0x0C);   
+        g_Console.writeToBuffer(tempE, (char)7, 0x0C);   
     }
 }
 
@@ -1508,14 +1489,17 @@ void exitLevel() {
 	if(maze[charY][charX] == '*' && ItemCounter == MaxItemCount)
 	{
 		//Beep (1440,30)
-		if (levelCount == 6) {
+		if (levelCount == MAX_LEVEL-1) {
             g_eGameState = S_WIN;
 		}
 		else {
-			++levelCount;
+			levelCount = static_cast<GAMELEVELS>(levelCount + 1);
             levelClear = true;
 		    g_eGameState = S_SPLASHSCREEN;
             BufferTime = g_dElapsedTime + 3.0;
+        }
+        for (int i = 0; i < rows; ++i) {
+            delete[] maze[i];
         }
 	}
 
