@@ -125,26 +125,26 @@ void shutdown    ( void );      // do clean up, free memory
 //PlaySound
 extern bool playmusic;
 
-void splashScreenWait();    // waits for time to pass in splash screen
-void gameplay();            // gameplay logic
-void moveCharacter();       // moves the character, collision detection, physics, etc
-void processUserInput();	// checks if you should change states or do something else with the game, e.g. pause, exit
-void clearScreen();         // clears the current screen and draw from scratch 
-void renderSplashScreen();  // renders the splash screen
-void renderGame();          // renders the game stuff
-void renderMap();           // renders the map to the buffer first
-void renderCharacter();     // renders the character into the buffer
-void renderEnemy();
-void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
-void renderCounters();      // renders item counter, level count. for gameplay() only
-void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
+void splashScreenWait( void );    // waits for time to pass in splash screen
+void gameplay( void );            // gameplay logic
+void moveCharacter( void );       // moves the character, collision detection, physics, etc
+void processUserInput( void );	// checks if you should change states or do something else with the game, e.g. pause, exit
+void clearScreen( void );         // clears the current screen and draw from scratch 
+void renderSplashScreen( void );  // renders the splash screen
+void renderGame( void );          // renders the game stuff
+void renderMap( void );           // renders the map to the buffer first
+void renderCharacter( void );     // renders the character into the buffer
+void renderEnemy( void );
+void renderFramerate( void );     // renders debug information, frame rate, elapsed time, etc
+void renderCounters( void );      // renders item counter, level count. for gameplay() only
+void renderToScreen( void );      // dump the contents of the buffer to the screen, one frame worth of game
 
 //Enemy
 void moveEnemy(Enemy& g_Enemy); //shania
 void enemyCollisionWithPlayer(Enemy g_Enemy); //wei min
 
 //generating map - JingTing
-void levelInit();
+void levelInit( void );
 void maze1(int& rows, int& cols);
 void maze2(int& rows, int& cols);
 void maze3(int& rows, int& cols);
@@ -155,26 +155,26 @@ void mapgenerator(int rows, int cols);
 void randomiseTeleporters(int rows, int cols);
 
 //checking things on map
-void checkTrap();
-void PickUpItems();
-void exitLevel();
+void checkTrap( void );
+void PickUpItems( void );
+void exitLevel( void );
 
 //finish the game - JingTing
-void clearGame();
+void clearGame( void );
 void processNameInput(char * name);
-void renderClearGame();
-void renderText();
+void renderClearGame( void );
+void renderText( void );
 void renderNameInput(char * name);
 
 //pause the game - Glennda
-void pauseGame();
-void pauseOne();
-void pauseTwo();
-void renderPauseGame();
-void renderPauseSound();
-void renderPauseChar();
-void processPauseInput();
-void processPauseSound();
+void pauseGame( void );
+void pauseOne( void );
+void pauseTwo( void );
+void renderPauseGame( void );
+void renderPauseSound( void );
+void renderPauseChar( void );
+void processPauseInput( void );
+void processPauseSound( void );
 void processPauseChar(char * arr);
 
 #endif // _GAME_H

@@ -99,7 +99,7 @@ void shutdown( void )
     g_Console.clearBuffer();
 }
 
-void levelInit() {
+void levelInit( void ) {
 
 	if (levelClear && levelCount < MAX_LEVEL) {
 
@@ -258,7 +258,7 @@ void update(double dt)
 // Input    : void
 // Output   : void
 //--------------------------------------------------------------
-void render()
+void render( void )
 {
     clearScreen();      // clears the current screen and draw from scratch 
     switch (g_eGameState)
@@ -281,7 +281,7 @@ void render()
 
 }
 
-void gameplay()            // gameplay logic
+void gameplay( void )            // gameplay logic
 {
     levelInit();
     processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
@@ -302,7 +302,7 @@ void gameplay()            // gameplay logic
 }
 
 //Movement for the character (UP,DOWN,LEFT,RIGHT) and check for collision with maze walls
-void moveCharacter()
+void moveCharacter( void )
 {
     bool bSomethingHappened = false;
     if (g_dBounceTime > g_dElapsedTime) {
@@ -369,7 +369,7 @@ void moveCharacter()
 
 }
 
-void processUserInput()
+void processUserInput( void )
 {
     // pauses the game if player hits the escape key
 	if (g_abKeyPressed[K_ESCAPE]) {
@@ -388,7 +388,7 @@ void processUserInput()
 }
 
 //Glennda
-void processPauseInput()
+void processPauseInput( void )
 {
     if (g_dElapsedTime <= g_dBounceTime) {
         return;
@@ -416,7 +416,7 @@ void processPauseInput()
     
 }
 
-void processPauseSound()
+void processPauseSound( void )
 {
     if (g_dElapsedTime <= g_dBounceTime) {
         return;
@@ -467,24 +467,24 @@ void processPauseChar(char * arr)
 }
 
 //Pause Gamestate_Main
-void pauseGame() {
+void pauseGame( void ) {
 	processPauseInput();
 }
 
 //Pause Gamestate_Sub
-void pauseOne()
+void pauseOne( void )
 {
     processPauseSound();
 }
 
-void pauseTwo()
+void pauseTwo( void )
 {
     processPauseChar(arr);
 }
 
 
 //Render text for main pause page and sub pause pages
-void renderPauseGame() {
+void renderPauseGame( void ) {
 
 	clearScreen();
 	COORD c = g_Console.getConsoleSize();
@@ -503,7 +503,7 @@ void renderPauseGame() {
 	g_Console.writeToBuffer(c, "Press '4' to quit game", 0x0B);
 }
 
-void renderPauseSound() {
+void renderPauseSound( void ) {
     clearScreen();
 	COORD c = g_Console.getConsoleSize();
 	c.Y /= 4;
@@ -515,7 +515,7 @@ void renderPauseSound() {
 	g_Console.writeToBuffer(c, "Press '2' to switch off sound", 0x0B);
 }
 
-void renderPauseChar() {
+void renderPauseChar( void ) {
     clearScreen();
 	COORD c = g_Console.getConsoleSize();
 	c.Y /= 4;
@@ -530,13 +530,13 @@ void renderPauseChar() {
     g_Console.writeToBuffer(c, "Press 'Enter' to return", 0x0B);
 }
 
-void clearScreen()
+void clearScreen( void )
 {
     // Clears the buffer with this colour attribute
     g_Console.clearBuffer(0x0F);
 }
 
-void splashScreenWait() {
+void splashScreenWait( void ) {
 
 	if (g_dElapsedTime > BufferTime) {
 		g_eGameState = S_GAME;
@@ -544,7 +544,7 @@ void splashScreenWait() {
 
 }
 
-void renderSplashScreen()  // renders the splash screen
+void renderSplashScreen( void )  // renders the splash screen
 {
 
 	COORD c = g_Console.getConsoleSize();
@@ -560,7 +560,7 @@ void renderSplashScreen()  // renders the splash screen
 
 }
 
-void clearGame() {
+void clearGame( void ) {
 
     if (playmusic && victoryplaymusic) {
         PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC);
@@ -572,7 +572,7 @@ void clearGame() {
 }
 
 //Render text for winning and get name for highscore
-void renderClearGame() {
+void renderClearGame( void ) {
     clearScreen();
     renderText();
     renderNameInput(name);
@@ -581,7 +581,7 @@ void renderClearGame() {
 //Shania
 //=======
 //Render the text for the win page
-void renderText() {
+void renderText( void ) {
 
     COORD c = g_Console.getConsoleSize();
 
@@ -836,7 +836,7 @@ void processNameInput(char * name) {
 
 }
 
-void renderGame()
+void renderGame( void )
 {
     renderCounters();   // counters will be rendered in gameplay() only (not in the splashscreen)
     renderMap();        // renders the map to the buffer first
@@ -844,7 +844,7 @@ void renderGame()
 	renderEnemy();
 }
 
-void renderMap()
+void renderMap( void )
 {
     // Set up sample colours, and output shadings
 	mapgenerator(rows, cols);
@@ -865,7 +865,7 @@ void mapgenerator(int rows, int cols) {
 				g_Console.writeToBuffer(c, '@', 0x0E);
 			}
 			else if (maze[i][j] == '$') {
-				g_Console.writeToBuffer(c, '$', 0x0A);
+				g_Console.writeToBuffer(c, '$', 0x07);
 			}
 			else if (maze[i][j] == '*') {
 				g_Console.writeToBuffer(c, '*', 0x0D);
@@ -1365,13 +1365,13 @@ void maze6(int& rows, int& cols) {
 
 }
 
-void renderCharacter()
+void renderCharacter( void )
 {
     // Draw the location of the character
     g_Console.writeToBuffer(g_sChar.m_cLocation, charIcon, 0x0A);
 }
 //JingTing + Shania
-void renderEnemy()
+void renderEnemy( void )
 {
     for (unsigned int i = 0; i < enemyvec.size(); ++i) {  // Use for loop is to check through the enemyvec for each level.
         Enemy tempEnemy = enemyvec[i];
@@ -1442,7 +1442,7 @@ void enemyCollisionWithPlayer(Enemy g_Enemy) {
 
 }
 
-void renderFramerate()
+void renderFramerate( void )
 {
     COORD c;
     // displays the framerate
@@ -1456,7 +1456,7 @@ void renderFramerate()
 
 //Render in game counters
 //WeiMin
-void renderCounters() {
+void renderCounters( void ) {
 
     COORD c;    
     c.X = 0;
@@ -1505,13 +1505,13 @@ void renderCounters() {
     g_Console.writeToBuffer(c,"Press ESC to pause");
 }
 
-void renderToScreen()
+void renderToScreen( void )
 {
     // Writes the buffer to the console, hence you will see what you have written
     g_Console.flushBufferToConsole();
 }
 
-void checkTrap() {
+void checkTrap( void ) {
 
 	int Y = g_sChar.m_cLocation.Y - 1;
 	int X = g_sChar.m_cLocation.X;
@@ -1537,7 +1537,7 @@ void checkTrap() {
 
 }
 //Shania
-void PickUpItems()
+void PickUpItems( void )
 {
 	int charY = g_sChar.m_cLocation.Y - 1; //call the coordinates of the player
 	int charX = g_sChar.m_cLocation.X;
@@ -1551,7 +1551,7 @@ void PickUpItems()
 
 }
 
-void exitLevel() {
+void exitLevel( void ) {
 
 	int charY = g_sChar.m_cLocation.Y - 1;
 	int charX = g_sChar.m_cLocation.X;

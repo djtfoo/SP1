@@ -33,18 +33,18 @@ enum SequenceOPT{
 };
 
 //WeiMin
-void gameLoop();
-void displayMenu();
-void displayGame();
-void displayInstructions();
-void displayOptions();
-void displayHighscore();
-void displayExit();
+void gameLoop( void );
+void displayMenu( void );
+void displayGame( void );
+void displayInstructions( void );
+void displayOptions( void );
+void displayHighscore( void );
+void displayExit( void );
 
 //options
-void options();
-void displayOptions();
-void displaySound();
+void options( void );
+void displayOptions( void );
+void displaySound( void );
 
 //highscore
 struct highScore
@@ -52,15 +52,15 @@ struct highScore
 	double time;
 	std::string name;
 };
-void toCpp();
+void toCpp( void );
 
 //declaring game state
 extern Sequence seq;
 extern bool exitGame;
 
 //user input
-void userInput();   //to get input
-void addTime();     //this is to set a buffer between detection of input for different menu screens, or else the previous input will be read by the next userInput()
+void userInput( void );   //to get input
+void addTime( void );     //this is to set a buffer between detection of input for different menu screens, or else the previous input will be read by the next userInput()
 extern bool inputDetected;  //when a key input has been detected, this bool changes to break out of the loop and move on to the next game state
 extern double BounceTime;   //this time is set to prevent the previous input from being read by the next userInput()
 extern double ElapsedTime;  //time that has passed from starting of detecting user input for that current game state

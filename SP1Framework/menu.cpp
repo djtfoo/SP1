@@ -31,7 +31,7 @@ bool menuplaymusic = true;  //while user remains in the menus, don't refresh the
 bool storyLine = true;
 
 //Shania
-void storyline()
+void storyline( void )
 {
 	clearScreen();
     PlaySound(TEXT("egypt.wav"), NULL, SND_LOOP | SND_ASYNC); //Play the music
@@ -101,7 +101,7 @@ void storyline()
 	}
 }
 
-void userInput()
+void userInput( void )
 {
     menu_KeyPressed[K_1] = isKeyPressed(49);
     menu_KeyPressed[K_2] = isKeyPressed(50);
@@ -113,7 +113,7 @@ void userInput()
     addTime();
 }
 
-void addTime() {
+void addTime( void ) {
 
     ElapsedTime += g_Timer.getElapsedTime();
 
@@ -206,7 +206,7 @@ void processInputSound(SequenceOPT &s) {
 //User interface for main menu
 //Writetobuffer to buffer the text and after wards flush to show the text in the screen
 //Wei Min
-void displayMenu()
+void displayMenu( void )
 {
 	if(playmusic && menuplaymusic)
 	{
@@ -293,7 +293,7 @@ void displayMenu()
 	
 }
 
-void displayInstructions()
+void displayInstructions( void )
 {
 	clearScreen();
 	COORD c = g_Console.getConsoleSize();
@@ -325,7 +325,7 @@ void displayInstructions()
 
 }
 
-void displayHighscore()
+void displayHighscore( void )
 {
 	clearScreen();
 	toCpp();
@@ -366,7 +366,7 @@ void displayHighscore()
 	g_Console.flushBufferToConsole();
 }
 
-void toCpp()
+void toCpp( void )
 {
 	// timings copied to displayHighscore
 	ifstream inData;
@@ -421,7 +421,7 @@ void toCpp()
 
 //Shania
 //To get the user input and use switch sequence to check which one they inputed
-void options() {
+void options( void ) {
 
     SequenceOPT s = OptionsMenu;
     ElapsedTime = 0.0;
@@ -455,7 +455,7 @@ void options() {
 
 //Shania
 //Display the options to adjust sound or go back inside Options
-void displayOptions() {
+void displayOptions( void ) {
 
     clearScreen();
 
@@ -475,7 +475,7 @@ void displayOptions() {
 
 //Shania
 //Display the options to on or off the sound in the game
-void displaySound() {
+void displaySound( void ) {
     
     clearScreen();
 
@@ -492,7 +492,7 @@ void displaySound() {
 
 }
 
-void displayExit()
+void displayExit( void )
 {
     clearScreen();
 
