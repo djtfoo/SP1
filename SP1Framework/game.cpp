@@ -695,11 +695,43 @@ void renderSplashScreen( void )  // renders the splash screen
 {
 
 	COORD c = g_Console.getConsoleSize();
-	c.Y /= 3;
-	c.X = c.X / 2 - 3;
+
+        string SplashScreen[18] = {
+        "         .. ..              ...   ",
+        "       .' ;' ;             ;''''. ",
+        "       ;| ; |;            ;;    ; ",
+        "       ;| ; |;            ;;.   ; ",
+        "       ;  ~~~~',,,,,,,    '. '  ; ",
+        "       ;    -A       ;      ';  ; ",
+        "       ;       .....'        ;   ;",
+        "       ;      _;             ;   ;",
+        "       ;   __(o)__.          ;   ;",
+        "      .;  '\\--\\\\--\\        .'    ;",
+        "    .'\\ \\_.._._\\\\......,.,.;     ;",
+        " .''   |       ;   ';      '    .'",
+        ";      |      .'    ;..,,.,,,,.'  ",
+        ";      |    .'  ...'              ",
+        "'.     \\  .'   ,'  \\\\             ",
+        "  '.    ;'   .;     \\\\            ",
+        "    '.      .'      '-'           ",
+        "      '..  .'                     "
+    };
+
+    c.X = 4;  //x and y coordinates to start the box
+	c.Y = 3;
+        
+    for(int i = 0; i < 18; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
+		std::ostringstream ss;
+        ss.str("");
+		ss << SplashScreen[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+    }
+
+    c.Y = 10;
+	c.X = 45;
 	std::ostringstream ss;
 	ss << std::fixed << std::setprecision(3);
-	
+
     if (g_dElapsedTime < BufferTime - 1.0) {
         c.Y += 1;
 	    c.X = g_Console.getConsoleSize().X / 2 - 20;
