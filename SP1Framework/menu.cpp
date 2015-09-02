@@ -371,18 +371,18 @@ void displayMenu( void )
     c.Y /= 8;
     for (int i = 0; i < 40; ++i) {
 		++c.X;
-		g_Console.writeToBuffer(c, "=", 0x0D);
+		g_Console.writeToBuffer(c, "=", 0x0C);
     }
     c.Y += 2;
     //SHOW GAME NAME
     c.X = g_Console.getConsoleSize().X / 2-5;
-    g_Console.writeToBuffer(c, "ESCAPEE", 0x0A);
+    g_Console.writeToBuffer(c, "ESCAPEE", 0x0B);
     c.X = g_Console.getConsoleSize().X / 4;
     --c.X;
 	c.Y += 2;
     for (int i = 0; i < 38; ++i) {
 		++c.X;
-		g_Console.writeToBuffer(c, "=", 0x0D);
+		g_Console.writeToBuffer(c, "=", 0x0C);
     }
     ++c.X;
     c.Y /= 4;
@@ -390,7 +390,7 @@ void displayMenu( void )
     for (int i = 0; i < 15; ++i)
     {
         ++c.Y;
-        g_Console.writeToBuffer(c, "-", 0x0D);
+        g_Console.writeToBuffer(c, "-", 0x0C);
     }
     c.Y = 0;
     c.Y /= 8;
@@ -400,7 +400,7 @@ void displayMenu( void )
     for (int i = 0; i < 15; ++i)
     {
         ++c.Y;
-        g_Console.writeToBuffer(c, "-", 0x0D);
+        g_Console.writeToBuffer(c, "-", 0x0C);
     }
 
     ++c.Y;
@@ -409,7 +409,7 @@ void displayMenu( void )
     c.X -= 2;
         for (int i = 0; i < 40; ++i) {
 		++c.X;
-		g_Console.writeToBuffer(c, "=", 0x0D);
+		g_Console.writeToBuffer(c, "=", 0x0C);
     }
 
     c.Y = 0;
