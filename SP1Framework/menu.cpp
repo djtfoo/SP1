@@ -822,16 +822,51 @@ void displaySound( void ) {
     clearScreen();
 
     COORD c = g_Console.getConsoleSize();
-    c.Y /= 3;
-    c.X = c.X / 2 - 9;
+    c.Y = 10;
+    c.X = 53;
     g_Console.writeToBuffer(c, "EDIT SOUND HERE", 0x0B);
-    c.Y += 3;
-    c.X = g_Console.getConsoleSize().X / 2 - 15;
+    c.Y = 12;
+    c.X = 53;
     g_Console.writeToBuffer(c, "ON", coloursSound[0]);
     ++c.Y;
     g_Console.writeToBuffer(c, "OFF", coloursSound[1]);
-    g_Console.flushBufferToConsole();
 
+    string Sound[21] = {
+        "    _________________________________",
+        "    \\____________________________( ( )",
+        "      \\___________________________( (|    _____",
+        "        \\________________________( ( |   /VVVVO\\_____",
+        "          \\________________________( /  |VVVVVV/     \\",
+        "            \\_____________________( /   |VVVVV(_-----\\|",
+        "              \\__________________( /    |VVVVVV|",
+        "               _\\_______________( /     /VVVVVV|",  
+        "              _\\________________( \\    /VVVVVVV|",   
+        "       _______\\__________________( \\  /VVVVVVVV|",  
+        "    __/      \\___________________(  \\/VVVVVVVVV|",
+        "   /=|                                VVVVVVVVV|",
+        "  // |       |                      \\VVVVVVVV|V|",
+        " //  |       |_______________________|VVVVVVV|/",
+        "||    \\     /                         \\VVVVVV|",
+        "||    /   /                             \\VVVV\\",
+        "||   /   /                                \\VVV\\",
+        " \\\\  \\   \\                                 \\VVV\\",
+        "  V    \\  \\                                  \\==\\",
+        "  V     \\  \\__                                \\==\\__",
+        "         (____)>                             ( ---- )"
+    };
+
+
+    c.X = 1;  //x and y coordinates to start the box
+	c.Y = 1;
+        
+    for(int i = 0; i < 21; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
+        std::ostringstream ss;
+		ss.str("");
+		ss << Sound[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+    }
+
+    g_Console.flushBufferToConsole();
 }
 
 //Glennda
