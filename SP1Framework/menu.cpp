@@ -875,17 +875,51 @@ void displayChar( void )
     clearScreen();
     COORD c = g_Console.getConsoleSize();
     c.Y /= 4;
-    c.X = g_Console.getConsoleSize().X / 2 - 26;
-    g_Console.writeToBuffer(c, "Switch Player Icon: Right arrow key or Left arrow key", 0x0B);
+    c.X = 3;
+    g_Console.writeToBuffer(c, "Switch Player Icon: Use Right key or Left key", 0x0B);
     c.Y+= 2;
-    c.X = g_Console.getConsoleSize().X / 2 - 25;
-    g_Console.writeToBuffer(c, "Switch Player Color: Up arrow key or Down arrow key", 0x0B);
+    c.X = 3;
+    g_Console.writeToBuffer(c, "Switch Player Color: Use Up key or Down key", 0x0B);
     c.Y += 3;
-    c.X = g_Console.getConsoleSize().X / 2;
+    c.X = 3;
     g_Console.writeToBuffer(c, charIcon, charClr);
     c.Y += 5;
-    c.X = g_Console.getConsoleSize().X / 2 - 11;
+    c.X = 3;
     g_Console.writeToBuffer(c, "Press 'Enter' to return", 0x0B);
+
+    //Shania
+    string CharSet[19] = {
+        "     _.mmmmmmmmm._",
+        "   dMMMY'~~~~~`YMMMb",
+        " dMMMY'         `YMMMb",
+        "dMMMY'           `YMMMb",
+        "CMMM(             )MMMD",
+        "YMMMb.           .dMMMY",
+         " YMMMb.         .dMMMY",
+        "  `YMMMboo...oodMMMY'",
+        ".    `\"#MMMMMMM#\"'    .",
+        "Mb       `MMM'       dM",
+        "MMMM.   .dMMMb.   .dMMM",
+        "MMMMMMMMMMMMMMMMMMMMMMM",
+        "MMMMMMMMMMMMMMMMMMMMMMM",
+        "MMMM'   `YMMMY'   `YMMM",
+        "MM'      )MMM(      `MM",
+        "'       .MMMMM.       `",
+        "        dMMMMMb",
+        "       dMMMMMMMb",
+        "        \"\"\"\"\"\"\"   "                     
+    };
+
+    c.X = 50;  //x and y coordinates to start the box
+	c.Y = 3;
+        
+    for(int i = 0; i < 19; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
+        std::ostringstream ss;
+		ss.str("");
+		ss << CharSet[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+    }
+
     g_Console.flushBufferToConsole();
 }
 
