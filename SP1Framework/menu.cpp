@@ -66,11 +66,11 @@ void storyline( void )
     PlaySound(TEXT("egypt.wav"), NULL, SND_LOOP | SND_ASYNC); //Play the music
 	COORD c = g_Console.getConsoleSize();
 
-	c.X = g_Console.getConsoleSize().X / 16-6; //the x and y coords where the pharoah ascii art starts
-	c.Y = g_Console.getConsoleSize().Y / 5;
+	c.X = g_Console.getConsoleSize().X / 16-8; //the x and y coords where the pharoah ascii art starts
+	c.Y = g_Console.getConsoleSize().Y / 4;
 
 	string pharaoh[10] = {   //string array
-        "          .....",
+        "          .......",
         "         .\\:\\:/:/.",
         "        /=\\_.@._/=\\",
         "       /==/ _ _ \\==\\",
@@ -91,31 +91,57 @@ void storyline( void )
 
 	c.X = 33; //the x and y coords where the storyline starts
 	c.Y = 3;
+    g_Console.writeToBuffer(c, "You are a greedy treasure hunter." , 0x0A); //use writetobuffer to print out the storyline
+	g_Console.flushBufferToConsole();
+	Sleep(500);  //show 1 line per 0.5 sec
 
-	g_Console.writeToBuffer(c, "You are a greedy treasure hunter." , 0x0A); //use writetobuffer to print out the storyline
 	c.Y += 2;
-	c.X -= 15;
+	c.X = 22;
 	g_Console.writeToBuffer(c, "Through your adventures, you heard rumours of a pyramid" , 0x0A);
+	g_Console.flushBufferToConsole();
+	Sleep(500);
+
 	c.Y += 2;
-	c.X += 4;
+	c.X = 30;
 	g_Console.writeToBuffer(c, "which houses a lot of hidden treasures." , 0x0A);
+	g_Console.flushBufferToConsole();
+	Sleep(500);
+
 	c.Y += 2;
-	c.X += 4;
+	c.X = 31;
 	g_Console.writeToBuffer(c, "However, no one has ever been known", 0x0A);
+	g_Console.flushBufferToConsole();
+	Sleep(500);
+
 	c.Y += 2;
+	c.X = 35;
     g_Console.writeToBuffer(c, "to return from exploring it.", 0x0A);
+	g_Console.flushBufferToConsole();
+	Sleep(500);
+
     c.Y += 2;
+	c.X = 24;
 	g_Console.writeToBuffer(c, "Yet, you are unfazed, and ventured to the pyramid.", 0x0A);
+	g_Console.flushBufferToConsole();
+	Sleep(500);
+
 	c.Y += 2;
-	c.X += 3;
+	c.X = 35;
 	g_Console.writeToBuffer(c, "As you explored the pyramid,", 0x0A);
+	g_Console.flushBufferToConsole();
+	Sleep(500);
+
 	c.Y += 2;
-	c.X -= 8;
+	c.X = 25;
 	g_Console.writeToBuffer(c, "you activated a trap door and fell into a maze.", 0x0A);
+	g_Console.flushBufferToConsole();
+	Sleep(500);
+
 	c.Y += 4;
-	c.X -= 9;
+	c.X = 30;
 	g_Console.writeToBuffer(c, "Press ENTER to continue", 0x0B);
 	g_Console.flushBufferToConsole();
+	Sleep(500);
 
 	while(storyLine){   //boolean to make the screen stay til the player press enter
 
@@ -581,49 +607,49 @@ void displayExit( void )
 	c.X = 12;
 	c.Y = 2;
 
-	g_Console.writeToBuffer(c,"~~YOU RIDE ON YOUR CAMEL ALL THE WAY HOME, GOOD BYE!~~", 0x0B);
+	g_Console.writeToBuffer(c,"~~YOU RIDE ON YOUR CAMEL ALL THE WAY HOME, GOOD BYE!~~", 0x0F);
 
 	//Display ascii camel
 	c.X = 3;
 	c.Y = 5;
 
-	g_Console.writeToBuffer(c,"                                                  =--_                ", 0x0B);
+	g_Console.writeToBuffer(c,"                                                  =--_                ", 0x0C);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"                                   .-\"\"\"\"\"\"-.     |* _)               ", 0x0B);
+	g_Console.writeToBuffer(c,"                                   .-\"\"\"\"\"\"-.     |* _)               ", 0x0C);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"                                  /          \\   /  /                 ", 0x0B);
+	g_Console.writeToBuffer(c,"                                  /          \\   /  /                 ", 0x0E);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"                                 /            \\_/  /                  ", 0x0B);
+	g_Console.writeToBuffer(c,"                                 /            \\_/  /                  ", 0x0E);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"     _                          /|                /                   ", 0x0B);
+	g_Console.writeToBuffer(c,"     _                          /|                /                   ", 0x0A);
 	c.Y += 1;
-	g_Console.writeToBuffer(c," _-'\"/\\                        / |    ____    _.-\"            _       ", 0x0B);
+	g_Console.writeToBuffer(c," _-'\"/\\                        / |    ____    _.-\"            _       ", 0x0A);
 	c.Y += 1;
 	g_Console.writeToBuffer(c,"'   (  '-_            _       (   \\  |\\  /\\  ||           .-'\".\".     ", 0x0B);
 	c.Y += 1;
 	g_Console.writeToBuffer(c,"     '.   `'-._   .-'\"/'.      \"   | |/ /  | |/        _-\"   (   '-_  ", 0x0B);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"       '.      _-\"   (   '-_       \\ | /   \\ |     _.-'       )     \"-", 0x0B);
+	g_Console.writeToBuffer(c,"       '.      _-\"   (   '-_       \\ | /   \\ |     _.-'       )     \"-", 0x09);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"     _.'   _.-'       )     \"-._    ||\\\\   |\\\\  '\"'        .-'        ", 0x0B);
+	g_Console.writeToBuffer(c,"     _.'   _.-'       )     \"-._    ||\\\\   |\\\\  '\"'        .-'        ", 0x09);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"   '               .-'          `'  || \\\\  ||))                       ", 0x0B);
+	g_Console.writeToBuffer(c,"   '               .-'          `'  || \\\\  ||))                       ", 0x0D);
 	c.Y += 1;
-    g_Console.writeToBuffer(c," _  ___  _ ____________ _____  ___ _|\\ _|\\_|\\\\/ _______________  ___  ", 0x0B);
+    g_Console.writeToBuffer(c," _  ___  _ ____________ _____  ___ _|\\ _|\\_|\\\\/ _______________  ___  ", 0x0D);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"                 c  c  \" c C \"\"C  \" \"\"  \"\" \"\"                         ", 0x0B);
+	g_Console.writeToBuffer(c,"                 c  c  \" c C \"\"C  \" \"\"  \"\" \"\"                         ", 0x07);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"             c       C                                                ", 0x0B);
+	g_Console.writeToBuffer(c,"             c       C                                                ", 0x07);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"        C        C                                                    " , 0x0B);
+	g_Console.writeToBuffer(c,"        C        C                                                    " , 0x07);
 	c.Y += 1;
-	g_Console.writeToBuffer(c,"             C                                                        ", 0x0B);
+	g_Console.writeToBuffer(c,"             C                                                        ", 0x07);
 
     
 	g_Console.flushBufferToConsole();
     
 	exitGame = true;
-    Sleep(5000);
+    Sleep(10000);
 }
 
 //--------------------------------------------------------------
