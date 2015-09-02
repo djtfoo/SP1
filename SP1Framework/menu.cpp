@@ -308,6 +308,24 @@ void processInputChar(SequenceOPT &s)
         charIcon = *ptr; // Selected Icon is where pointer is pointing at
     }
 
+    if (menu_KeyPressed[MK_UP]) {
+        inputDetected = true;
+        BounceTime = 0.2;
+        if (rtp < rra+5) {      // rtp not at position 5
+            ++rtp;      // up shift of pointer
+        }
+        charClr = *rtp;
+    }
+
+    if (menu_KeyPressed[MK_DOWN]) {
+        inputDetected = true;
+        BounceTime = 0.2;
+        if (rtp > rra) {      // rtp not pointing at position 0 of rra
+            --rtp;      // down shift of pointer
+        }
+        charClr = *rtp; // Selected Color is where pointer is pointing at
+    }
+
     else if (menu_KeyPressed[MK_ENT]) {
         inputDetected = true;
         s = OptionsMenu;
@@ -588,7 +606,7 @@ void displayOptions( void ) {
     c.X = g_Console.getConsoleSize().X / 2 - 12;
     g_Console.writeToBuffer(c, "SOUND", coloursOptions[0]);
     ++c.Y;
-    g_Console.writeToBuffer(c, "CHANGE CHARACTER ICON", coloursOptions[1]);
+    g_Console.writeToBuffer(c, "CHARACTER SETTINGS", coloursOptions[1]);
     ++c.Y;
     g_Console.writeToBuffer(c, "BACK", coloursOptions[2]);
     g_Console.flushBufferToConsole();
@@ -619,13 +637,16 @@ void displayChar( void )
 {
     clearScreen();
     COORD c = g_Console.getConsoleSize();
-    c.Y /= 3;
-    c.X = c.X / 2 - 30;
-    g_Console.writeToBuffer(c, "Press Right arrow key or Left arrow key to switch Player Icon", 0x0B);
+    c.Y /= 4;
+    c.X = g_Console.getConsoleSize().X / 2 - 26;
+    g_Console.writeToBuffer(c, "Switch Player Icon: Right arrow key or Left arrow key", 0x0B);
+    c.Y+= 2;
+    c.X = g_Console.getConsoleSize().X / 2 - 25;
+    g_Console.writeToBuffer(c, "Switch Player Color: Up arrow key or Down arrow key", 0x0B);
     c.Y += 3;
     c.X = g_Console.getConsoleSize().X / 2;
-    g_Console.writeToBuffer(c, charIcon, 0x0A);
-    c.Y += 4;
+    g_Console.writeToBuffer(c, charIcon, charClr);
+    c.Y += 5;
     c.X = g_Console.getConsoleSize().X / 2 - 11;
     g_Console.writeToBuffer(c, "Press 'Enter' to return", 0x0B);
     g_Console.flushBufferToConsole();

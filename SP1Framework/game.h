@@ -175,10 +175,13 @@ void renderPauseSound( void );
 void renderPauseChar( void );
 void processPauseInput( void );
 void processPauseSound( void );
-void processPauseChar(char * arr);
+void processPauseChar(char * arr, char * rra);
 
 extern CHAR charIcon;
 extern char arr[7];
 extern char *ptr;
+extern WORD charClr;
+extern char rra[6];
+extern char *rtp;
 
 #endif // _GAME_H

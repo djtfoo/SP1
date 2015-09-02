@@ -73,6 +73,10 @@ WORD *ptrPSound = coloursPSound;
 CHAR charIcon = (char)1;
 char arr[7] = {(char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7};
 char *ptr = arr;
+//changing character color
+WORD charClr = 0x0A;
+char rra[6] = {0x0A, 0x0C, 0x0B, 0x0F, 0x0D, 0x0E};
+char *rtp = rra;
 
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
@@ -522,7 +526,7 @@ void processPauseSound( void )
 
 }
 
-void processPauseChar(char * arr)
+void processPauseChar(char * arr, char * rra)
 {
     if (g_dElapsedTime <= g_dBounceTime) {
         return;
@@ -544,8 +548,24 @@ void processPauseChar(char * arr)
         charIcon = *ptr; // Selected Icon is where pointer is pointing at
     }
 
+    if (g_abKeyPressed[K_UP]) {
+        g_dBounceTime = g_dElapsedTime + 0.2;
+        if (rtp < rra+5) {      // rtp not at position 5
+            ++rtp;      // up shift of pointer
+        }
+        charClr = *rtp;
+    }
+
+    if (g_abKeyPressed[K_DOWN]) {
+        g_dBounceTime = g_dElapsedTime + 0.2;
+        if (rtp > rra) {      // rtp not pointing at position 0 of rra
+            --rtp;      // down shift of pointer
+        }
+        charClr = *rtp; // Selected Color is where pointer is pointing at
+    }
+
     else if (g_abKeyPressed[K_ENTER]) {
-        g_dBounceTime = g_dElapsedTime + 0.1;
+        g_dBounceTime = g_dElapsedTime + 0.3;
         g_eGameState = S_PAUSE;
     }
 }
@@ -563,7 +583,7 @@ void pauseOne( void )
 
 void pauseTwo( void )
 {
-    processPauseChar(arr);
+    processPauseChar(arr, rra);
 }
 
 
@@ -572,16 +592,54 @@ void renderPauseGame( void ) {
 
 	clearScreen();
 	COORD c = g_Console.getConsoleSize();
+
+    string pause[21] = {
+        "|vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv|",
+        " ",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "  ___     ",
+        " <*,*>      ",
+        " ['o']",
+        "|vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv|",
+    };
+
+    c.X = 5;
+	c.Y = 1;
+	for (int i = 0; i < 21; ++i, ++c.Y) {
+		std::ostringstream ss;
+		ss.str("");
+		ss << pause[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+	}
+
 	c.Y /= 4;
-    c.Y += 2;
-	c.X = g_Console.getConsoleSize().X / 2 - 23;
+    c.Y += 3;
+	c.X = g_Console.getConsoleSize().X / 2 - 20;
 	g_Console.writeToBuffer(c, "RETURN TO GAME", coloursPause[0]);
 	++c.Y;
 	g_Console.writeToBuffer(c, "SOUND", coloursPause[1]);
     ++c.Y;
-	g_Console.writeToBuffer(c, "CHANGE CHARACTER ICON", coloursPause[2]);
+	g_Console.writeToBuffer(c, "CHARACTER SETTINGS", coloursPause[2]);
     ++c.Y;
 	g_Console.writeToBuffer(c, "RETURN TO MAIN MENU", coloursPause[3]);
+
+    c.Y = g_Console.getConsoleSize().Y / 2 - 9;
+    c.X = g_Console.getConsoleSize().X / 2 - 2;
+    g_Console.writeToBuffer(c, "PAUSE", 0x0A);
 }
 
 void renderPauseSound( void ) {
@@ -589,7 +647,10 @@ void renderPauseSound( void ) {
 	COORD c = g_Console.getConsoleSize();
 	c.Y /= 4;
     c.Y += 2;
-	c.X = g_Console.getConsoleSize().X / 2 - 23;
+	c.X = c.X / 2 - 9;
+    g_Console.writeToBuffer(c, "EDIT SOUND HERE", 0x0B);
+    c.Y += 3;
+	c.X = g_Console.getConsoleSize().X / 2 - 15;
     g_Console.writeToBuffer(c, "ON", coloursPSound[0]);
     ++c.Y;
 	g_Console.writeToBuffer(c, "OFF", coloursPSound[1]);
@@ -600,13 +661,16 @@ void renderPauseChar( void ) {
 	COORD c = g_Console.getConsoleSize();
 	c.Y /= 4;
     c.Y += 2;
-	c.X = g_Console.getConsoleSize().X / 2 - 30;
-    g_Console.writeToBuffer(c, "Press Right arrow key or Left arrow key to switch Player Icon", 0x0B);
+	c.X = g_Console.getConsoleSize().X / 2 - 26;
+    g_Console.writeToBuffer(c, "Switch Player Icon: Right arrow key or Left arrow key", 0x0B);
     c.Y += 2;
+    c.X = g_Console.getConsoleSize().X / 2 - 25;
+    g_Console.writeToBuffer(c, "Switch Player Color: Up arrow key or Down arrow key", 0x0B);
+    c.Y += 3;
 	c.X = g_Console.getConsoleSize().X / 2;
-    g_Console.writeToBuffer(c, charIcon, 0x0A);
+    g_Console.writeToBuffer(c, charIcon, charClr);
     c.Y += 5;
-	c.X = g_Console.getConsoleSize().X / 2 - 12;
+	c.X = g_Console.getConsoleSize().X / 2 - 11;
     g_Console.writeToBuffer(c, "Press 'Enter' to return", 0x0B);
 }
 
@@ -1504,7 +1568,7 @@ void maze6(int& rows, int& cols) {
 void renderCharacter( void )
 {
     // Draw the location of the character
-    g_Console.writeToBuffer(g_sChar.m_cLocation, charIcon, 0x0A);
+    g_Console.writeToBuffer(g_sChar.m_cLocation, charIcon, charClr);
 }
 //JingTing + Shania
 void renderEnemy( void )
