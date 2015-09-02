@@ -439,8 +439,62 @@ void displayMenu( void )
 
     c.X = g_Console.getConsoleSize().X / 2 - 13;
     g_Console.writeToBuffer(c, "QUIT", coloursMenu[4]);
-	g_Console.flushBufferToConsole();
-	
+
+    string MenuLeft[14] = {
+        "          ,.====.  ",           
+        "        .-`\"/c)}}},",      
+        "    .-'-6>   {{{{{'",       
+        "   t         |}}}}}",           
+        "    \\__.___.'{{{{{{",             
+        "        `[__/}}}}}}",          
+        "         {{{.'     ",          
+        "         }}/       ",              
+        "         {{|       ",                   
+        "         }}|       ",                   
+        "  .------{{{\\    , ",              
+        " //.--------'    ; ",             
+        "((///            \\ ",            
+        " (((--' `''-------'" 
+    };
+
+        c.X = 0;  //x and y coordinates to start the box
+	    c.Y = 6;
+        
+        for(int i = 0; i < 14; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
+        std::ostringstream ss;
+		ss.str("");
+		ss << MenuLeft[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+        }
+
+     string MenuRight[14] = {
+        " .====.,",
+        ",{{{(c\\\"`-.",
+        "}}}}   <9-'-.",
+        "{{{{{|        y",
+        "}}}}}}'.___.__/",
+        "{{{{{{\\__]`",
+        "   '.}}}",
+        "       \\{{",
+        "       |}}",
+        "       |{{",
+        " ,    /}}}------.",
+        " ;   '---------.\\\\",
+        "/             \\\\\\))",
+        "'-------''` '--)))"
+    };
+
+        c.X = 59;  //x and y coordinates to start the box
+	    c.Y = 6;
+        
+        for(int i = 0; i < 14; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
+        std::ostringstream ss;
+		ss.str("");
+		ss << MenuRight[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+        }
+
+        g_Console.flushBufferToConsole();
 }
 
 //displaying the hows and what to do
