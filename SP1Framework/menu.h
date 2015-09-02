@@ -20,7 +20,8 @@ enum MENUKEYS
     MK_RIGHT,
     MK_LEFT,
     MK_ENT,
-    K_MAX,
+    MK_SPACE,
+    K_MAX
 };
 
 enum SequenceOPT {

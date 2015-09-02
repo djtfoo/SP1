@@ -1135,7 +1135,7 @@ void mapgenerator(int rows, int cols) {
 				g_Console.writeToBuffer(c, '*', 0x0D);
 			}
 			else if (maze[i][j] == '#') {
-				g_Console.writeToBuffer(c, (char)178, 0x0B);
+				g_Console.writeToBuffer(c, (char)178, 0x06);
 			}
 		}
 	}
@@ -1728,12 +1728,61 @@ void renderCounters( void ) {
     c.Y = 0;
     g_Console.writeToBuffer(c,"ESCAPEE");
 
+    //Array for color
+    WORD eColor[] =
+    {
+        0x02,
+        0x03,
+        0x05,
+        0x08,
+        0x09,
+        0x0A,
+        0x0B,
+        0x0C,
+        0x0D,
+        0x0E
+    };
+
+    int IElapsedTime = g_dElapsedTime;
+    WORD currentColor = eColor[IElapsedTime % 10];
+   
+    string egypt[20] = {   //string array
+        
+         "              |   |",
+         "              |\\_/|_____,",
+         "              /::| Q  ____)",
+         "             /:::|   /    ,_",
+         "            /::::|_ /    / _///",
+         "          _|:::::| |:___/ |",
+         "         | '----'\\_/  /___|",
+         "        _| /  \\   :  /",
+         "    _\\\\\\__/    \\    /",
+         "               /===(",
+         "              /     \\",
+         "             |       \\",
+         "             |,_______\\",
+         "             /  )  / )",
+         "            /  /  (  |",
+         "            | /    \\ |",
+         "            |/      \\|",
+         "            S__      S__",
+         "           /___\\    /___\\",
+    };
+
 	std::ostringstream ss;
 
+    c.Y = 2;
+    c.X =50;
+    for (int i = 0; i < 20; ++i, ++c.Y) {  //check through the string array and print out using writeToBuffer
+       
+        ss.str("");
+        ss << egypt[i];
+        g_Console.writeToBuffer(c, ss.str(), currentColor);
+    }
      // displays the level count
     ss.str("");
     ss << "Level: " << levelCount;
-    c.X = 50;
+    c.X = 41;
     c.Y = 6;
     g_Console.writeToBuffer(c, ss.str());
 
@@ -1749,20 +1798,18 @@ void renderCounters( void ) {
     ss << "Timer: " << playTime << "secs";
     c.Y = 10;
     g_Console.writeToBuffer(c, ss.str());
-
+    
+    c.X = 41;
     //show if the exit is locked
     if (ItemCounter < MaxItemCount)
     {
-        c.X = 40;
         c.Y = 12;
-        g_Console.writeToBuffer(c,"You have not collected enough items");
-        c.X = 50;
+        g_Console.writeToBuffer(c,"Not collected enough items");
         c.Y = 14;
         g_Console.writeToBuffer(c,"Exit is locked");
     }
     else
     {
-        c.X = 45;
         c.Y = 12;
         g_Console.writeToBuffer(c,"Exit is unlocked");
     }

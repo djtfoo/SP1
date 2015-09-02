@@ -37,6 +37,19 @@ WORD nonHighlight = 0x0A;   //non-selected options
 //main menu
 WORD coloursMenu[] = {Highlight, nonHighlight, nonHighlight, nonHighlight, nonHighlight};   //start with the first option highlighted
 WORD *ptrMenu = coloursMenu;    //to point at the coloursMenu[] array
+WORD mColor[] =
+    {
+        0x02,
+        0x03,
+        0x05,
+        0x08,
+        0x09,
+        0x0A,
+        0x0B,
+        0x0C,
+        0x0D,
+        0x0E
+    };
 
 Sequence menu[] = {
     Play,
@@ -90,11 +103,6 @@ void storyline( void )
         ss << pharaoh[i];
         g_Console.writeToBuffer(c, ss.str(), 0x0F);
     }
-
-	c.Y += 4;
-	c.X = 30;
-	g_Console.writeToBuffer(c, "Press ENTER to continue", 0x0B);
-	g_Console.flushBufferToConsole();
     
 	c.X = 19;
 	c.Y = 3;
@@ -120,7 +128,7 @@ void storyline( void )
 			
 		userInput();   //get the player input
 	
-		if(menu_KeyPressed[MK_ENT]){
+		if(menu_KeyPressed[MK_SPACE]){
 			Sleep(300);
 		}
 		else{
@@ -128,8 +136,20 @@ void storyline( void )
 		}
 	}
 
+    c.X = 30;
+    c.Y = 21;
+    int IElapsedTime;
+    WORD menuColor;
+
 	while(storyLine){   //boolean to make the screen stay til the player press enter
 		userInput();   //get the player input
+
+        IElapsedTime = ElapsedTime;
+        menuColor = mColor[IElapsedTime % 10];
+
+	    g_Console.writeToBuffer(c, "Press ENTER to continue", menuColor);
+	    g_Console.flushBufferToConsole();
+
         if(menu_KeyPressed[MK_ENT]){
             storyLine = false;  //go to the menu page
             ElapsedTime = 0.0;  //reset the time elapsed since the program starts to detect key input
@@ -145,6 +165,7 @@ void userInput() //If s is modified, seq is modified as well
     menu_KeyPressed[MK_RIGHT] = isKeyPressed(VK_RIGHT);
     menu_KeyPressed[MK_LEFT] = isKeyPressed(VK_LEFT);
     menu_KeyPressed[MK_ENT] = isKeyPressed(VK_RETURN);
+    menu_KeyPressed[MK_SPACE] = isKeyPressed(VK_SPACE);
     
     addTime();
 }
