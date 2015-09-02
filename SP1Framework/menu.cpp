@@ -138,6 +138,7 @@ void storyline( void )
 
     c.X = 30;
     c.Y = 21;
+
     int IElapsedTime;
     WORD menuColor;
 
@@ -206,7 +207,6 @@ void processInputMenu(Sequence &s) {
         inputDetected = true;
         BounceTime = 0.3;
     }
-
 }
 
 void processInputBack(Sequence &s) {
@@ -259,7 +259,6 @@ void processInputOptions(SequenceOPT &s) {
 }
 
 //Detect the player's input to on and off the sounds in the game
-
 void processInputSound(SequenceOPT &s) {
 
     if (ElapsedTime <= BounceTime) {
@@ -356,7 +355,7 @@ void processInputChar(SequenceOPT &s)
 
 //User interface for main menu
 //Writetobuffer to buffer the text and after wards flush to show the text in the screen
-//Wei Min
+//WeiMin
 void displayMenu( void )
 {
 	if(playmusic && menuplaymusic)

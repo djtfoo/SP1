@@ -49,6 +49,8 @@ int i = 0;
 
 //PlaySound - victory screen
 bool victoryplaymusic;
+
+//Play death sound
 bool deathsound = true;
 
 EKEYS prevKeyPressed = K_ESCAPE;
@@ -734,6 +736,8 @@ void renderClearGame( void ) {
     renderNameInput(name);
 }
 
+//WeiMin 
+//Show out the death screen, stop current music and play the death sound
 void renderDeath(void) 
 {
     //if music is not off, and this screen is shown, play the death sound
@@ -781,6 +785,9 @@ void renderDeath(void)
     g_Console.writeToBuffer(c, "Press ESC to go back to main menu", 0x0B);
 }
 
+//WeiMin
+//Check if user has input enter in the death screen
+//Play back game music
 void processDeath(void)
 {
     if (g_abKeyPressed[K_ENTER])
