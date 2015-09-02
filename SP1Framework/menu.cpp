@@ -649,7 +649,7 @@ void displayExit( void )
 	g_Console.flushBufferToConsole();
     
 	exitGame = true;
-    Sleep(10000);
+    Sleep(6000);
 }
 
 //--------------------------------------------------------------
