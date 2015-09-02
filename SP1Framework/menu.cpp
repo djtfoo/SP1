@@ -47,11 +47,12 @@ Sequence menu[] = {
 };
 
 //options menu
-WORD coloursOptions[] = {Highlight, nonHighlight};  //start with the first option highlighted
+WORD coloursOptions[] = {Highlight, nonHighlight, nonHighlight};  //start with the first option highlighted
 WORD *ptrOPT = coloursOptions;  //to point at the coloursOptions[] array
 
 SequenceOPT option[] = {
     Sound,
+    Character,
     Back,
 };
 
@@ -159,6 +160,8 @@ void userInput() //If s is modified, seq is modified as well
 {
     menu_KeyPressed[MK_UP] = isKeyPressed(VK_UP);
     menu_KeyPressed[MK_DOWN] = isKeyPressed(VK_DOWN);
+    menu_KeyPressed[MK_RIGHT] = isKeyPressed(VK_RIGHT);
+    menu_KeyPressed[MK_LEFT] = isKeyPressed(VK_LEFT);
     menu_KeyPressed[MK_ENT] = isKeyPressed(VK_RETURN);
     
     addTime();
@@ -299,6 +302,37 @@ void processInputSound(SequenceOPT &s) {
 
 }
 
+void processInputChar(SequenceOPT &s)
+{
+    if (ElapsedTime <= BounceTime) {
+        return;
+    }
+
+    if (menu_KeyPressed[MK_RIGHT]) {
+        inputDetected = true;
+        BounceTime = 0.2;
+        if (ptr < arr+6) {      // ptr not at position 6
+            ++ptr;      // right shift of pointer
+        }
+        charIcon = *ptr;
+    }
+
+    if (menu_KeyPressed[MK_LEFT]) {
+        inputDetected = true;
+        BounceTime = 0.2;
+        if (ptr > arr) {       // ptr not pointing at position 0 of arr
+            --ptr;      // left shift of pointer
+        }
+        charIcon = *ptr; // Selected Icon is where pointer is pointing at
+    }
+
+    else if (menu_KeyPressed[MK_ENT]) {
+        inputDetected = true;
+        s = OptionsMenu;
+        BounceTime = 0.3;
+    }
+}
+
 //User interface for main menu
 //Writetobuffer to buffer the text and after wards flush to show the text in the screen
 //Wei Min
@@ -413,7 +447,7 @@ void displayInstructions( void )
     c.Y += 1;
 	g_Console.writeToBuffer(c, "Find the correct portal that leads to the exit.", 0x0D);
     c.Y += 1;
-	g_Console.writeToBuffer(c, "Careful, for fake portals will stun you for 1 second!", 0x0D);
+	g_Console.writeToBuffer(c, "Careful, fake portals will stun you for 1 second!", 0x0D);
 	c.Y += 4;
 	c.X = g_Console.getConsoleSize().X / 3 + 4;
 	g_Console.writeToBuffer(c, "Press ENTER to return", 0x0B);
@@ -543,6 +577,14 @@ void options( void ) {
                 inputDetected = false;
                 ElapsedTime = 0.0;
                 break;
+            case Character : displayChar();
+                while (!inputDetected) {
+                    userInput();
+                    processInputChar(s);
+                }
+                inputDetected = false;
+                ElapsedTime = 0.0;
+                break;
             case Back : seq = Menu;
                 break;
         }
@@ -564,7 +606,9 @@ void displayOptions( void ) {
     c.X = g_Console.getConsoleSize().X / 2 - 12;
     g_Console.writeToBuffer(c, "SOUND", coloursOptions[0]);
     ++c.Y;
-    g_Console.writeToBuffer(c, "BACK", coloursOptions[1]);
+    g_Console.writeToBuffer(c, "CHANGE CHARACTER ICON", coloursOptions[1]);
+    ++c.Y;
+    g_Console.writeToBuffer(c, "BACK", coloursOptions[2]);
     g_Console.flushBufferToConsole();
 
 }
@@ -586,6 +630,23 @@ void displaySound( void ) {
     g_Console.writeToBuffer(c, "OFF", coloursSound[1]);
     g_Console.flushBufferToConsole();
 
+}
+
+//Glennda
+void displayChar( void )
+{
+    clearScreen();
+    COORD c = g_Console.getConsoleSize();
+    c.Y /= 3;
+    c.X = c.X / 2 - 30;
+    g_Console.writeToBuffer(c, "Press Right arrow key or Left arrow key to switch Player Icon", 0x0B);
+    c.Y += 3;
+    c.X = g_Console.getConsoleSize().X / 2;
+    g_Console.writeToBuffer(c, charIcon, 0x0A);
+    c.Y += 4;
+    c.X = g_Console.getConsoleSize().X / 2 - 11;
+    g_Console.writeToBuffer(c, "Press 'Enter' to return", 0x0B);
+    g_Console.flushBufferToConsole();
 }
 
 void displayExit( void )

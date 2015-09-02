@@ -73,6 +73,7 @@ WORD *ptrPSound = coloursPSound;
 CHAR charIcon = (char)1;
 char arr[7] = {(char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7};
 char *ptr = arr;
+
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
 //            Initialize variables, allocate memory, load data from file, etc. 

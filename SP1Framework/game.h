@@ -177,4 +177,8 @@ void processPauseInput( void );
 void processPauseSound( void );
 void processPauseChar(char * arr);
 
+extern CHAR charIcon;
+extern char arr[7];
+extern char *ptr;
+
 #endif // _GAME_H

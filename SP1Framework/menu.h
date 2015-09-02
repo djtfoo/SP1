@@ -17,6 +17,8 @@ enum MENUKEYS
 {
     MK_UP,
     MK_DOWN,
+    MK_RIGHT,
+    MK_LEFT,
     MK_ENT,
     K_MAX,
 };
@@ -24,7 +26,8 @@ enum MENUKEYS
 enum SequenceOPT {
 	OptionsMenu,
 	Sound,			//1
-	Back,			//2
+    Character,      //2
+	Back,			//3
 	MAX_SEQUENCEOPT,
 };
 
@@ -41,6 +44,7 @@ void displayExit( void );
 void options( void );
 void displayOptions( void );
 void displaySound( void );
+void displayChar( void );
 
 //highscore
 struct highScore
@@ -66,3 +70,4 @@ void processInputMenu(Sequence &s); //to process the input when in main menu
 void processInputBack(Sequence &s); //to process the input when in instructions and high score, to return to main menu
 void processInputOptions(SequenceOPT &s); //to process the input when in options
 void processInputSound(SequenceOPT &s); //to process the input when in sound options
+void processInputChar(SequenceOPT &s); //to process input when in character icon change options
