@@ -450,6 +450,40 @@ void displayInstructions( void )
 {
 	clearScreen();
 	COORD c = g_Console.getConsoleSize();
+
+    string instruction[21] = {
+        "|vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv|",
+        "",
+        "   _                                                                     _",
+        "  /_\\                                                                   /_\\",
+        "  =|=                                                                   =|=",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "L                                                                            J",
+        "LL                                                                          JJ",
+        "LLL                                                                        JJJ",
+        "LLLL                                                                      JJJJ",
+        "LLLLL                                                                    JJJJJ",
+    };
+
+    c.X = 1;
+	c.Y = 1;
+	for (int i = 0; i < 21; ++i, ++c.Y) {
+		std::ostringstream ss;
+		ss.str("");
+		ss << instruction[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+	}
+
 	c.Y /= 4;
 	c.X = g_Console.getConsoleSize().X / 2 - 6;
 	g_Console.writeToBuffer(c, "INSTRUCTIONS", 0x0B);
@@ -476,11 +510,45 @@ void displayInstructions( void )
 
 }
 
-void displayHighscore( void )
+void displayHighscore( void ) // CROSS
 {
 	clearScreen();
 	toCpp();
 	COORD c = g_Console.getConsoleSize();
+
+    string highscore[21] = {
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        "    _                                                                  _",
+        "   //  _                                                              //  _",
+        "  ((   ))                                                            ((   ))",
+        "   \\\\ //                                                              \\\\ //",
+        "    ---                                                                ---",
+        "  -------                                                            -------",
+        "    ||                                                                 ||",
+        "    ||                                                                 ||",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+    };
+
+    c.X = 1;
+	c.Y = 1;
+	for (int i = 0; i < 21; ++i, ++c.Y) {
+		std::ostringstream ss;
+		ss.str("");
+		ss << highscore[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+	}
+
 	c.Y /= 10;
     c.X = g_Console.getConsoleSize().X / 2 - 7;
     g_Console.writeToBuffer(c, "HIGH SCORE", 0x0B);
