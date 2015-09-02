@@ -63,7 +63,7 @@ WORD *ptrSound = coloursSound;  //to point at the coloursSound[] array
 //Shania
 void storyline( void )
 {
-	clearScreen();
+    clearScreen();
     PlaySound(TEXT("egypt.wav"), NULL, SND_LOOP | SND_ASYNC); //Play the music
 	COORD c = g_Console.getConsoleSize();
 
@@ -83,77 +83,59 @@ void storyline( void )
         "        '=.|   |.='"
     };
 	
+
 	for (int i = 0; i < 10; ++i, ++c.Y) {  //check through the string array and print out using writeToBuffer
         std::ostringstream ss;
-        ss.str("");
+		ss.str("");
         ss << pharaoh[i];
         g_Console.writeToBuffer(c, ss.str(), 0x0F);
     }
-
-	c.X = 33; //the x and y coords where the storyline starts
-	c.Y = 3;
-    g_Console.writeToBuffer(c, "You are a greedy treasure hunter." , 0x0A); //use writetobuffer to print out the storyline
-	g_Console.flushBufferToConsole();
-	Sleep(500);  //show 1 line per 0.5 sec
-
-	c.Y += 2;
-	c.X = 22;
-	g_Console.writeToBuffer(c, "Through your adventures, you heard rumours of a pyramid" , 0x0A);
-	g_Console.flushBufferToConsole();
-	Sleep(500);
-
-	c.Y += 2;
-	c.X = 30;
-	g_Console.writeToBuffer(c, "which houses a lot of hidden treasures." , 0x0A);
-	g_Console.flushBufferToConsole();
-	Sleep(500);
-
-	c.Y += 2;
-	c.X = 31;
-	g_Console.writeToBuffer(c, "However, no one has ever been known", 0x0A);
-	g_Console.flushBufferToConsole();
-	Sleep(500);
-
-	c.Y += 2;
-	c.X = 35;
-    g_Console.writeToBuffer(c, "to return from exploring it.", 0x0A);
-	g_Console.flushBufferToConsole();
-	Sleep(500);
-
-    c.Y += 2;
-	c.X = 24;
-	g_Console.writeToBuffer(c, "Yet, you are unfazed, and ventured to the pyramid.", 0x0A);
-	g_Console.flushBufferToConsole();
-	Sleep(500);
-
-	c.Y += 2;
-	c.X = 35;
-	g_Console.writeToBuffer(c, "As you explored the pyramid,", 0x0A);
-	g_Console.flushBufferToConsole();
-	Sleep(500);
-
-	c.Y += 2;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "you activated a trap door and fell into a maze.", 0x0A);
-	g_Console.flushBufferToConsole();
-	Sleep(500);
 
 	c.Y += 4;
 	c.X = 30;
 	g_Console.writeToBuffer(c, "Press ENTER to continue", 0x0B);
 	g_Console.flushBufferToConsole();
-	Sleep(500);
+    
+	c.X = 19;
+	c.Y = 3;
 
-	while(storyLine){   //boolean to make the screen stay til the player press enter
+    string storyline[9] = {
+        "           You are a greedy treasure hunter.",
+		"Through your adventures, you heard rumours of a pyramid",
+		"       which houses a lot of hidden treasures.",
+		"         However, no one has ever been known",
+		"              to return from exploring it.",
+		"  Yet, you are unfazed, and ventured to the pyramid.",
+		"             As you explored the pyramid,",
+		"    you activated a trap door and fell into a maze."
+	};
 
+		
+    for (int i = 0; i < 9; ++i, c.Y += 2) {  //check through the string array and print out using writeToBuffer
+		std::ostringstream ss;
+		ss.str("");
+		ss << storyline[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0A);
+		g_Console.flushBufferToConsole();	
+			
 		userInput();   //get the player input
-
-		if(menu_KeyPressed[MK_ENT])
-		{
-			storyLine = false;  //go to the menu page
-            ElapsedTime = 0.0;  //reset the time elapsed since the program starts to detect key input
+	
+		if(menu_KeyPressed[MK_ENT]){
+			Sleep(300);
+		}
+		else{
+			Sleep(1500);
 		}
 	}
+
+	while(storyLine){   //boolean to make the screen stay til the player press enter
+		userInput();   //get the player input
+        if(menu_KeyPressed[MK_ENT]){
+            storyLine = false;  //go to the menu page
+            ElapsedTime = 0.0;  //reset the time elapsed since the program starts to detect key input
+            BounceTime = 0.3;   //reset the bounce time to 0.3 to prevent possibility of enter being detected again in main menu
+        }
+    }
 }
 
 void userInput() //If s is modified, seq is modified as well
