@@ -597,25 +597,25 @@ void renderPauseGame( void ) {
 
     string pause[21] = {
         "|vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv|",
-        " ",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "  ___     ",
-        " <*,*>      ",
-        " ['o']",
+        "                                               ._._._.",
+        "                                              /=_.@._=\\",
+        "                                             /=/<*,*>\\=\\",
+        "                                          ==^\\=\\[`-']/=/^==",
+        "                                                 \" \" ",
+        "                                      _________________________",
+        "                                          ___             |# #|",
+        "                                         <-,->            |# #|",
+        "                                         [`-']            |# #|",
+        "                                      ____\"-\"_____        |# #|",
+        "                                              |# #|       |# #|",
+        "                           ___________________|# #|______ |# #|",
+        "                                              |# #| |# #| |# #|",
+        "                                              |# #| |# #| |# #|",
+        "                                              |# #| |# #| |# #|",
+        "                                              |# #| |# #| |# #|",
+        "  ___                                         |# #| |# #| |# #|",
+        " <*,*>                                    ___ |# #| |# #| |# #|",
+        " [`o']                                   <* *>|# #| |# #| |# #|",
         "|vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv|",
     };
 
@@ -630,7 +630,7 @@ void renderPauseGame( void ) {
 
 	c.Y /= 4;
     c.Y += 3;
-	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	c.X = g_Console.getConsoleSize().X / 2 - 25;
 	g_Console.writeToBuffer(c, "RETURN TO GAME", coloursPause[0]);
 	++c.Y;
 	g_Console.writeToBuffer(c, "SOUND", coloursPause[1]);
@@ -639,8 +639,8 @@ void renderPauseGame( void ) {
     ++c.Y;
 	g_Console.writeToBuffer(c, "RETURN TO MAIN MENU", coloursPause[3]);
 
-    c.Y = g_Console.getConsoleSize().Y / 2 - 9;
-    c.X = g_Console.getConsoleSize().X / 2 - 2;
+    c.Y = g_Console.getConsoleSize().Y / 2 - 6;
+    c.X = g_Console.getConsoleSize().X / 2 - 23;
     g_Console.writeToBuffer(c, "PAUSE", 0x0A);
 }
 
