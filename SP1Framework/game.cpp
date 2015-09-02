@@ -811,18 +811,21 @@ void processDeath(void)
 //=======
 //Render the text for the win page
 void renderText( void ) {
-
+    
     COORD c = g_Console.getConsoleSize();
+    int IElapsedTime = g_dElapsedTime;
+
+    if(IElapsedTime%2 == 0){
 
 	string victory[21] = { //string array
-		".____________________________________________________________________.",
+        ".____________________________________________________________________.",
 		"|  _    _         _    _        _    _         _    _        _    _  |",
 		"|   \\/}/     /}    \\/}/     /}   \\/}/     /}    \\/}/     /}   \\/}/   |",
 		"|    |_    _/|\\_    |_    _/|\\_   |_    _/|\\_    |_    _/|\\_   |_    |",
 		"|    | \\    / \\     | \\    / \\    | \\    / \\     | \\    / \\    | \\   |",
 		"|vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv|",
 		"|                                                                    |",
-		"|                                                                    |",
+		"|                             YOU WIN!                               |",
 		"|                                                                    |",
 		"|                                                                    |",
 		"|     _                                                        _     |",
@@ -836,26 +839,62 @@ void renderText( void ) {
 		"|         | / \\     | \\    / \\     | \\    / \\    | \\   / \\ |         |",
 		"|       __|vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv|__       |",
 		"|______|______________________________________________________|______|"
-	};
-
-	c.X = 5;  //x and y coordinates to start the box
+    };
+    
+    c.X = 5;  //x and y coordinates to start the box
 	c.Y = 1;
-	for (int i = 0; i < 21; ++i, ++c.Y) {  //check through the string array and writeToBuffer to print out
+    
+    for (int i = 0; i < 21; ++i, ++c.Y) {  //check through the string array and writeToBuffer to print out
 		std::ostringstream ss;
 		ss.str("");
 		ss << victory[i];
 		g_Console.writeToBuffer(c, ss.str(), 0x0E);
-	}
-
-	//display "YOU ESCAPED!"
+    }
+    }
+    else{
+        
+        string victory2[21] = { //string array
+            ".____________________________________________________________________.",
+            "|          _    _         _    _        _    _         _    _        |",
+            "|    /}     \\/}/    /}     \\/}/   /}     \\/}/    /}     \\/}/   /}    |",
+            "|  _/|\\_     |_   _/|\\_     |_   /|\\      |_   _/|\\_     |_   /|\\    |",
+            "|   / \\      | \\   / \\      | \\  / \\      | \\   / \\      | \\  / \\    |",
+            "|vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv|",
+            "|                                                                    |",
+            "|                             YOU WIN!                               |",
+            "|                                                                    |",
+            "|                                                                    |",
+            "|     _                                                        _     |",
+            "|    \\_/                                                      \\_/    |",
+            "|    =|=                                                      =|=    |",
+            "|          .*.                                          .*.          |",
+            "|         ;(;);________________________________________;(;);         |",
+            "|         |;;;    _    _         _    _        _    _   ;;;|         |",
+            "|         | ;/}    \\/}/     /}    \\/}/     /}   \\/}/    /; |         |",
+            "|         |_/|\\_    |_    _/|\\_    |_    _/|\\_   |_   _/|\\_|         |",
+            "|         | / \\     | \\    / \\     | \\    / \\    | \\   / \\ |         |",
+            "|       __|vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv|__       |",
+            "|______|______________________________________________________|______|"
+        };
+        
+        c.X = 5;  //x and y coordinates to start the box
+	    c.Y = 1;
+        
+        for(int i = 0; i < 21; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
+        std::ostringstream ss;
+		ss.str("");
+		ss << victory2[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+        }
+    }
+    
+    //display "YOU ESCAPED!"
 	std::ostringstream ss;
     c.X = g_Console.getConsoleSize().X /2 - 5;
 	c.Y = 9;
+    g_Console.writeToBuffer(c, "YOU ESCAPED!", 0x0F);
 
-	g_Console.writeToBuffer(c, "YOU ESCAPED!", 0x0F);
-
-   // displays the playtime
-	
+    // displays the playtime
     ss.str("");
     ss << "Time: " << playTime << "secs";
     c.X = g_Console.getConsoleSize().X / 2 - 7;
@@ -865,12 +904,12 @@ void renderText( void ) {
    // text to ask user to input name
     c.Y += 2;
 	g_Console.writeToBuffer(c, "INPUT YOUR NAME: ", 0x0F);
-
     c.X = g_Console.getConsoleSize().X / 2;
     c.X -= 14;
     c.Y += 4;
-}
 
+
+}
 //JingTing
 void renderNameInput(char * name) {
     COORD c = g_Console.getConsoleSize();
