@@ -739,8 +739,8 @@ void options( void ) {
 void displayOptions( void ) {
 
     clearScreen();
-
     COORD c = g_Console.getConsoleSize();
+
     c.Y /= 3;
     c.X = c.X / 2 - 5;
     g_Console.writeToBuffer(c, "OPTIONS", 0x0B);
@@ -751,8 +751,68 @@ void displayOptions( void ) {
     g_Console.writeToBuffer(c, "CHARACTER SETTINGS", coloursOptions[1]);
     ++c.Y;
     g_Console.writeToBuffer(c, "BACK", coloursOptions[2]);
-    g_Console.flushBufferToConsole();
+   
+    string OptionsLeft[17] = {
+        "][][][][][]",   
+        "|^^^^^|",                       
+        "|^^^^^|",   
+        "|^^^^^|  .::Z::.",     
+        "|^^^^^|  :'^ ^':",      
+        "|^^^^^|  ::)^(::",     
+        "|^^^^^| /''\\ /''\\",     
+        "|^^^^^| | / @ \\ |",    
+        "|^^^^^| ||);;;(||",    
+        "|^^^^^__|||   |||__",    
+        "|^^^^^|'-'|   |`-'",    
+        "|^^^^^|   | | |",    
+        "|^^^^^|   | | |",   
+        "|^^^^^|   | | |",   
+        "|^^^^^|   |/|\\|",    
+        "|^^^^^|    |||",    
+        "][][][][][]" 
+    };
+    
+    c.X = 4;  //x and y coordinates to start the box
+	c.Y = 3;
+        
+    for(int i = 0; i < 17; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
+        std::ostringstream ss;
+		ss.str("");
+		ss << OptionsLeft[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+    }
 
+    string OptionsRight[17] = {
+        "       [][][][][][",
+        "           |^^^^^|",
+        "  |\\_/|    |^^^^^|",
+        "  | | |    |^^^^^|",
+        "  (=|=)    |^^^^^|",
+        "  |\\^/|    |^^^^^|",
+        "  | ' |    |^^^^^|",
+        "  )\\ /(    |^^^^^|",
+        " /  |  \\   |^^^^^|",
+        " |  @  |   |^^^^^|",
+        " |  |  |   |^^^^^|",
+        " | / \\ |   |^^^^^|",
+        " | | | |   |^^^^^|",
+        " | | | |   |^^^^^|",
+        " |_|_|_|   |^^^^^|",
+        "(_______)  |^^^^^|",
+        "      []][][][][]["
+    };
+
+    c.X = 52;  //x and y coordinates to start the box
+	c.Y = 3;
+        
+    for(int i = 0; i < 17; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
+        std::ostringstream ss;
+		ss.str("");
+		ss << OptionsRight[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+    }
+
+    g_Console.flushBufferToConsole();
 }
 
 //Shania
