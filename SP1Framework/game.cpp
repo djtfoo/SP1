@@ -48,7 +48,8 @@ char * pointer = 0;
 int i = 0;
 
 //PlaySound - victory screen
-bool victoryplaymusic = true;
+bool victoryplaymusic;
+bool deathsound = true;
 
 EKEYS prevKeyPressed = K_ESCAPE;
 double bouncePrevKey = 0.0;
@@ -103,6 +104,7 @@ void init( void )
 	levelCount = static_cast<GAMELEVELS>(1);
     levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
+    victoryplaymusic = true;    //to allow victory music to play every time the game is reset
 
     // sets the width, height and the font name to use in the console
 
@@ -684,8 +686,7 @@ void splashScreenWait( void ) {
 
 	if (g_dElapsedTime > BufferTime) {
 		g_eGameState = S_GAME;
-	}
-
+    }
 }
 
 void renderSplashScreen( void )  // renders the splash screen
@@ -715,10 +716,6 @@ void renderSplashScreen( void )  // renders the splash screen
 	    ss << "Level " << levelCount;
 	    g_Console.writeToBuffer(c, ss.str(), 0x0B);
     }
-    
-
-    
-
 }
 
 void clearGame( void ) {
@@ -739,6 +736,13 @@ void renderClearGame( void ) {
 
 void renderDeath(void) 
 {
+    //if music is not off, and this screen is shown, play the death sound
+    if (playmusic && deathsound)
+    {
+        PlaySound(TEXT("die.wav"), NULL, SND_ASYNC);
+        deathsound = false;
+    }
+
     string scream[10] = {   //string array
     "   .----------.",
     "  /  .-.  .-.  \\",
@@ -750,35 +754,56 @@ void renderDeath(void)
     "  /`-------'  \\ \\" 
     };
     COORD c = g_Console.getConsoleSize();
+    std::ostringstream ss;
 
     c.Y /= 2;
     c.X /=2;
     for (int i = 0; i < 10; ++i, ++c.Y) {  //check through the string array and print out using writeToBuffer
-        std::ostringstream ss;
+       
         ss.str("");
         ss << scream[i];
         g_Console.writeToBuffer(c, ss.str(), 0x0F);
     }
 
-    std::ostringstream ss;
 	c.X = g_Console.getConsoleSize().X/2-5;
 	c.Y = g_Console.getConsoleSize().Y /3;
+    g_Console.writeToBuffer(c, "You Died!", 0x0B);
+
     ss.str("");
-	ss << "You died!";
-    g_Console.writeToBuffer(c, ss.str(), 0x0B);
-    ss.str("");
-    c.X -= 3;
-    c.Y ++;
-    ss << "Press ENTER to restart";
+    c.X -= 9;
+    c.Y +=2;
+    ss << "Press ENTER to restart level " << levelCount;
+    //writetobuffer does not take in int, so need to insert the number into the string with ss
 	g_Console.writeToBuffer(c, ss.str(), 0x0B);
+
+    c.X -= 2;
+    c.Y++;
+    g_Console.writeToBuffer(c, "Press ESC to go back to main menu", 0x0B);
 }
 
 void processDeath(void)
 {
     if (g_abKeyPressed[K_ENTER])
     {
+        //Restart that level again once enter is pressed
        levelClear = true;
        g_eGameState = S_GAME;
+
+       //If player did not of the music
+       if (playmusic)
+       {
+           PlaySound(TEXT("gamemusic.wav"), NULL, SND_LOOP | SND_ASYNC);
+       }
+       //Reset death sound boolean
+       deathsound = true;
+    }
+
+    if (g_abKeyPressed[K_ESCAPE])
+    {
+        //Quit to main menu when escape is pressed
+        g_bQuitGame = true;
+        //Reset death sound boolean
+        deathsound = true;
     }
 };
 
