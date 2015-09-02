@@ -63,6 +63,7 @@ enum EGAMESTATES
     S_SPLASHSCREEN,
     S_GAME,
     S_WIN,
+    S_DEATH,
     S_PAUSE,
     S_PAUSEONE,
     S_PAUSETWO,
@@ -164,6 +165,9 @@ void processNameInput(char * name);
 void renderClearGame( void );
 void renderText( void );
 void renderNameInput(char * name);
+
+void renderDeath(void);
+void processDeath(void);
 
 //pause the game - Glennda
 void pauseGame( void );

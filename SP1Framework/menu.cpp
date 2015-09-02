@@ -31,7 +31,7 @@ bool menuplaymusic = true;  //while user remains in the menus, don't refresh the
 bool storyLine = true;
 
 //menu colours
-WORD Highlight = 0x1A;      //the selected option in the menu
+WORD Highlight = 0x3A;      //the selected option in the menu
 WORD nonHighlight = 0x0A;   //non-selected options
 
 //main menu

@@ -61,7 +61,7 @@ EGAMESTATES gamestate[] = {
 };
 
 //pause menu colours
-WORD HighlightP = 0x1B;
+WORD HighlightP = 0x3B;
 WORD nonHighlightP = 0x0B;
 WORD coloursPause[] = {HighlightP, nonHighlightP, nonHighlightP, nonHighlightP};
 WORD *ptrPause = coloursPause;
@@ -249,10 +249,13 @@ void update(double dt)
 
 		case S_GAME : playTime += dt; gameplay();	// gameplay logic when we are in the game
             break;
+        
+        case S_DEATH : processDeath();
+            break;
 
 		case S_PAUSE : pauseGame();         // main stage of pause
 			break;
-
+        
         case S_PAUSEONE : pauseOne();       // sub stage of pause; game sounds
             break;
 
@@ -280,6 +283,8 @@ void render( void )
         case S_SPLASHSCREEN: renderSplashScreen(); //Splashscreen shows for a few seconds with the level counter
             break;
         case S_GAME: renderGame();  //show out the game
+            break;
+        case S_DEATH : renderDeath();
             break;
 		case S_PAUSE : renderPauseGame();   //show out the pause screen
 			break;
@@ -637,6 +642,27 @@ void renderClearGame( void ) {
     renderText();
     renderNameInput(name);
 }
+
+void renderDeath(void) 
+{
+    COORD c = g_Console.getConsoleSize();
+	c.Y /= 3;
+	c.X /= 2;
+	std::ostringstream ss;
+	ss << std::fixed << std::setprecision(3);
+	ss.str("");
+	ss << "You died!";
+	g_Console.writeToBuffer(c, ss.str(), 0x0B);
+}
+
+void processDeath(void)
+{
+    if (g_abKeyPressed[K_ENTER])
+    {
+       levelClear = true;
+       g_eGameState = S_GAME;
+    }
+};
 
 //Shania
 //=======
@@ -1495,6 +1521,8 @@ void enemyCollisionWithPlayer(Enemy g_Enemy) {
     {
         g_sChar.m_cLocation.X = 1;
         g_sChar.m_cLocation.Y = 2;
+
+        g_eGameState = S_DEATH;
     }
 
 }
