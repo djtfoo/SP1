@@ -19,7 +19,7 @@ double  g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
 
-bool developerMode = false;
+bool showTeleporter = false;
 
 // Game specific variables here
 SGameChar   g_sChar;
@@ -215,10 +215,6 @@ void getInput( void )
     g_abKeyPressed[K_Z] = isKeyPressed(90);
     g_abKeyPressed[K_ENTER] = isKeyPressed(VK_RETURN);
     g_abKeyPressed[K_BACKSPACE] = isKeyPressed(VK_BACK);
-    
-    //developer options (for debugging and demonstration)
-    g_abKeyPressed[K_SKIP] = isKeyPressed(83);  //'S' key
-    g_abKeyPressed[K_SHOWTELEPORTER] = isKeyPressed(84);    //'T' key
 }
 
 //--------------------------------------------------------------
@@ -401,7 +397,25 @@ void processUserInput( void )
 		g_eGameState = S_PAUSE;
 	}
 
-    if (g_abKeyPressed[K_SKIP]) {
+    //developer options (for debugging and demonstration)
+    else if (g_abKeyPressed[K_R]) {     //to collect all the items
+        bSomethingHappened = true;
+
+        if (ItemCounter != MaxItemCount) {
+            for (int i = 0; i < rows; ++i) {
+                for (int j = 0; j < cols; ++j) {
+                    if (maze[i][j] == '$') {
+                        maze[i][j] = ' ';
+                    }
+                }
+            }
+        }
+
+        ItemCounter = MaxItemCount;
+
+    }
+    
+    else if (g_abKeyPressed[K_S]) {  //to skip and load the next level
         bSomethingHappened = true;
 
         if (levelCount == MAX_LEVEL-1) {
@@ -413,14 +427,14 @@ void processUserInput( void )
         }
     }
 
-    if (g_abKeyPressed[K_SHOWTELEPORTER]) {
+    else if (g_abKeyPressed[K_T]) {  //to show the real teleporter
         bSomethingHappened = true;
 
-        if (!developerMode) {
-            developerMode = true;
+        if (!showTeleporter) {
+            showTeleporter = true;
         }
-        else if (developerMode) {
-            developerMode = false;
+        else if (showTeleporter) {
+            showTeleporter = false;
         }
     }
 
@@ -617,11 +631,28 @@ void renderSplashScreen( void )  // renders the splash screen
 	c.X = c.X / 2 - 3;
 	std::ostringstream ss;
 	ss << std::fixed << std::setprecision(3);
-	ss.str("");
-	ss << "Level " << levelCount;
-	g_Console.writeToBuffer(c, ss.str(), 0x0B);
-	c.Y += 1;
-	c.X = g_Console.getConsoleSize().X / 2 - 20;
+	
+    if (g_dElapsedTime < BufferTime - 1.0) {
+        c.Y += 1;
+	    c.X = g_Console.getConsoleSize().X / 2 - 20;
+        ss.str ("");
+        ss << "Level Clear!";
+        g_Console.writeToBuffer(c, ss.str(), 0x0B);
+        ++c.Y;
+        ss.str("");
+        ss << "Proceeding on to the next level";
+        g_Console.writeToBuffer(c, ss.str(), 0x0B);
+    }
+
+    else
+    {
+        ss.str("");
+	    ss << "Level " << levelCount;
+	    g_Console.writeToBuffer(c, ss.str(), 0x0B);
+    }
+    
+
+    
 
 }
 
@@ -631,9 +662,7 @@ void clearGame( void ) {
         PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC);
         victoryplaymusic = false;
     }
-
     processNameInput(name);
-
 }
 
 //Render text for winning and get name for highscore
@@ -645,13 +674,37 @@ void renderClearGame( void ) {
 
 void renderDeath(void) 
 {
+    string scream[10] = {   //string array
+    "   .----------.",
+    "  /  .-.  .-.  \\",
+    " /   | |  | |   \\",
+    " \\   `-'  `-'  _/",
+    " /\\     .--.  / |",
+    " \\ |   /  /  / /",
+    " / |  `--' /\\ \\",
+    "  /`-------'  \\ \\" 
+    };
     COORD c = g_Console.getConsoleSize();
-	c.Y /= 3;
-	c.X /= 2;
-	std::ostringstream ss;
-	ss << std::fixed << std::setprecision(3);
-	ss.str("");
+
+    c.Y /= 2;
+    c.X /=2;
+    for (int i = 0; i < 10; ++i, ++c.Y) {  //check through the string array and print out using writeToBuffer
+        std::ostringstream ss;
+        ss.str("");
+        ss << scream[i];
+        g_Console.writeToBuffer(c, ss.str(), 0x0F);
+    }
+
+    std::ostringstream ss;
+	c.X = g_Console.getConsoleSize().X/2-5;
+	c.Y = g_Console.getConsoleSize().Y /3;
+    ss.str("");
 	ss << "You died!";
+    g_Console.writeToBuffer(c, ss.str(), 0x0B);
+    ss.str("");
+    c.X -= 3;
+    c.Y ++;
+    ss << "Press ENTER to restart";
 	g_Console.writeToBuffer(c, ss.str(), 0x0B);
 }
 
@@ -715,12 +768,11 @@ void renderText( void ) {
 	
     ss.str("");
     ss << "Time: " << playTime << "secs";
-    c.X = g_Console.getConsoleSize().X / 2 - 5;
+    c.X = g_Console.getConsoleSize().X / 2 - 7;
     ++c.Y;
     g_Console.writeToBuffer(c, ss.str());
 
    // text to ask user to input name
-	c.X = g_Console.getConsoleSize().X / 2 - 7;
     c.Y += 2;
 	g_Console.writeToBuffer(c, "INPUT YOUR NAME: ", 0x0F);
 
@@ -958,7 +1010,7 @@ void mapgenerator(int rows, int cols) {
 			}
 		}
 	}
-    if (developerMode) {
+    if (showTeleporter) {
         g_Console.writeToBuffer(Tel.own_Loc, '@', 0x0C);
         g_Console.writeToBuffer(Tel.warp_Loc, '@', 0x0C);
     }
@@ -1524,7 +1576,6 @@ void enemyCollisionWithPlayer(Enemy g_Enemy) {
 
         g_eGameState = S_DEATH;
     }
-
 }
 
 void renderFramerate( void )
@@ -1651,12 +1702,12 @@ void exitLevel( void ) {
 			levelCount = static_cast<GAMELEVELS>(levelCount + 1);
             levelClear = true;
 		    g_eGameState = S_SPLASHSCREEN;
-            BufferTime = g_dElapsedTime + 1.0;
+            BufferTime = g_dElapsedTime + 3.0;
         }
         for (int i = 0; i < rows; ++i) {
             delete[] maze[i];
         }
-        developerMode = false;
+        showTeleporter = false;
 	}
 
 }
