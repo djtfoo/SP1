@@ -41,6 +41,7 @@ int MaxItemCount = 0;
 
 //Teleporter
 ExitTeleporter Tel;
+bool trap = false;
 
 //high score name
 char name[11];
@@ -49,6 +50,8 @@ int i = 0;
 
 //PlaySound - victory screen
 bool victoryplaymusic;
+bool nameRej;
+double nameBounceTime;
 
 //Play death sound
 bool deathsound = true;
@@ -106,11 +109,20 @@ void init( void )
 	levelCount = static_cast<GAMELEVELS>(1);
     levelClear = true;
 	g_eGameState = S_SPLASHSCREEN;
+
+    // reset the victory screen page
     victoryplaymusic = true;    //to allow victory music to play every time the game is reset
+    nameBounceTime = 0.0;
+    nameRej = false;
 
     // sets the width, height and the font name to use in the console
 
-    name[0] = '\0';
+    name[0] = 'J';
+    name[1] = 'O';
+    name[2] = 'H';
+    name[3] = 'N';
+    name[4] = 'N';
+    name[5] = 'Y';
     pointer = name - 1;
 }
 
@@ -317,6 +329,10 @@ void render( void )
 void gameplay( void )            // gameplay logic
 {
     levelInit();
+    if (trap) {
+        activateTrap();
+        trap = false;
+    }
     processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
     moveCharacter();    // moves the character, collision detection, physics, etc
                         // sound can be played here too.
@@ -352,7 +368,6 @@ void moveCharacter( void )
     {
         //Only move in that direction if its not a "wall"
 		if (maze[charY-1][charX] != '#') {
-			//Beep(1440, 30);
 			g_sChar.m_cLocation.Y--;
 			bSomethingHappened = true;
 		}
@@ -363,7 +378,6 @@ void moveCharacter( void )
     {
         //Only move in that direction if its not a "wall"
 		if (maze[charY][charX-1] != '#') {
-			//Beep(1440, 30);
 			g_sChar.m_cLocation.X--;
 			bSomethingHappened = true;
 		}
@@ -374,7 +388,6 @@ void moveCharacter( void )
     {
         //Only move in that direction if its not a "wall"
 		if (maze[charY+1][charX] != '#') {
-			//Beep(1440, 30);
 			g_sChar.m_cLocation.Y++;
 			bSomethingHappened = true;
 		}
@@ -385,7 +398,6 @@ void moveCharacter( void )
     {
         //Only move in that direction if its not a "wall"
 		if (maze[charY][charX+1] != '#') {
-			//Beep(1440, 30);
 			g_sChar.m_cLocation.X++;
 			bSomethingHappened = true;
 		}
@@ -664,9 +676,9 @@ void renderPauseSound( void ) {
     g_Console.writeToBuffer(c, "EDIT SOUND HERE", 0x0B);
     c.Y = 12;
     c.X = 53;
-    g_Console.writeToBuffer(c, "ON", coloursPause[0]);
+    g_Console.writeToBuffer(c, "ON", coloursPSound[0]);
     ++c.Y;
-    g_Console.writeToBuffer(c, "OFF", coloursPause[1]);
+    g_Console.writeToBuffer(c, "OFF", coloursPSound[1]);
 
     string Sound[21] = {
         "    _________________________________",
@@ -1017,7 +1029,7 @@ void renderText( void ) {
 
     // displays the playtime
     ss.str("");
-    ss << "Time: " << playTime << "secs";
+    ss << "TIME: " << playTime << "secs";
     c.X = g_Console.getConsoleSize().X / 2 - 7;
     ++c.Y;
     g_Console.writeToBuffer(c, ss.str());
@@ -1025,10 +1037,13 @@ void renderText( void ) {
    // text to ask user to input name
     c.Y += 2;
 	g_Console.writeToBuffer(c, "INPUT YOUR NAME: ", 0x0F);
-    c.X = g_Console.getConsoleSize().X / 2;
-    c.X -= 14;
-    c.Y += 4;
 
+    //if player tried keying in a blank name, reject it
+    if (nameBounceTime > g_dElapsedTime) {
+        c.X = g_Console.getConsoleSize().X / 2 - 6;
+        c.Y += 2;
+        g_Console.writeToBuffer(c, "KEY IN A NAME!", 0x0F);
+    }
 
 }
 //JingTing
@@ -1185,22 +1200,32 @@ void processNameInput(char * name) {
     }
 
     if (g_abKeyPressed[K_BACKSPACE]) {
-        *pointer = '\0';
+        if (pointer == name - 1) {
+            *(pointer+1) = '\0';
+        }
+        else {
+            *pointer = '\0';
+        }
         keySomething = true;
         backspace = true;
     }
 
     //saves the name into the text file if the player presses ENTER key
     if (g_abKeyPressed[K_ENTER]) {
-        ofstream outData;
 
-	    outData.open("Timings.txt", ofstream::app);
+        if (name[0] != '\0') {
 
-	    outData << std::endl << name << " " << playTime;
+            ofstream outData;
+	        outData.open("Timings.txt", ofstream::app);
+	        outData << std::endl << name << " " << playTime;
+	        outData.close();
 
-	    outData.close();
-
-        g_bQuitGame = true;
+            g_bQuitGame = true;
+        }
+        else {
+            nameRej = true;
+            nameBounceTime = g_dElapsedTime + 1.5;
+        }
 	}
 
     if (keySomething)
@@ -1208,6 +1233,7 @@ void processNameInput(char * name) {
         g_dBounceTime = g_dElapsedTime + 0.05;
         if (!backspace && pointer < name+9) {
             ++pointer;
+            *(pointer+1) = '\0';
             bouncePrevKey = g_dElapsedTime + 0.15;
         }
         if (backspace && pointer >= name) {
@@ -2039,26 +2065,43 @@ void checkTrap( void ) {
 	int Y = g_sChar.m_cLocation.Y - 1;
 	int X = g_sChar.m_cLocation.X;
 
-     //Checking if player is on the teleporter at the exit point (the locations of exit teleporters are saved at each map)
-	 if (maze[Y][X] == '@') {
-		 if (g_sChar.m_cLocation.X == Tel.own_Loc.X && g_sChar.m_cLocation.Y == Tel.own_Loc.Y) {
-			 g_sChar.m_cLocation = Tel.warp_Loc;
-             g_dBounceTime = g_dElapsedTime + 0.3;
-		 }
-         //Checking if player is on the teleporter at the "random assigned" teleporters
-         //Move player to the exit point
-		 else if (g_sChar.m_cLocation.X == Tel.warp_Loc.X && g_sChar.m_cLocation.Y == Tel.warp_Loc.Y) {
-			 g_sChar.m_cLocation = Tel.own_Loc;
-             g_dBounceTime = g_dElapsedTime + 0.3;
-		 }
-		 else {
-			 //it's a trap, delete the '@' sign and make the player immobile for 1 second with the player bounce time
-			 maze[Y][X] = ' ';
-             g_dBounceTime = g_dElapsedTime + 1;
-		 }
-	 }
+    
+	if (maze[Y][X] == '@') {
+        //Checking if player is on the teleporter at the exit point (the locations of exit teleporters are saved at each map)
+        trap = true;
+    }
 
 }
+
+void activateTrap( void ) {
+
+    bool teleport = false;
+
+    if (g_sChar.m_cLocation.X == Tel.own_Loc.X && g_sChar.m_cLocation.Y == Tel.own_Loc.Y) {
+        g_sChar.m_cLocation = Tel.warp_Loc;
+        teleport = true;
+    }
+    //Checking if player is on the teleporter at the "random assigned" teleporters
+    //Move player to the exit point
+    else if (g_sChar.m_cLocation.X == Tel.warp_Loc.X && g_sChar.m_cLocation.Y == Tel.warp_Loc.Y) {
+        g_sChar.m_cLocation = Tel.own_Loc;
+        teleport = true;
+    }
+    else { //it's a trap, delete the '@' sign and make the player immobile for 1.5 seconds using the player bounce time
+        int Y = g_sChar.m_cLocation.Y - 1;
+	    int X = g_sChar.m_cLocation.X;
+        maze[Y][X] = ' ';
+        g_dBounceTime = g_dElapsedTime + 1.5;
+        Beep (1000,200);
+    }
+
+    if (teleport) { //it's a teleporter, have sound effect
+        g_dBounceTime = g_dElapsedTime + 0.3;
+        Beep (1440,200);
+        Beep (2000,200);
+    }
+}
+
 //Shania
 void PickUpItems( void )
 {
@@ -2067,7 +2110,9 @@ void PickUpItems( void )
 
 	if(maze[charY][charX] == '$')  //Check if the coordinates the character is on has $ 
 	{
-		//Beep (1440,30)
+        if (playmusic) {
+		    Beep (1440,30);
+        }
 		ItemCounter++;             //Add 1 to the ItemCounter
 		maze[charY][charX] = ' ';  //Change the $ to a space
 	}
@@ -2081,11 +2126,14 @@ void exitLevel( void ) {
 
 	if(maze[charY][charX] == '*' && ItemCounter == MaxItemCount)
 	{
-		//Beep (1440,30)
 		if (levelCount == MAX_LEVEL-1) {
             g_eGameState = S_WIN;
 		}
 		else {
+            if (playmusic) {
+		        Beep (2000,100);
+                Beep (2500,200);
+            }
 			levelCount = static_cast<GAMELEVELS>(levelCount + 1);
             levelClear = true;
 		    g_eGameState = S_SPLASHSCREEN;

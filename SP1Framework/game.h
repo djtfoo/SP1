@@ -153,6 +153,7 @@ void randomiseTeleporters(int rows, int cols);
 
 //checking things on map
 void checkTrap( void );
+void activateTrap( void );
 void PickUpItems( void );
 void exitLevel( void );
 

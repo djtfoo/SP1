@@ -589,7 +589,7 @@ void displayInstructions( void )
 
     c.X = g_Console.getConsoleSize().X / 2 - 26;
     c.Y += 1;
-	g_Console.writeToBuffer(c, "Careful, fake portals   will stun you for 1 second!", 0x0D);
+	g_Console.writeToBuffer(c, "Careful, fake portals   will stun you for 1.5 seconds!", 0x0D);
 
     //visual display of portal
     c.X += 22;
@@ -605,7 +605,6 @@ void displayInstructions( void )
 void displayHighscore( void )
 {
 	clearScreen();
-	toCpp();
 	COORD c = g_Console.getConsoleSize();
 
     string highscore[21] = {
@@ -673,6 +672,8 @@ void displayHighscore( void )
 	c.Y += 4;
 	c.X = g_Console.getConsoleSize().X / 2 - 10;
 	g_Console.writeToBuffer(c, "Press ENTER to return", 0x0B);
+
+    toCpp();
 	
 	g_Console.flushBufferToConsole();
 }
@@ -702,12 +703,15 @@ void toCpp( void )
 	inData.close();
 
     // arranging data in .txt file in ascending order
+    highScore current;
+    highScore next;
+    highScore temp;
 	for (unsigned int i = 0; i < highS.size(); ++i) {
 		for (unsigned int j = 0; j < highS.size() - 1; ++j) {
-			highScore current = highS[j];
-			highScore next = highS[j+1];
+			current = highS[j];
+			next = highS[j+1];
 			if (current.time > next.time) {
-				highScore temp = current;
+				temp = current;
 				highS[j] = next;
 				highS[j+1] = temp;
 			}
@@ -716,7 +720,7 @@ void toCpp( void )
 
     // fishing out data that is within the top 10 (shortest time)
 	COORD c = g_Console.getConsoleSize();
-	c.Y = 7;
+	c.Y = 8;
 	c.X = g_Console.getConsoleSize().X / 2 - 10;
 	std::ostringstream ss;
 
