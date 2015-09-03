@@ -694,13 +694,14 @@ void toCpp( void )
 		tempData >> tempTime;
 
 		highScore temp;
-		temp.time = std::stod(tempTime);
-		temp.name = tempName;
-		highS.push_back(temp);
+		temp.time = std::stod(tempTime);        // gets time from dt in gameplay
+		temp.name = tempName;       // gets name through user input
+		highS.push_back(temp);      // push in both temp.name and temp.time into .txt file
 	}
 
 	inData.close();
 
+    // arranging data in .txt file in ascending order
 	for (unsigned int i = 0; i < highS.size(); ++i) {
 		for (unsigned int j = 0; j < highS.size() - 1; ++j) {
 			highScore current = highS[j];
@@ -713,6 +714,7 @@ void toCpp( void )
 		}
 	}
 
+    // fishing out data that is within the top 10 (shortest time)
 	COORD c = g_Console.getConsoleSize();
 	c.Y = 7;
 	c.X = g_Console.getConsoleSize().X / 2 - 10;
