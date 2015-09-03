@@ -789,10 +789,10 @@ void displayOptions( void ) {
     COORD c = g_Console.getConsoleSize();
 
     c.Y /= 3;
-    c.X = c.X / 2 - 5;
+    c.X = c.X / 2 - 3;
     g_Console.writeToBuffer(c, "OPTIONS", 0x0B);
     c.Y += 3;
-    c.X = g_Console.getConsoleSize().X / 2 - 12;
+    c.X = g_Console.getConsoleSize().X / 2 - 9;
     g_Console.writeToBuffer(c, "SOUND", coloursOptions[0]);
     ++c.Y;
     g_Console.writeToBuffer(c, "CHARACTER SETTINGS", coloursOptions[1]);
@@ -819,7 +819,7 @@ void displayOptions( void ) {
         "][][][][][]" 
     };
     
-    c.X = 4;  //x and y coordinates to start
+    c.X = 8;  //x and y coordinates to start
 	c.Y = 3;
         
     for(int i = 0; i < 17; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
