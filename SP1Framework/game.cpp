@@ -734,7 +734,7 @@ void renderSplashScreen( void )  // renders the splash screen
 
     if (g_dElapsedTime < BufferTime - 1.0) {
         c.Y += 1;
-	    c.X = g_Console.getConsoleSize().X / 2 - 20;
+	    c.X = 40;
         ss.str ("");
         ss << "Level Clear!";
         g_Console.writeToBuffer(c, ss.str(), 0x0B);
