@@ -655,36 +655,106 @@ void renderPauseGame( void ) {
     g_Console.writeToBuffer(c, "PAUSE", 0x0A);
 }
 
+//displaySound duplicated and changed to fit PauseGame requirements
 void renderPauseSound( void ) {
     clearScreen();
 	COORD c = g_Console.getConsoleSize();
-	c.Y /= 4;
-    c.Y += 2;
-	c.X = c.X / 2 - 9;
+	c.Y = 10;
+    c.X = 53;
     g_Console.writeToBuffer(c, "EDIT SOUND HERE", 0x0B);
-    c.Y += 3;
-	c.X = g_Console.getConsoleSize().X / 2 - 15;
-    g_Console.writeToBuffer(c, "ON", coloursPSound[0]);
+    c.Y = 12;
+    c.X = 53;
+    g_Console.writeToBuffer(c, "ON", coloursPause[0]);
     ++c.Y;
-	g_Console.writeToBuffer(c, "OFF", coloursPSound[1]);
+    g_Console.writeToBuffer(c, "OFF", coloursPause[1]);
+
+    string Sound[21] = {
+        "    _________________________________",
+        "    \\____________________________( ( )",
+        "      \\___________________________( (|    _____",
+        "        \\________________________( ( |   /VVVVO\\_____",
+        "          \\________________________( /  |VVVVVV/     \\",
+        "            \\_____________________( /   |VVVVV(_-----\\|",
+        "              \\__________________( /    |VVVVVV|",
+        "               _\\_______________( /     /VVVVVV|",  
+        "              _\\________________( \\    /VVVVVVV|",   
+        "       _______\\__________________( \\  /VVVVVVVV|",  
+        "    __/      \\___________________(  \\/VVVVVVVVV|",
+        "   /=|                                VVVVVVVVV|",
+        "  // |       |                      \\VVVVVVVV|V|",
+        " //  |       |_______________________|VVVVVVV|/",
+        "||    \\     /                         \\VVVVVV|",
+        "||    /   /                             \\VVVV\\",
+        "||   /   /                                \\VVV\\",
+        " \\\\  \\   \\                                 \\VVV\\",
+        "  V    \\  \\                                  \\==\\",
+        "  V     \\  \\__                                \\==\\__",
+        "         (____)>                             ( ---- )"
+    };
+
+
+    c.X = 1;  //x and y coordinates to start
+	c.Y = 1;
+        
+    for(int i = 0; i < 21; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
+        std::ostringstream ss;
+		ss.str("");
+		ss << Sound[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+    }
+    g_Console.flushBufferToConsole();
 }
 
+//displayChar duplicated and changed to fit PauseGame requirements
 void renderPauseChar( void ) {
     clearScreen();
 	COORD c = g_Console.getConsoleSize();
 	c.Y /= 4;
-    c.Y += 2;
-	c.X = g_Console.getConsoleSize().X / 2 - 26;
-    g_Console.writeToBuffer(c, "Switch Player Icon: Right arrow key or Left arrow key", 0x0B);
-    c.Y += 2;
-    c.X = g_Console.getConsoleSize().X / 2 - 25;
-    g_Console.writeToBuffer(c, "Switch Player Color: Up arrow key or Down arrow key", 0x0B);
+    c.X = 3;
+    g_Console.writeToBuffer(c, "Switch Player Icon: Use Right key or Left key", 0x0B);
+    c.Y+= 2;
+    c.X = 3;
+    g_Console.writeToBuffer(c, "Switch Player Color: Use Up key or Down key", 0x0B);
     c.Y += 3;
-	c.X = g_Console.getConsoleSize().X / 2;
+    c.X = 25;
     g_Console.writeToBuffer(c, charIcon, charClr);
     c.Y += 5;
-	c.X = g_Console.getConsoleSize().X / 2 - 11;
-    g_Console.writeToBuffer(c, "Press 'Enter' to return", 0x0B);
+    c.X = 13;
+    g_Console.writeToBuffer(c, "Press ENTER to return", 0x0B);
+
+    string CharSet[19] = {
+        "     _.mmmmmmmmm._",
+        "   dMMMY'~~~~~`YMMMb",
+        " dMMMY'         `YMMMb",
+        "dMMMY'           `YMMMb",
+        "CMMM(             )MMMD",
+        "YMMMb.           .dMMMY",
+         " YMMMb.         .dMMMY",
+        "  `YMMMboo...oodMMMY'",
+        ".    `\"#MMMMMMM#\"'    .",
+        "Mb       `MMM'       dM",
+        "MMMM.   .dMMMb.   .dMMM",
+        "MMMMMMMMMMMMMMMMMMMMMMM",
+        "MMMMMMMMMMMMMMMMMMMMMMM",
+        "MMMM'   `YMMMY'   `YMMM",
+        "MM'      )MMM(      `MM",
+        "'       .MMMMM.       `",
+        "        dMMMMMb",
+        "       dMMMMMMMb",
+        "        \"\"\"\"\"\"\"   "                     
+    };
+
+    c.X = 50;  //x and y coordinates to start
+	c.Y = 3;
+        
+    for(int i = 0; i < 19; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
+        std::ostringstream ss;
+		ss.str("");
+		ss << CharSet[i];
+		g_Console.writeToBuffer(c, ss.str(), 0x0E);
+    }
+
+    g_Console.flushBufferToConsole();
 }
 
 void clearScreen( void )

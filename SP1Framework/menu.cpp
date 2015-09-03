@@ -310,6 +310,8 @@ void processInputSound(SequenceOPT &s) {
 
 }
 
+//PauseGame Character settings duplicated and changed to fit OptionsMenu requirements
+//Glennda
 void processInputChar(SequenceOPT &s)
 {
     if (ElapsedTime <= BounceTime) {
@@ -610,7 +612,7 @@ void displayInstructions( void )
 
 }
 
-void displayHighscore( void ) // CROSS
+void displayHighscore( void )
 {
 	clearScreen();
 	toCpp();
@@ -932,7 +934,7 @@ void displayChar( void )
     g_Console.writeToBuffer(c, charIcon, charClr);
     c.Y += 5;
     c.X = 13;
-    g_Console.writeToBuffer(c, "Press 'Enter' to return", 0x0B);
+    g_Console.writeToBuffer(c, "Press Enter to return", 0x0B);
 
     //Shania
     string CharSet[19] = {
