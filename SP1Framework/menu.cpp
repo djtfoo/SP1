@@ -995,6 +995,10 @@ void displayExit( void )
 {
     clearScreen();
 
+    if (playmusic) {
+        PlaySound(TEXT("bye.wav"), NULL, SND_ASYNC);
+    }
+
     COORD c = g_Console.getConsoleSize();
 
 	//Display exit text
@@ -1043,7 +1047,7 @@ void displayExit( void )
 	g_Console.flushBufferToConsole();
     
 	exitGame = true;
-    Sleep(6000);
+    Sleep(5000);
 }
 
 //--------------------------------------------------------------
