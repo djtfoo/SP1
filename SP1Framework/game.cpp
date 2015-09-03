@@ -1031,8 +1031,9 @@ void renderText( void ) {
     g_Console.writeToBuffer(c, ss.str());
 
    // text to ask user to input name
+    c.X = g_Console.getConsoleSize().X / 2 - 8;
     c.Y += 2;
-	g_Console.writeToBuffer(c, "INPUT YOUR NAME: ", 0x0F);
+	g_Console.writeToBuffer(c, "RECORD YOUR LEGACY", 0x0F);
 
     //if player tried keying in a blank name, reject it
     if (nameBounceTime > g_dElapsedTime) {

@@ -133,7 +133,7 @@ void storyline( void )
 		"              to return from exploring it.",
 		"  Yet, you are unfazed, and ventured to the pyramid.",
 		"             As you explored the pyramid,",
-		"    you activated a trap door and fell into a maze."
+		"   you activated a trap door and fell into a maze..."
 	};
 
 	//check through the string array and print out using writeToBuffer
@@ -142,7 +142,7 @@ void storyline( void )
 		ss.str("");
 		ss << storyline[i];
 		g_Console.writeToBuffer(c, ss.str(), 0x0A);
-		g_Console.flushBufferToConsole();	
+		g_Console.flushBufferToConsole();
 			
 		userInput();   //get the player input
 	
@@ -441,7 +441,7 @@ void displayMenu( void )
     c.Y += 1;
 
 	c.X = g_Console.getConsoleSize().X / 2 - 10;
-    g_Console.writeToBuffer(c, "HIGH SCORE", coloursMenu[2]);
+    g_Console.writeToBuffer(c, "HALL OF FAME", coloursMenu[2]);
 	c.Y += 1;
 
     c.X = g_Console.getConsoleSize().X / 2 - 10;
@@ -553,7 +553,7 @@ void displayInstructions( void )
 	g_Console.writeToBuffer(c, "INSTRUCTIONS", 0x0B);
 	c.Y += 2;
 	c.X = g_Console.getConsoleSize().X / 2 - 23;
-	g_Console.writeToBuffer(c, "Players' main objective is to escape the maze.", 0x0A);
+	g_Console.writeToBuffer(c, "Players' objective is to escape the maze.", 0x0A);
 	c.Y += 2;
 	c.X = g_Console.getConsoleSize().X / 2 - 26;
 	g_Console.writeToBuffer(c, "Use arrow keys to move", 0x0D);
@@ -664,8 +664,8 @@ void displayHighscore( void )
 	}
 
 	c.Y = 3;
-    c.X = g_Console.getConsoleSize().X / 2 - 7;
-    g_Console.writeToBuffer(c, "HIGH SCORE", 0x0B);
+    c.X = g_Console.getConsoleSize().X / 2 - 6;
+    g_Console.writeToBuffer(c, "HALL OF FAME", 0x0B);
 	c.Y = 1;
 	c.X = 0;
 	for (int i= 3; i < 80; ++i) {
