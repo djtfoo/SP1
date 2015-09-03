@@ -2092,13 +2092,12 @@ void activateTrap( void ) {
 	    int X = g_sChar.m_cLocation.X;
         maze[Y][X] = ' ';
         g_dBounceTime = g_dElapsedTime + 1.5;
-        Beep (1000,200);
+        Beep (1500,300);
     }
 
     if (teleport) { //it's a teleporter, have sound effect
         g_dBounceTime = g_dElapsedTime + 0.3;
-        Beep (1440,200);
-        Beep (2000,200);
+        Beep (3000,300);
     }
 }
 
@@ -2111,7 +2110,7 @@ void PickUpItems( void )
 	if(maze[charY][charX] == '$')  //Check if the coordinates the character is on has $ 
 	{
         if (playmusic) {
-		    Beep (1440,30);
+		    Beep (1000,40);
         }
 		ItemCounter++;             //Add 1 to the ItemCounter
 		maze[charY][charX] = ' ';  //Change the $ to a space
