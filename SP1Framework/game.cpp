@@ -255,6 +255,8 @@ void update(double dt)
 		case S_GAME : playTime += dt; gameplay();	// gameplay logic when we are in the game
             break;
         
+        //process input for death screen (Enter/ESC)
+        //Inside update's switch sequence
         case S_DEATH : processDeath();
             break;
 
@@ -285,23 +287,30 @@ void render( void )
     clearScreen();      // clears the current screen and draw from scratch 
     switch (g_eGameState)
     {
-        case S_SPLASHSCREEN: renderSplashScreen(); //Splashscreen shows for a few seconds with the level counter
+        //Splashscreen shows for a few seconds with the level counter
+        case S_SPLASHSCREEN: renderSplashScreen(); 
             break;
         case S_GAME: renderGame();  //show out the game
             break;
+        //Show death screen
         case S_DEATH : renderDeath();
             break;
-		case S_PAUSE : renderPauseGame();   //show out the pause screen
+        //show out the pause screen
+		case S_PAUSE : renderPauseGame();   
 			break;
-        case S_PAUSEONE : renderPauseSound();   //show out the sub-menu of pause: sound selection
+        //show out the sub-menu of pause: sound selection
+        case S_PAUSEONE : renderPauseSound();   
 			break;
-        case S_PAUSETWO : renderPauseChar();    //show out the sub-menu of pause: changing of character appearance
+        //show out the sub-menu of pause: changing of character appearance
+        case S_PAUSETWO : renderPauseChar();    
             break;
         case S_WIN : renderClearGame();     //show out the victory screen
             break;
     }
-    renderFramerate();  // renders debug information, frame rate, elapsed time, etc
-    renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
+    // renders debug information, frame rate, elapsed time, etc
+    renderFramerate();  
+    // dump the contents of the buffer to the screen, one frame worth of game
+    renderToScreen();   
 
 }
 
@@ -770,7 +779,8 @@ void renderClearGame( void ) {
 //Show out the death screen, stop current music and play the death sound
 void renderDeath(void) 
 {
-    //if music is not off, and this screen is shown, play the death sound
+    //if music is not off, and this screen is shown
+    //play the death sound
     if (playmusic && deathsound)
     {
         PlaySound(TEXT("die.wav"), NULL, SND_ASYNC);
@@ -792,7 +802,10 @@ void renderDeath(void)
 
     c.Y /= 2;
     c.X /=2;
-    for (int i = 0; i < 10; ++i, ++c.Y) {  //check through the string array and print out using writeToBuffer
+
+    //check through the string array and 
+    //print out using writeToBuffer
+    for (int i = 0; i < 10; ++i, ++c.Y) {  
        
         ss.str("");
         ss << scream[i];
@@ -807,7 +820,8 @@ void renderDeath(void)
     c.X -= 9;
     c.Y +=2;
     ss << "Press ENTER to restart level " << levelCount;
-    //writetobuffer does not take in int, so need to insert the number into the string with ss
+    //writetobuffer does not take in int, 
+    //so need to insert the number into the string with ss
 	g_Console.writeToBuffer(c, ss.str(), 0x0B);
 
     c.X -= 2;
@@ -842,7 +856,7 @@ void processDeath(void)
         //Reset death sound boolean
         deathsound = true;
     }
-};
+}
 
 //Shania
 //=======
@@ -1760,22 +1774,30 @@ void moveEnemy(Enemy& g_Enemy)
 	
     //Move the enemy
 	//If enemy next X position is not a wall
-    if (g_Enemy.d == right && maze[eY][eX+1] != '#') //if not a wall, and direction is right, move right
+    //if not a wall, and direction is right, move right
+    if (g_Enemy.d == right && maze[eY][eX+1] != '#') 
     {
-        g_Enemy.m_Enemy.X++;     //enemy's x-axis increase by 1
+        //enemy's x-axis increase by 1
+        g_Enemy.m_Enemy.X++;     
     }
 
-    else if(g_Enemy.d == left && maze[eY][eX-1] != '#') //if not a wall, and direction is left, move left
+    //if not a wall, and direction is left, move left
+    else if(g_Enemy.d == left && maze[eY][eX-1] != '#') 
     {
-        g_Enemy.m_Enemy.X--;     //enemy's x-axis decrease by 1
+        //enemy's x-axis decrease by 1
+        g_Enemy.m_Enemy.X--;     
     }
-    else if (g_Enemy.d == up && maze[eY-1][eX] != '#') //if not a wall, and direction is up, move up
+    //if not a wall, and direction is up, move up
+    else if (g_Enemy.d == up && maze[eY-1][eX] != '#') 
     {
-        g_Enemy.m_Enemy.Y--;      //enemy's y-axis decrease by 1
+        //enemy's y-axis decrease by 1
+        g_Enemy.m_Enemy.Y--;      
     }
-	else if(g_Enemy.d == down && maze[eY+1][eX] != '#') //if not a wall, and direction is down, move down
+    //if not a wall, and direction is down, move down
+	else if(g_Enemy.d == down && maze[eY+1][eX] != '#') 
     {
-        g_Enemy.m_Enemy.Y++;     //enemy's y-axis increase by 1
+         //enemy's y-axis increase by 1
+        g_Enemy.m_Enemy.Y++;    
     }
 
 	//change direction when a wall is detected
@@ -1804,12 +1826,9 @@ void moveEnemy(Enemy& g_Enemy)
 //WeiMin
 void enemyCollisionWithPlayer(Enemy g_Enemy) {
 
-	//If character touches the enemy, spawn the character back to starting location
+	//If character touches the enemy, show death screen
     if (g_sChar.m_cLocation.X == g_Enemy.m_Enemy.X && g_sChar.m_cLocation.Y == g_Enemy.m_Enemy.Y)
     {
-        g_sChar.m_cLocation.X = 1;
-        g_sChar.m_cLocation.Y = 2;
-
         g_eGameState = S_DEATH;
     }
 }
