@@ -375,18 +375,18 @@ void displayMenu( void )
     c.X /= 5;
     c.X += 2;
     c.Y /= 8;
-    for (int i = 0; i < 40; ++i) {
+    for (int i = 0; i < 43; ++i) {
 		++c.X;
 		g_Console.writeToBuffer(c, "=", 0x0C);
     }
     c.Y += 2;
     //SHOW GAME NAME
-    c.X = g_Console.getConsoleSize().X / 2-5;
+    c.X = g_Console.getConsoleSize().X / 2-1;
     g_Console.writeToBuffer(c, "ESCAPEE", 0x0B);
     c.X = g_Console.getConsoleSize().X / 4;
     --c.X;
 	c.Y += 2;
-    for (int i = 0; i < 38; ++i) {
+    for (int i = 0; i < 41; ++i) {
 		++c.X;
 		g_Console.writeToBuffer(c, "=", 0x0C);
     }
@@ -413,37 +413,35 @@ void displayMenu( void )
     c.X = 0;
     c.X = g_Console.getConsoleSize().X / 4;
     c.X -= 2;
-        for (int i = 0; i < 40; ++i) {
+        for (int i = 0; i < 43; ++i) {
 		++c.X;
 		g_Console.writeToBuffer(c, "=", 0x0C);
     }
 
     c.Y = 0;
     c.Y /= 2;
-    c.Y += 8;
-    c.X = g_Console.getConsoleSize().X / 2;
-    c.X -= 4;
-    c.Y += 2;
+    c.Y += 10;
+    c.X = g_Console.getConsoleSize().X / 2-1;
     g_Console.writeToBuffer (c,"MENU", 0x0B);
   
     c.Y += 2;
-    c.X = g_Console.getConsoleSize().X / 2 - 13;
+    c.X = g_Console.getConsoleSize().X / 2 - 10;
     g_Console.writeToBuffer(c, "PLAY", coloursMenu[0]);
     c.Y += 1;
 
-	c.X = g_Console.getConsoleSize().X / 2 - 13;
+	c.X = g_Console.getConsoleSize().X / 2 - 10;
     g_Console.writeToBuffer(c, "INSTRUCTIONS", coloursMenu[1]);
     c.Y += 1;
 
-	c.X = g_Console.getConsoleSize().X / 2 - 13;
+	c.X = g_Console.getConsoleSize().X / 2 - 10;
     g_Console.writeToBuffer(c, "HIGH SCORE", coloursMenu[2]);
 	c.Y += 1;
 
-    c.X = g_Console.getConsoleSize().X / 2 - 13;
+    c.X = g_Console.getConsoleSize().X / 2 - 10;
     g_Console.writeToBuffer(c, "OPTIONS", coloursMenu[3]);
     c.Y += 1;
 
-    c.X = g_Console.getConsoleSize().X / 2 - 13;
+    c.X = g_Console.getConsoleSize().X / 2 - 10;
     g_Console.writeToBuffer(c, "QUIT", coloursMenu[4]);
 
     string MenuLeft[14] = {
@@ -490,7 +488,7 @@ void displayMenu( void )
         "'-------''` '--)))"
     };
 
-        c.X = 59;  //x and y coordinates to start the box
+        c.X = 62;  //x and y coordinates to start the box
 	    c.Y = 6;
         
         for(int i = 0; i < 14; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
