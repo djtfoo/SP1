@@ -13,7 +13,7 @@
 using std::vector;
 using std::string;
 using std::ifstream;
-
+extern Sequence seq;
 //detecting key input
 bool menu_KeyPressed[K_COUNT];
 
@@ -22,6 +22,7 @@ CStopWatch g_Timer;                            // Timer function to keep track o
 bool g_bQuitGame = false;                    // Set to true if you want to quit the game
 const unsigned char gc_ucFPS = 100;                // FPS of this game
 const unsigned int gc_uFrameTime = 1000 / gc_ucFPS;    // time for each frame
+
 
 //PlaySound
 bool playmusic = true;      //check if user wants music or not
@@ -33,6 +34,16 @@ bool storyLine = true;
 //menu colours
 WORD Highlight = 0x3A;      //the selected option in the menu
 WORD nonHighlight = 0x0A;   //non-selected options
+
+
+//changing character icon
+CHAR charIcon = (char)1;
+char arr[7] = {(char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7};
+char *ptr = arr;
+//changing character color
+WORD charClr = 0x0A;
+char rra[6] = {0x0A, 0x0C, 0x0B, 0x0F, 0x0D, 0x0E};
+char *rtp = rra;
 
 //main menu
 WORD coloursMenu[] = {Highlight, nonHighlight, nonHighlight, nonHighlight, nonHighlight};   //start with the first option highlighted

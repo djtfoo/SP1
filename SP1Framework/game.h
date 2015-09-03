@@ -1,9 +1,7 @@
 #ifndef _GAME_H
 #define _GAME_H
 
-#include "Framework\timer.h"
-#include "Framework\console.h"
-
+//MR SIM
 extern CStopWatch g_swTimer;
 extern bool g_bQuitGame;
 
@@ -119,8 +117,6 @@ void update      ( double dt ); // update the game and the state of the game
 void render      ( void );      // renders the current state of the game to the console
 void shutdown    ( void );      // do clean up, free memory
 
-//PlaySound
-extern bool playmusic;
 
 void splashScreenWait( void );    // waits for time to pass in splash screen
 void gameplay( void );            // gameplay logic
@@ -179,11 +175,6 @@ void processPauseInput( void );
 void processPauseSound( void );
 void processPauseChar(char * arr, char * rra);
 
-extern CHAR charIcon;
-extern char arr[7];
-extern char *ptr;
-extern WORD charClr;
-extern char rra[6];
-extern char *rtp;
+
 
 #endif // _GAME_H

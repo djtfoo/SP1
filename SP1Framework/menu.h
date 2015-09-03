@@ -1,6 +1,3 @@
-#include "Framework\timer.h"
-#include "Framework\console.h"
-
 //WeiMin
 enum Sequence 
 {
@@ -56,7 +53,6 @@ struct highScore
 void toCpp( void );
 
 //declaring game state
-extern Sequence seq;
 extern bool exitGame;
 
 //user input

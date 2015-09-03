@@ -48,6 +48,9 @@ char name[11];
 char * pointer = 0;
 int i = 0;
 
+//PlaySound
+extern bool playmusic;
+
 //PlaySound - victory screen
 bool victoryplaymusic;
 bool nameRej;
@@ -75,14 +78,12 @@ WORD *ptrPause = coloursPause;
 WORD coloursPSound[] = {HighlightP, nonHighlightP};
 WORD *ptrPSound = coloursPSound;
 
-//changing character icon
-CHAR charIcon = (char)1;
-char arr[7] = {(char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7};
-char *ptr = arr;
-//changing character color
-WORD charClr = 0x0A;
-char rra[6] = {0x0A, 0x0C, 0x0B, 0x0F, 0x0D, 0x0E};
-char *rtp = rra;
+extern CHAR charIcon;
+extern char arr[7];
+extern char *ptr;
+extern WORD charClr;
+extern char rra[6];
+extern char *rtp;
 
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
@@ -2110,7 +2111,7 @@ void PickUpItems( void )
 	if(maze[charY][charX] == '$')  //Check if the coordinates the character is on has $ 
 	{
         if (playmusic) {
-		    Beep (1000,400);
+		    Beep (1000,50);
         }
 		ItemCounter++;             //Add 1 to the ItemCounter
 		maze[charY][charX] = ' ';  //Change the $ to a space
