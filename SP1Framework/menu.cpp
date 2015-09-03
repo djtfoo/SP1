@@ -45,10 +45,7 @@ WORD charClr = 0x0A;
 char rra[6] = {0x0A, 0x0C, 0x0B, 0x0F, 0x0D, 0x0E};
 char *rtp = rra;
 
-//main menu
-WORD coloursMenu[] = {Highlight, nonHighlight, nonHighlight, nonHighlight, nonHighlight};   //start with the first option highlighted
-WORD *ptrMenu = coloursMenu;    //to point at the coloursMenu[] array
-WORD mColor[] =
+WORD mColor[] =     //array for colours of "Press 'ENTER' to continue" in storyline()
     {
         0x02,
         0x03,
@@ -61,6 +58,10 @@ WORD mColor[] =
         0x0D,
         0x0E
     };
+
+//main menu
+WORD coloursMenu[] = {Highlight, nonHighlight, nonHighlight, nonHighlight, nonHighlight};   //start with the first option highlighted
+WORD *ptrMenu = coloursMenu;    //to point at the coloursMenu[] array
 
 Sequence menu[] = {
     Play,
@@ -123,16 +124,17 @@ void storyline( void )
     g_Console.writeToBuffer(c, "Press SPACE for faster text", 0x0E);
     
 	c.X = 19;
-	c.Y = 3;
+	c.Y = 2;
 
     string storyline[9] = {
         "           You are a greedy treasure hunter.",
-		"Through your adventures, you heard rumours of a pyramid",
-		"       which houses a lot of hidden treasures.",
-		"         However, no one has ever been known",
+		"        Throughout your adventures in your life,",
+        "             you heard rumours of a pyramid",
+		"           which houses vast hidden treasures.",
+		"           However, no one has ever been known",
 		"              to return from exploring it.",
-		"  Yet, you are unfazed, and ventured to the pyramid.",
-		"             As you explored the pyramid,",
+		"      Yet, unfazed, you venture into the pyramid.",
+		"             In the midst of your exploration",
 		"   you activated a trap door and fell into a maze..."
 	};
 
@@ -165,7 +167,7 @@ void storyline( void )
 		userInput();   //get the player input
 
         IElapsedTime = ElapsedTime;
-        menuColor = mColor[IElapsedTime % 10];
+        menuColor = mColor[IElapsedTime % 10];  //get a colour depending on the elapsedTime - colour will change every second
 
         g_Console.writeToBuffer(c, "Press ENTER to continue", menuColor);
 	    g_Console.flushBufferToConsole();

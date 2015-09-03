@@ -196,14 +196,17 @@ void levelInit( void ) {
 // Output   : void
 //--------------------------------------------------------------
 void getInput( void )
-{    
+{   
+    //movement keys and changing of character icon
     g_abKeyPressed[K_UP]     = isKeyPressed(VK_UP);
     g_abKeyPressed[K_DOWN]   = isKeyPressed(VK_DOWN);
     g_abKeyPressed[K_LEFT]   = isKeyPressed(VK_LEFT);
     g_abKeyPressed[K_RIGHT]  = isKeyPressed(VK_RIGHT);
+
+    //pause
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
 
-    //for keying in name for high score
+    //keying in name for high score
     g_abKeyPressed[K_A] = isKeyPressed(65);
     g_abKeyPressed[K_B] = isKeyPressed(66);
     g_abKeyPressed[K_C] = isKeyPressed(67);
@@ -257,15 +260,16 @@ void update(double dt)
 
 	switch (g_eGameState)
 	{
-		case S_SPLASHSCREEN : splashScreenWait();
+		case S_SPLASHSCREEN : splashScreenWait();   //based on timing, check if the game state can be changed to S_GAME
 			break;
 
-		case S_GAME : playTime += dt; gameplay();	// gameplay logic when we are in the game
+		case S_GAME : playTime += dt;   //increase the play time as the game runs
+            gameplay();	// gameplay logic when we are in the game
             break;
         
         //process input for death screen (Enter/ESC)
         //Inside update's switch sequence
-        case S_DEATH : processDeath();
+        case S_DEATH : processDeath();      // check for key input to revert the player back to game or main menu
             break;
 
 		case S_PAUSE : pauseGame();         // main stage of pause
@@ -301,10 +305,10 @@ void render( void )
         case S_GAME: renderGame();  //show out the game
             break;
         //Show death screen
-        case S_DEATH : renderDeath();
+        case S_DEATH : renderDeath();   //show the death screen
             break;
         //show out the pause screen
-		case S_PAUSE : renderPauseGame();   
+		case S_PAUSE : renderPauseGame();   //show the pause screen
 			break;
         //show out the sub-menu of pause: sound selection
         case S_PAUSEONE : renderPauseSound();   
@@ -339,6 +343,7 @@ void gameplay( void )            // gameplay logic
             enemyCollisionWithPlayer(enemyvec[i]);
         }
 
+    //move the enemy
     if (g_dBounceTimeEnemy < g_dElapsedTime) {
         for (unsigned int i = 0; i < enemyvec.size(); ++i) {
             moveEnemy(enemyvec[i]);
@@ -918,7 +923,7 @@ void processDeath(void)
        levelClear = true;
        g_eGameState = S_GAME;
 
-       //If player did not of the music
+       //If player did not switch off the music
        if (playmusic)
        {
            PlaySound(TEXT("gamemusic.wav"), NULL, SND_LOOP | SND_ASYNC);
@@ -1658,7 +1663,7 @@ void maze5(int& rows, int& cols) {
         "# #$     #$  # ##@         ##  ### ## ##",
         "# ## # #####   ###########$##   $# ## ##",
         "#    # #     ###        *#### #### ## ##",
-        "###### ## ####$#@        #@           ##",
+        "###### ## ####$#@        #            ##",
         "#    # #@    # ########### #############",
         "#      #### ## ###       #            @#",
         "# ######    #      ##### ###### ###### #",
@@ -1751,7 +1756,7 @@ void maze6(int& rows, int& cols) {
         "# # ### # # ### # ## # #### ### # # # #",
         "# #@#   #   #   #  #   #      #       #",
         "# ### ####### ###### # # ### ######## #",
-        "# #   # $ #@  #   ##   # # #@   #$#   #",
+        "# #   # $ #@  #   ##   # # #    #$#   #",
         "# # ### # ##### # #  # ### ### ## #   #",
         "# #     #       #    #  $#   #  #     #",
         "# ### ################# ## # ## ##### #",
@@ -1759,11 +1764,11 @@ void maze6(int& rows, int& cols) {
 		"##### #              ### ### # ## ### #",
         "#@  # #        $     #    $# #        #",
         "#   # ################ ##### #### #####",
-		"#     #$   # #         # @ # #        #",
+		"#     #$   # #         #   # #        #",
 		"## #######   # ####### # # ########## #",
-		"#          #     #  @# # # # #    #@  #",
+		"#          #     #  @# # # #@#    #   #",
         "# # ## ## #####      #   #        # ###",
-        "# # #@ #    #@# ################# #   #",
+        "# # #@ #    #@# ################# #  @#",
         "#   #### ##                         ###",
         "#####    $# ###### ########### ######@#",
 		"# @ #   ### #   #   #@ # $ #   #    # #",
