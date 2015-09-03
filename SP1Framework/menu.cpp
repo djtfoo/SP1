@@ -1005,7 +1005,7 @@ void displayExit( void )
 	c.X = 12;
 	c.Y = 2;
 
-	g_Console.writeToBuffer(c,"~~YOU RIDE ON YOUR CAMEL ALL THE WAY HOME, GOOD BYE!~~", 0x0F);
+	g_Console.writeToBuffer(c,"~~YOU RIDE YOUR CAMEL ALL THE WAY HOME, GOOD BYE!~~", 0x0F);
 
 	//Display ascii camel
 	c.X = 3;
