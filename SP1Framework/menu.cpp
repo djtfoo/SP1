@@ -382,7 +382,7 @@ void displayMenu( void )
     }
     c.Y += 2;
     //SHOW GAME NAME
-    c.X = g_Console.getConsoleSize().X / 2-1;
+    c.X = g_Console.getConsoleSize().X / 2-2;
     g_Console.writeToBuffer(c, "ESCAPEE", 0x0B);
     c.X = 18;
 	c.Y += 2;
