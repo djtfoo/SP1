@@ -604,11 +604,19 @@ void displayInstructions( void )
 
     c.X = g_Console.getConsoleSize().X / 2 - 26;
     c.Y += 1;
-	g_Console.writeToBuffer(c, "Careful, fake portals   will stun you for 1.5 seconds!", 0x0D);
+	g_Console.writeToBuffer(c, "Fake portals   will stun you for 1.5 seconds", 0x0D);
 
     //visual display of portal
-    c.X += 22;
+    c.X += 13;
     g_Console.writeToBuffer(c, '@', 0x0E);
+
+    c.X = g_Console.getConsoleSize().X / 2 - 26;
+	c.Y += 1;
+	g_Console.writeToBuffer(c, "Avoid enemies   or you'll have to restart the level", 0x0D);
+
+    //visual display of enemy
+    c.X += 14;
+    g_Console.writeToBuffer(c, 'X', 0x0C);
 
 	c.Y += 4;
 	c.X = g_Console.getConsoleSize().X / 3 + 4;
