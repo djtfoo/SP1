@@ -2067,7 +2067,6 @@ void checkTrap( void ) {
 
     
 	if (maze[Y][X] == '@') {
-        //Checking if player is on the teleporter at the exit point (the locations of exit teleporters are saved at each map)
         trap = true;
     }
 
@@ -2077,6 +2076,7 @@ void activateTrap( void ) {
 
     bool teleport = false;
 
+    //Checking if player is on the teleporter at the exit point (the locations of exit teleporters are saved at each map)
     if (g_sChar.m_cLocation.X == Tel.own_Loc.X && g_sChar.m_cLocation.Y == Tel.own_Loc.Y) {
         g_sChar.m_cLocation = Tel.warp_Loc;
         teleport = true;

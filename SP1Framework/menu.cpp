@@ -106,6 +106,10 @@ void storyline( void )
         ss << pharaoh[i];
         g_Console.writeToBuffer(c, ss.str(), 0x0E);
     }
+
+    c.X = 28;
+    c.Y = 20;
+    g_Console.writeToBuffer(c, "Press SPACE for faster text", 0x0E);
     
 	c.X = 19;
 	c.Y = 3;
@@ -140,7 +144,7 @@ void storyline( void )
 	}
 
     c.X = 30;
-    c.Y = 21;
+    c.Y = 22;
 
     int IElapsedTime;
     WORD menuColor;
@@ -152,9 +156,8 @@ void storyline( void )
         IElapsedTime = ElapsedTime;
         menuColor = mColor[IElapsedTime % 10];
 
-	    g_Console.writeToBuffer(c, "Press ENTER to continue", menuColor);
+        g_Console.writeToBuffer(c, "Press ENTER to continue", menuColor);
 	    g_Console.flushBufferToConsole();
-
         if(menu_KeyPressed[MK_ENT]){
             storyLine = false;  //go to the menu page
             //reset the time elapsed since the program starts to detect key input
@@ -162,6 +165,7 @@ void storyline( void )
             //reset the bounce time to 0.3 to prevent possibility of enter being detected again in main menu
             BounceTime = 0.3;   
         }
+
     }
 }
 
