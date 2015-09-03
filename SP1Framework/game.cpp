@@ -118,12 +118,7 @@ void init( void )
 
     // sets the width, height and the font name to use in the console
 
-    name[0] = 'J';
-    name[1] = 'O';
-    name[2] = 'H';
-    name[3] = 'N';
-    name[4] = 'N';
-    name[5] = 'Y';
+    name[0] = '\0';
     pointer = name - 1;
 }
 
@@ -1225,7 +1220,7 @@ void processNameInput(char * name) {
         }
         else {
             nameRej = true;
-            nameBounceTime = g_dElapsedTime + 1.5;
+            nameBounceTime = g_dElapsedTime + 1;
         }
 	}
 
