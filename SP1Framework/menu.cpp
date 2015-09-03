@@ -975,15 +975,6 @@ void displayChar( void )
 void displayExit( void )
 {
     clearScreen();
-    
-	/*Beep (1480,200);  
-    Beep (1568,200);      
-    Beep (1568,200);     
-    Beep (1568,200);
-	Beep (739.99,200);
-    Beep (783.99,200);
-    Beep (783.99,200);
-    Beep (783.99,200);*/
 
     COORD c = g_Console.getConsoleSize();
 
