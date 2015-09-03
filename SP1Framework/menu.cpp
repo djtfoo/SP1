@@ -996,7 +996,7 @@ void displayExit( void )
     clearScreen();
 
     if (playmusic) {
-        PlaySound(TEXT("bye.wav"), NULL, SND_ASYNC);
+        PlaySound(TEXT("die.wav"), NULL, SND_ASYNC);
     }
 
     COORD c = g_Console.getConsoleSize();
