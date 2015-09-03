@@ -329,6 +329,7 @@ void render( void )
 void gameplay( void )            // gameplay logic
 {
     levelInit();
+    PickUpItems();
     if (trap) {
         activateTrap();
         trap = false;
@@ -408,7 +409,6 @@ void moveCharacter( void )
         // set the bounce time to some time in the future to prevent accidental triggers
         g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
         checkTrap();
-		PickUpItems();
 		exitLevel();
     }
 
@@ -2110,7 +2110,7 @@ void PickUpItems( void )
 	if(maze[charY][charX] == '$')  //Check if the coordinates the character is on has $ 
 	{
         if (playmusic) {
-		    Beep (1000,40);
+		    Beep (1000,400);
         }
 		ItemCounter++;             //Add 1 to the ItemCounter
 		maze[charY][charX] = ' ';  //Change the $ to a space
