@@ -546,17 +546,60 @@ void displayInstructions( void )
 	g_Console.writeToBuffer(c, "Players' main objective is to escape the maze.", 0x0A);
 	c.Y += 2;
 	c.X = g_Console.getConsoleSize().X / 2 - 26;
-	g_Console.writeToBuffer(c, "Arrow keys are for movement.", 0x0D);
+	g_Console.writeToBuffer(c, "Use arrow keys to move", 0x0D);
+
+    //visual display of arrow keys
+    c.X += 24;
+    g_Console.writeToBuffer(c, 27, 0x0E);
+    c.X += 1;
+    g_Console.writeToBuffer(c, 18, 0x0E);
+    c.X += 1;
+    g_Console.writeToBuffer(c, 26, 0x0E);
+
+    c.X = g_Console.getConsoleSize().X / 2 - 26;
 	c.Y += 1;
-	g_Console.writeToBuffer(c, "Step over the objects in the maze to collect them.", 0x0D);
+	g_Console.writeToBuffer(c, "Step over objects   in the maze to collect them", 0x0D);
+
+    //visual display of object
+    c.X += 18;
+    g_Console.writeToBuffer(c, '$', 0x0F);
+
+    c.X = g_Console.getConsoleSize().X / 2 - 26;
 	c.Y += 1;
-	g_Console.writeToBuffer(c, "Collecting objects along the way adds on to the Item Counter.", 0x0D);
+	g_Console.writeToBuffer(c, "Collecting objects   along the way adds to the Item Counter", 0x0D);
+
+    //visual display of object
+    c.X += 19;
+    g_Console.writeToBuffer(c, '$', 0x0F);
+
+    c.X = g_Console.getConsoleSize().X / 2 - 26;
     c.Y += 1;
-	g_Console.writeToBuffer(c, "Once all objects are collected, the exit is unlocked.", 0x0D);
+	g_Console.writeToBuffer(c, "Once all objects   are collected, the exit is unlocked", 0x0D);
+    
+    //visual display of object
+    c.X += 17;
+    g_Console.writeToBuffer(c, '$', 0x0F);
+
+    c.X = g_Console.getConsoleSize().X / 2 - 26;
     c.Y += 1;
-	g_Console.writeToBuffer(c, "Find the correct portal that leads to the exit.", 0x0D);
+	g_Console.writeToBuffer(c, "Find the correct portal   that leads to the exit  ", 0x0D);
+
+    //visual display of portal
+    c.X += 24;
+    g_Console.writeToBuffer(c, '@', 0x0E);
+
+    //visual display of exit
+    c.X += 25;
+    g_Console.writeToBuffer(c, '*', 0x0B);
+
+    c.X = g_Console.getConsoleSize().X / 2 - 26;
     c.Y += 1;
-	g_Console.writeToBuffer(c, "Careful, fake portals will stun you for 1 second!", 0x0D);
+	g_Console.writeToBuffer(c, "Careful, fake portals   will stun you for 1 second!", 0x0D);
+
+    //visual display of portal
+    c.X += 22;
+    g_Console.writeToBuffer(c, '@', 0x0E);
+
 	c.Y += 4;
 	c.X = g_Console.getConsoleSize().X / 3 + 4;
 	g_Console.writeToBuffer(c, "Press ENTER to return", 0x0B);
@@ -603,14 +646,14 @@ void displayHighscore( void ) // CROSS
 		g_Console.writeToBuffer(c, ss.str(), 0x0E);
 	}
 
-	c.Y /= 10;
+	c.Y = 3;
     c.X = g_Console.getConsoleSize().X / 2 - 7;
     g_Console.writeToBuffer(c, "HIGH SCORE", 0x0B);
-	c.Y /= 3;
+	c.Y = 1;
 	c.X = 0;
-	for (int i = 3; i < 80; ++i) {
+	for (int i= 3; i < 80; ++i) {
 		c.X++;
-		g_Console.writeToBuffer(c, "_", 0x06);
+		g_Console.writeToBuffer(c, "_", 0x0E);
 		if (i == 80) {
 			break;
 		}
@@ -619,7 +662,7 @@ void displayHighscore( void ) // CROSS
 	c.X = 0;
 	for (int i = 3; i < 80; ++i) {
 		c.X++;
-		g_Console.writeToBuffer(c, "_", 0x06);
+		g_Console.writeToBuffer(c, "_", 0x0E);
 	}
 
 	c.Y += 2;
@@ -882,10 +925,10 @@ void displayChar( void )
     c.X = 3;
     g_Console.writeToBuffer(c, "Switch Player Color: Use Up key or Down key", 0x0B);
     c.Y += 3;
-    c.X = 3;
+    c.X = 25;
     g_Console.writeToBuffer(c, charIcon, charClr);
     c.Y += 5;
-    c.X = 3;
+    c.X = 13;
     g_Console.writeToBuffer(c, "Press 'Enter' to return", 0x0B);
 
     //Shania

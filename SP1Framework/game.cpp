@@ -728,12 +728,9 @@ void renderSplashScreen( void )  // renders the splash screen
     }
 
     c.Y = 10;
-	c.X = 45;
 	std::ostringstream ss;
-	ss << std::fixed << std::setprecision(3);
 
     if (g_dElapsedTime < BufferTime - 1.0) {
-        c.Y += 1;
 	    c.X = 40;
         ss.str ("");
         ss << "Level Clear!";
@@ -746,6 +743,7 @@ void renderSplashScreen( void )  // renders the splash screen
 
     else
     {
+        c.X = 45;
         ss.str("");
 	    ss << "Level " << levelCount;
 	    g_Console.writeToBuffer(c, ss.str(), 0x0B);
@@ -1171,7 +1169,7 @@ void mapgenerator(int rows, int cols) {
 				g_Console.writeToBuffer(c, '$', 0x07);
 			}
 			else if (maze[i][j] == '*') {
-				g_Console.writeToBuffer(c, '*', 0x0D);
+				g_Console.writeToBuffer(c, '*', 0x0B);
 			}
 			else if (maze[i][j] == '#') {
 				g_Console.writeToBuffer(c, (char)178, 0x06);
@@ -1216,7 +1214,7 @@ void randomiseTeleporters(int rows, int cols) {
 void maze1(int& rows, int& cols) {
 
 	string map1[21] = {
-        "################################",   // 3 Items, 5 teleports, 2 AI
+        "################################",
         "#              #  #@           #",   
 		"##### ######## ## ###########  #",
 		"#     # @# $ # #  #            #",
@@ -1272,7 +1270,7 @@ void maze1(int& rows, int& cols) {
 void maze2(int& rows, int& cols) {
 
 	string map2[21] = {
-        "################################",    // 5 Items, 5 teleports, 3 AI
+        "################################",
 		"# #                  #    #    #",
 		"# # ### ### # ###### # #  # #  #",
 		"# # #     # #  #  #  #@#  # # $#",
@@ -1282,16 +1280,16 @@ void maze2(int& rows, int& cols) {
         "# # ##### #    #        #    # #",
 		"# #    @# ## # ######## #  # # #",
 		"# #######    #        # #  # # #",
-		"#     #    # ########## #### # #",
-        "#####   #### #*     #          #",
+		"#     #    # ########## ####   #",
+        "#####   #### #*     #        # #",
 		"# $ # #      #     @######## # #",
-		"## ## ############### #  # # # #",
-        "#   #   #   #   #     #  # # # #",
-		"# # ### ### # # #  ####  # # # #",
-        "# # @ # #@    # #        #   #$#",
-        "# ##### ####### #  ## #  # # ###",
-        "#  #  #  #         #  #### #   #",
-        "#          # # #   #   $   #   #",
+		"## ## ############### # $# # # #",
+        "#   #   ### ###       #  # # # #",
+		"# # ### #@         ####  # # # #",
+        "# #  @# #########        #   #$#",
+        "# #####  #         ## #  # # ###",
+        "#  #  #  # # # #   #  #### #   #",
+        "#          # # #   #       #  $#",
         "################################" };
 
 	rows = 21;
@@ -1332,29 +1330,42 @@ void maze2(int& rows, int& cols) {
 	g_Enemy3.d = right;
 	enemyvec.push_back(g_Enemy3);
 
+    //Enemy4
+    Enemy g_Enemy4;
+    g_Enemy4.m_Enemy.X = 12;
+    g_Enemy4.m_Enemy.Y = 20;
+    g_Enemy4.d = up;
+    enemyvec.push_back(g_Enemy4);
+
+    //Enemy5
+    Enemy g_Enemy5;
+    g_Enemy5.m_Enemy.X = 14;
+    g_Enemy5.m_Enemy.Y = 19;
+    g_Enemy5.d = up;
+    enemyvec.push_back(g_Enemy5);
 
 }
 
 void maze3(int& rows, int& cols) {
 
 	string map3[21] = {
-        "################################",    // 8 Items, 8 teleports, 3 AI
-        "# #  #  @  #               #   #",
-        "# #  # ### ###   # ######### # #",
+        "################################",
+        "# #  #  @  #             ###   #",
+        "# #  # ### ### # # ######### # #",
         "# #          # # # #@        # #",
         "# ## ####### # # # ####### # # #",
         "#      #     #$# #       # # # #",
 		"## ##  # ### ### # ####### ### #",
-        "#   #@   # #  @# # #$      #   #",
+        "#   #@   #$#  @# # #$      #   #",
         "##  ###### # ### # ####### #   #",
         "#   #  #   #     #         # # #",
-        "#   # ## #$############### #$#@#",
+        "#   # ## # ############### #$#@#",
         "# #@#    ###@ #@         # #####",
         "# ###  ##     #         *#   #$#",
-        "# $#    # #   ############## # #",
-        "# ##### ###   #  #      #    # #",
+        "#  #    #$#   ############## # #",
+        "# ##### ###   #$ #      #    # #",
 		"#           ###    #  #   #    #",
-        "## ### ###  #$############## # #",
+        "## ### ###  # ############## # #",
         "#  #   #      #   #   #   #    #",
         "#  #   #  ##### # # # # # ### ##",
 		"#$   # #        #   #   #     @#",
@@ -1397,34 +1408,56 @@ void maze3(int& rows, int& cols) {
 	g_Enemy3.m_Enemy.Y = 10;
 	g_Enemy3.d = up;
 	enemyvec.push_back(g_Enemy3);
+
+    //Enemy 4
+    Enemy g_Enemy4;
+    g_Enemy4.m_Enemy.X = 9;
+    g_Enemy4.m_Enemy.Y = 18;
+    g_Enemy4.d = down;
+	enemyvec.push_back(g_Enemy4);
+
+    //Enemy 5
+    Enemy g_Enemy5;
+    g_Enemy5.m_Enemy.X = 28;
+    g_Enemy5.m_Enemy.Y = 16;
+    g_Enemy5.d = down;
+	enemyvec.push_back(g_Enemy5);
+
+    //Enemy 6
+    Enemy g_Enemy6;
+    g_Enemy6.m_Enemy.X = 16;
+    g_Enemy6.m_Enemy.Y = 2;
+    g_Enemy6.d = left;
+	enemyvec.push_back(g_Enemy6);
+
 }
 
 void maze4(int& rows, int& cols) {
 
 	string map4[24] = {
-        "###################################",   // 10 Items, 10 teleportss, 4 AI
+        "###################################",
         "#     #@   #          #           #",
         "##### #### #  ####### #   ######  #",
         "#     #    #  #$      #   #    #  #",
         "# #####  # ## ##### ### ### #  #  #",
-        "#@    #  #        #     #   #  #$ #",
+        "#  $  #  #        #     #   # @#$ #",
         "##### ## ########### #### #########",
-        "#    $#          @#  #     #    @ #",
+        "#     #          @#  #     #    @ #",
         "# ##### ## ####   #     #### ######",
         "#       #    #    #### ##@   #   $#",
         "#### #### ###### ##               #",
-		"#$ #     @#    # #  $# # # ########",
+		"#$ #      #   @# #  $# # # ########",
         "#  #### ### #### # ### # # #$  #  #",
         "#           #      #     # # # #  #",
         "## #################### ##   #    #",
         "#   #     #          *#    ###### #",
-        "# #   #   #@          # ###     # #",
+        "#@#   #   #@          # ###    @# #",
         "######### ############# #   ##### #",
-        "#       #$              #         #",
+        "#       #               #         #",
         "# ### # #### # ##### ###### #######",
-        "# #@ $#      # #      @#     #$   #",
+        "# #@  #      # #      @#     #$   #",
         "# ############ ## ### ##  # ##### #",
-        "#     @#       #  #       #@      #",
+        "#     @#$      #$ #       #       #",
         "###################################" };
 
 	rows = 24;
@@ -1450,55 +1483,83 @@ void maze4(int& rows, int& cols) {
     g_Enemy1.d = right;
     enemyvec.push_back(g_Enemy1);
 
-    //Enemy2
+    //Enemy 2
     Enemy g_Enemy2;
     g_Enemy2.m_Enemy.X = 26;
     g_Enemy2.m_Enemy.Y = 15;
     g_Enemy2.d = up;
     enemyvec.push_back(g_Enemy2);
 
-	//Enemy3
+	//Enemy 3
 	Enemy g_Enemy3;
 	g_Enemy3.m_Enemy.X = 24;
 	g_Enemy3.m_Enemy.Y = 2;
-	g_Enemy3.d = right ;
+	g_Enemy3.d = right;
 	enemyvec.push_back(g_Enemy3);
 
-	//Enemy4
+	//Enemy 4
 	Enemy g_Enemy4;
 	g_Enemy4.m_Enemy.X = 25;
 	g_Enemy4.m_Enemy.Y = 11;
-	g_Enemy4.d = right ;
+	g_Enemy4.d = right;
 	enemyvec.push_back(g_Enemy4);
+
+    //Enemy 5
+	Enemy g_Enemy5;
+	g_Enemy5.m_Enemy.X = 33;
+	g_Enemy5.m_Enemy.Y = 14;
+	g_Enemy5.d = up;
+	enemyvec.push_back(g_Enemy5);
+
+    //Enemy 6
+	Enemy g_Enemy6;
+	g_Enemy6.m_Enemy.X = 5;
+	g_Enemy6.m_Enemy.Y = 16;
+	g_Enemy6.d = right;
+	enemyvec.push_back(g_Enemy6);
+
+    //Enemy 7
+	Enemy g_Enemy7;
+	g_Enemy7.m_Enemy.X = 10;
+	g_Enemy7.m_Enemy.Y = 19;
+	g_Enemy7.d = right;
+	enemyvec.push_back(g_Enemy7);
+
+    //Enemy 8
+    Enemy g_Enemy8;
+    g_Enemy8.m_Enemy.X = 3;
+    g_Enemy8.m_Enemy.Y = 14;
+    g_Enemy8.d = right;
+	enemyvec.push_back(g_Enemy8);
 
 }
 
 void maze5(int& rows, int& cols) {
 
 	string map5[24] = {
-        "########################################",   // 10 Items, 15 teleports, 5 AI
+        "########################################",
         "#      #         #          #      #@  #",
         "# #### ##### # # # ######## ### # #### #",
-        "#    #   #@  # #   # @ #        # #    #",
+        "#   $#   #@  # #   # $ #        # #    #",
         "######## ##### # ###   # ######## #### #",
-        "#   @  #       # #       #      # #    #",
+        "#      #       # #       #      # #    #",
         "# #### # ######### ############ # #  # #",
         "#    #   #@     $# #          # # #  #$#",
         "#### ###### ###### # ######   # #   ####",
         "#    #@  #         # #$       # # ##@  #", 
         "# ##### ###### ##### ########   #  #   #",
-        "# #      #$  # #@           #  ### ## ##",
-        "# ## # #####   ###########$ #   $# ## ##",
+        "# #$     #$  # ##@         ##  ### ## ##",
+        "# ## # #####   ###########$##   $# ## ##",
         "#    # #     ###        *#### #### ## ##",
         "###### ## ####$#@        #@           ##",
         "#    # #@    # ########### #############",
         "#      #### ## ###       #            @#",
         "# ######    #      ##### ###### ###### #",
-        "# #@        ###### #$  # #@            #",
+        "# #@        ###### #@  # #             #",
         "# #########        ### # # #############",
-        "#        $# # ######   #$#      # @    #",
+        "#        $# # ######   #@#      #@     #",
         "# ######### # #    #   ######## ###### #",
-        "#     @     #                          #",
+        "#           #                          #",
         "########################################" };
 
 	rows = 24;
@@ -1551,12 +1612,19 @@ void maze5(int& rows, int& cols) {
     g_Enemy5.m_Enemy.Y = 23;
     g_Enemy5.d = right;
     enemyvec.push_back(g_Enemy5);
+
+    //Enemy6
+    Enemy g_Enemy6;
+    g_Enemy6.m_Enemy.X = 17;
+    g_Enemy6.m_Enemy.Y = 12;
+    g_Enemy6.d = right;
+    enemyvec.push_back(g_Enemy6);
 }
 
 void maze6(int& rows, int& cols) {
     
 	string map6[23] = {
-        "#######################################",  //  10 Items, 15 teleports, 2AI
+        "#######################################",
         "#     #   #  @  #    #       $# #   #@#",
         "# # ### # # ### # ## # #### ### # # # #",
         "# #@#   #   #   #  #   #      #       #",
