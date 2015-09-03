@@ -74,6 +74,7 @@ WORD coloursSound[] = {Highlight, nonHighlight};    //start with the first optio
 WORD *ptrSound = coloursSound;  //to point at the coloursSound[] array
 
 //Shania
+//To print out line by line the storyline before the game starts
 void storyline( void )
 {
     clearScreen();
@@ -128,11 +129,11 @@ void storyline( void )
 			
 		userInput();   //get the player input
 	
-		if(menu_KeyPressed[MK_SPACE]){
+		if(menu_KeyPressed[MK_SPACE]){  //if space detected the text will print out faster
 			Sleep(300);
 		}
 		else{
-			Sleep(1500);
+			Sleep(1500); //text will print out slower
 		}
 	}
 
@@ -772,7 +773,7 @@ void displayOptions( void ) {
         "][][][][][]" 
     };
     
-    c.X = 4;  //x and y coordinates to start the box
+    c.X = 4;  //x and y coordinates to start
 	c.Y = 3;
         
     for(int i = 0; i < 17; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
@@ -802,7 +803,7 @@ void displayOptions( void ) {
         "      []][][][][]["
     };
 
-    c.X = 52;  //x and y coordinates to start the box
+    c.X = 52;  //x and y coordinates to start
 	c.Y = 3;
         
     for(int i = 0; i < 17; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
@@ -856,7 +857,7 @@ void displaySound( void ) {
     };
 
 
-    c.X = 1;  //x and y coordinates to start the box
+    c.X = 1;  //x and y coordinates to start
 	c.Y = 1;
         
     for(int i = 0; i < 21; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out
@@ -910,7 +911,7 @@ void displayChar( void )
         "        \"\"\"\"\"\"\"   "                     
     };
 
-    c.X = 50;  //x and y coordinates to start the box
+    c.X = 50;  //x and y coordinates to start
 	c.Y = 3;
         
     for(int i = 0; i < 19; ++i, ++c.Y){  //check through the string array and writeToBuffer to print out

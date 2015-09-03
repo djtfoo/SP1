@@ -696,8 +696,8 @@ void renderSplashScreen( void )  // renders the splash screen
 
 	COORD c = g_Console.getConsoleSize();
 
-        string SplashScreen[18] = {
-        "         .. ..              ...   ",
+    string SplashScreen[18] = {
+        "         .. ..              ...   ",  //Shania
         "       .' ;' ;             ;''''. ",
         "       ;| ; |;            ;;    ; ",
         "       ;| ; |;            ;;.   ; ",
@@ -854,7 +854,7 @@ void renderText( void ) {
     COORD c = g_Console.getConsoleSize();
     int IElapsedTime = g_dElapsedTime;
 
-    if(IElapsedTime%2 == 0){
+    if(IElapsedTime%2 == 0){  //Check if the ElapsedTime is even 
 
 	string victory[21] = { //string array
         ".____________________________________________________________________.",
@@ -890,7 +890,7 @@ void renderText( void ) {
 		g_Console.writeToBuffer(c, ss.str(), 0x0E);
     }
     }
-    else{
+    else{  //When ElapsedTime is odd
         
         string victory2[21] = { //string array
             ".____________________________________________________________________.",
