@@ -163,6 +163,7 @@ void renderClearGame( void );
 void renderText( void );
 void renderNameInput(char * name);
 
+//WeiMin
 void renderDeath(void);
 void processDeath(void);
 

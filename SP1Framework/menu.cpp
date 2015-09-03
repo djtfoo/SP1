@@ -78,10 +78,12 @@ WORD *ptrSound = coloursSound;  //to point at the coloursSound[] array
 void storyline( void )
 {
     clearScreen();
-    PlaySound(TEXT("egypt.wav"), NULL, SND_LOOP | SND_ASYNC); //Play the music
+    //Play the music
+    PlaySound(TEXT("egypt.wav"), NULL, SND_LOOP | SND_ASYNC);
 	COORD c = g_Console.getConsoleSize();
 
-	c.X = g_Console.getConsoleSize().X / 16-8; //the x and y coords where the pharoah ascii art starts
+    //the x and y coords where the pharoah ascii art starts
+	c.X = g_Console.getConsoleSize().X / 16-8; 
 	c.Y = g_Console.getConsoleSize().Y / 4;
 
 	string pharaoh[10] = {   //string array
@@ -97,12 +99,12 @@ void storyline( void )
         "        '=.|   |.='"
     };
 	
-
-	for (int i = 0; i < 10; ++i, ++c.Y) {  //check through the string array and print out using writeToBuffer
+    //check through the string array and print out using writeToBuffer
+	for (int i = 0; i < 10; ++i, ++c.Y) {  
         std::ostringstream ss;
 		ss.str("");
         ss << pharaoh[i];
-        g_Console.writeToBuffer(c, ss.str(), 0x0F);
+        g_Console.writeToBuffer(c, ss.str(), 0x0E);
     }
     
 	c.X = 19;
@@ -119,8 +121,8 @@ void storyline( void )
 		"    you activated a trap door and fell into a maze."
 	};
 
-		
-    for (int i = 0; i < 9; ++i, c.Y += 2) {  //check through the string array and print out using writeToBuffer
+	//check through the string array and print out using writeToBuffer
+    for (int i = 0; i < 9; ++i, c.Y += 2) {  
 		std::ostringstream ss;
 		ss.str("");
 		ss << storyline[i];
@@ -143,7 +145,8 @@ void storyline( void )
     int IElapsedTime;
     WORD menuColor;
 
-	while(storyLine){   //boolean to make the screen stay til the player press enter
+    //boolean to make the screen stay til the player press enter
+	while(storyLine){   
 		userInput();   //get the player input
 
         IElapsedTime = ElapsedTime;
@@ -154,8 +157,10 @@ void storyline( void )
 
         if(menu_KeyPressed[MK_ENT]){
             storyLine = false;  //go to the menu page
-            ElapsedTime = 0.0;  //reset the time elapsed since the program starts to detect key input
-            BounceTime = 0.3;   //reset the bounce time to 0.3 to prevent possibility of enter being detected again in main menu
+            //reset the time elapsed since the program starts to detect key input
+            ElapsedTime = 0.0;  
+            //reset the bounce time to 0.3 to prevent possibility of enter being detected again in main menu
+            BounceTime = 0.3;   
         }
     }
 }
